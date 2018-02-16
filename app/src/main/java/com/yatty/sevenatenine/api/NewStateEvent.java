@@ -4,7 +4,6 @@ import android.os.Handler;
 
 public class NewStateEvent implements CommandInterface {
     public static final String COMMAND_TYPE = "NewStateEvent";
-    public static final int COMMAND_CODE = 6;
     public final String _type = COMMAND_TYPE;
     private int moveNumber;
     private int move;

@@ -7,7 +7,7 @@
     tools:context="com.yatty.sevenatenine.client.GameActivity">
 
     <TextView
-        android:id="@+id/selected_button_tv"
+        android:id="@+id/card_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -43,4 +43,10 @@
             android:text="3"/>
     </LinearLayout>
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|right"
+        android:layout_margin="10dp"
+        android:text="disconnect"/>
 </FrameLayout>

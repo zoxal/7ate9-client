@@ -1,7 +1,6 @@
 package com.yatty.sevenatenine.client;
 
 import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
 
 import com.google.gson.ExclusionStrategy;
@@ -10,6 +9,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.yatty.sevenatenine.api.CommandInterface;
 import com.yatty.sevenatenine.api.ConnectRequest;
 import com.yatty.sevenatenine.api.ConnectResponse;
 import com.yatty.sevenatenine.api.GameStartedEvent;
@@ -19,13 +19,12 @@ import com.yatty.sevenatenine.api.NewStateEvent;
 
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.List;
 
 import io.netty.bootstrap.Bootstrap;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufInputStream;
-import io.netty.buffer.ByteBufOutputStream;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
@@ -34,8 +33,11 @@ import io.netty.channel.ChannelInitializer;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.DatagramPacket;
 import io.netty.channel.socket.nio.NioDatagramChannel;
-import io.netty.handler.codec.ByteToMessageCodec;
+import io.netty.handler.codec.MessageToMessageCodec;
+import io.netty.util.concurrent.Future;
+import io.netty.util.concurrent.GenericFutureListener;
 
 public class NettyClient {
     private static final String HOST = "192.168.1.105";
@@ -107,27 +109,67 @@ public class NettyClient {
         @Override
         protected void channelRead0(ChannelHandlerContext ctx, Object obj) throws Exception {
             Log.d(TAG, "Got class: " + obj.getClass());
-            Message message = new Message();
+            Log.d(TAG, ctx.pipeline().names().toString());
+            CommandInterface command = (CommandInterface) obj;
+            command.doLogic(handler);
+          /*  Message message = new Message();
             message.obj = ConnectResponse.COMMAND_TYPE;
-            handler.sendMessage(message);
+            handler.sendMessage(message);*/
         }
     }
 
-    public class GsonCodec extends ByteToMessageCodec<Object> {
+    public class GsonCodec extends MessageToMessageCodec<DatagramPacket, Object> {
+
+//        @Override
+//        protected void encode(ChannelHandlerContext ctx, Object msg, ByteBuf out) throws Exception {
+//            Log.d(TAG, "Encoding...");
+//            ByteBufOutputStream byteBufOutputStream = new ByteBufOutputStream(out);
+//            Gson gson = new Gson();
+//            String json = gson.toJson(msg);
+//            byteBufOutputStream.writeBytes(json);
+//        }
+
+//        @Override
+//        protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
+//            Log.d(TAG, "Decoding...");
+//            ByteBufInputStream byteBufInputStream = new ByteBufInputStream(in);
+//            Gson gson = new GsonBuilder().setExclusionStrategies(new ExclusionStrategy() {
+//                @Override
+//                public boolean shouldSkipField(FieldAttributes fieldAttributes) {
+//                    return fieldAttributes.getName().equals("_type");
+//                }
+//
+//                @Override
+//                public boolean shouldSkipClass(Class<?> aClass) {
+//                    return false;
+//                }
+//            }).create();
+//            String json = byteBufInputStream.readLine();
+//            Log.d(TAG, "Get json: " + json);
+//            JsonParser parser = new JsonParser();
+//            JsonObject obj = parser.parse(json).getAsJsonObject();
+//            String type = obj.get(COMMAND_TYPE_FIELD).getAsString();
+//            Log.d(TAG, "Parsec type: " + type);
+//            Class clazz = commands.get(type);
+//            out.add(gson.fromJson(json, clazz));
+//        }
 
         @Override
-        protected void encode(ChannelHandlerContext ctx, Object msg, ByteBuf out) throws Exception {
-            Log.d(TAG, "Encoding...");
-            ByteBufOutputStream byteBufOutputStream = new ByteBufOutputStream(out);
-            Gson gson = new Gson();
-            String json = gson.toJson(msg);
-            byteBufOutputStream.writeBytes(json);
+        public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+            cause.printStackTrace();
         }
 
         @Override
-        protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
+        protected void encode(ChannelHandlerContext ctx, Object msg, List<Object> out) throws Exception {
+            Log.d(TAG, "Encoding...");
+            Gson gson = new Gson();
+            String json = gson.toJson(msg);
+            out.add(Unpooled.wrappedBuffer(json.getBytes()));
+        }
+
+        @Override
+        protected void decode(ChannelHandlerContext ctx, DatagramPacket msg, List<Object> out) throws Exception {
             Log.d(TAG, "Decoding...");
-            ByteBufInputStream byteBufInputStream = new ByteBufInputStream(in);
             Gson gson = new GsonBuilder().setExclusionStrategies(new ExclusionStrategy() {
                 @Override
                 public boolean shouldSkipField(FieldAttributes fieldAttributes) {
@@ -139,19 +181,14 @@ public class NettyClient {
                     return false;
                 }
             }).create();
-            String json = byteBufInputStream.readLine();
+            String json = msg.content().toString(Charset.defaultCharset());
             Log.d(TAG, "Get json: " + json);
             JsonParser parser = new JsonParser();
             JsonObject obj = parser.parse(json).getAsJsonObject();
             String type = obj.get(COMMAND_TYPE_FIELD).getAsString();
-            Log.d(TAG, "Parsec type: " + type);
+            Log.d(TAG, "Parsed type: " + type);
             Class clazz = commands.get(type);
             out.add(gson.fromJson(json, clazz));
-        }
-
-        @Override
-        public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-            cause.printStackTrace();
         }
     }
 

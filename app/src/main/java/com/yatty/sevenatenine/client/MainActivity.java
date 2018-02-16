@@ -27,12 +27,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void handleMessage(android.os.Message msg) {
                 Log.d(TAG, "Handler: Get obj: " + msg.obj);
+                String gameId = msg.getData().getString(Constants.GAME_ID_KEY);
                 String messageStr = (String) msg.obj;
                 if (messageStr.equals(ConnectResponse.COMMAND_TYPE)) {
                     Log.d(TAG, "msg what: " + msg.what);
                     Log.d(TAG, "Connected");
                     Toast.makeText(getApplicationContext(), "Connected", Toast.LENGTH_SHORT);
-                    Intent nextActivity = GameActivity.newIntent(getApplicationContext());
+                    Intent nextActivity = GameActivity.newIntent(getApplicationContext(), gameId);
                     startActivity(nextActivity);
                     finish();
                 }
