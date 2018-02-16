@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.yatty.sevenatenine.api.ConnectRequest;
+
 public class MainActivity extends AppCompatActivity {
     public static final String TAG = "TAG";
     public static final String CONNECT_MESSAGE = "connect";
@@ -35,9 +37,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 try {
-                    NettyUdpClient nettyUdpClient = new NettyUdpClient();
-                    nettyUdpClient.sendOneMessage(CONNECT_MESSAGE, h);
+                    NettyClient nettyClient = new NettyClient(h);
+                    nettyClient.run();
+                    ConnectRequest connectRequest = new ConnectRequest();
+                    connectRequest.setName("Client wants to connect.:)");
+                    nettyClient.write(connectRequest);
                 } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
