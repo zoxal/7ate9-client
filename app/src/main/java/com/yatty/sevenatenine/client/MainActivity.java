@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.yatty.sevenatenine.api.ConnectRequest;
+import com.yatty.sevenatenine.api.ConnectResponse;
 
 public class MainActivity extends AppCompatActivity {
     public static final String TAG = "TAG";
@@ -25,25 +26,27 @@ public class MainActivity extends AppCompatActivity {
         final Handler h = new Handler() {
             @Override
             public void handleMessage(android.os.Message msg) {
-                Log.d(TAG, "msg what: " + msg.what);
-                Log.d(TAG, "Connected");
-                Toast.makeText(getApplicationContext(), "Connected", Toast.LENGTH_SHORT);
-                Intent nextActivity = GameActivity.newIntent(getApplicationContext());
-                startActivity(nextActivity);
-                finish();
+                Log.d(TAG, "Handler: Get obj: " + msg.obj);
+                String messageStr = (String) msg.obj;
+                if (messageStr.equals(ConnectResponse.COMMAND_TYPE)) {
+                    Log.d(TAG, "msg what: " + msg.what);
+                    Log.d(TAG, "Connected");
+                    Toast.makeText(getApplicationContext(), "Connected", Toast.LENGTH_SHORT);
+                    Intent nextActivity = GameActivity.newIntent(getApplicationContext());
+                    startActivity(nextActivity);
+                    finish();
+                }
             }
         };
+
         connectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 try {
-                    NettyClient nettyClient = new NettyClient(h);
-                    nettyClient.run();
+                    NettyClient nettyClient = NettyClient.getInstance(h);
                     ConnectRequest connectRequest = new ConnectRequest();
                     connectRequest.setName("Client wants to connect.:)");
                     nettyClient.write(connectRequest);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

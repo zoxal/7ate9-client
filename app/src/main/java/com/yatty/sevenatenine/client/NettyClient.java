@@ -1,6 +1,7 @@
 package com.yatty.sevenatenine.client;
 
 import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 
 import com.google.gson.ExclusionStrategy;
@@ -37,15 +38,18 @@ import io.netty.channel.socket.nio.NioDatagramChannel;
 import io.netty.handler.codec.ByteToMessageCodec;
 
 public class NettyClient {
-    private static final String HOST = "";
-    private static final int PORT = 8080;
+    private static final String HOST = "192.168.1.105";
+    private static final int PORT = 6667;
     private static final String COMMAND_TYPE_FIELD = "_type";
     private static final String TAG = "TAG";
+
+    private static NettyClient nettyClient;
     private HashMap<String, Class> commands;
     private Channel channel;
     private Handler handler;
 
-    NettyClient(Handler handler) {
+    private NettyClient(Handler handler) {
+        commands = new HashMap<>();
         commands.put(ConnectRequest.COMMAND_TYPE, ConnectRequest.class);
         commands.put(ConnectResponse.COMMAND_TYPE, ConnectResponse.class);
         commands.put(GameStartedEvent.COMMAND_TYPE, GameStartedEvent.class);
@@ -55,12 +59,26 @@ public class NettyClient {
         this.handler = handler;
     }
 
-    public void run() throws Exception {
+    public static NettyClient getInstance(Handler handler) {
+        if (nettyClient == null) {
+            nettyClient = new NettyClient(handler);
+            try {
+                nettyClient.run();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            nettyClient.setHandler(handler);
+        }
+        return nettyClient;
+    }
+
+    private void run() throws Exception {
         EventLoopGroup eventLoopGroup = new NioEventLoopGroup();
         Bootstrap bootstrap = new Bootstrap();
         bootstrap.group(eventLoopGroup).channel(NioDatagramChannel.class).handler(new PipeLineInitializer());
         SocketAddress socketAddress = new InetSocketAddress(HOST, PORT);
-        channel = bootstrap.connect(socketAddress).channel();
+        channel = bootstrap.connect(socketAddress).sync().channel();
     }
 
     public void write(Object obj) {
@@ -70,6 +88,7 @@ public class NettyClient {
                 if (future.isSuccess()) {
                     Log.d(TAG, "Message sent");
                 } else {
+                    System.out.println("Fail");
                     future.cause().printStackTrace();
                 }
             }
@@ -88,14 +107,16 @@ public class NettyClient {
         @Override
         protected void channelRead0(ChannelHandlerContext ctx, Object obj) throws Exception {
             Log.d(TAG, "Got class: " + obj.getClass());
-            handler.sendEmptyMessage(1);
+            Message message = new Message();
+            message.obj = ConnectResponse.COMMAND_TYPE;
+            handler.sendMessage(message);
         }
     }
 
-    public class GsonCodec<T> extends ByteToMessageCodec<T> {
+    public class GsonCodec extends ByteToMessageCodec<Object> {
 
         @Override
-        protected void encode(ChannelHandlerContext ctx, T msg, ByteBuf out) throws Exception {
+        protected void encode(ChannelHandlerContext ctx, Object msg, ByteBuf out) throws Exception {
             Log.d(TAG, "Encoding...");
             ByteBufOutputStream byteBufOutputStream = new ByteBufOutputStream(out);
             Gson gson = new Gson();
@@ -134,7 +155,7 @@ public class NettyClient {
         }
     }
 
-    public void setHandler(Handler handler) {
+    private void setHandler(Handler handler) {
         this.handler = handler;
     }
 }
