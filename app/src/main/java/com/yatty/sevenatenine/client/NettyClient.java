@@ -36,8 +36,6 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.DatagramPacket;
 import io.netty.channel.socket.nio.NioDatagramChannel;
 import io.netty.handler.codec.MessageToMessageCodec;
-import io.netty.util.concurrent.Future;
-import io.netty.util.concurrent.GenericFutureListener;
 
 public class NettyClient {
     private static final String HOST = "192.168.1.105";
@@ -119,40 +117,6 @@ public class NettyClient {
     }
 
     public class GsonCodec extends MessageToMessageCodec<DatagramPacket, Object> {
-
-//        @Override
-//        protected void encode(ChannelHandlerContext ctx, Object msg, ByteBuf out) throws Exception {
-//            Log.d(TAG, "Encoding...");
-//            ByteBufOutputStream byteBufOutputStream = new ByteBufOutputStream(out);
-//            Gson gson = new Gson();
-//            String json = gson.toJson(msg);
-//            byteBufOutputStream.writeBytes(json);
-//        }
-
-//        @Override
-//        protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
-//            Log.d(TAG, "Decoding...");
-//            ByteBufInputStream byteBufInputStream = new ByteBufInputStream(in);
-//            Gson gson = new GsonBuilder().setExclusionStrategies(new ExclusionStrategy() {
-//                @Override
-//                public boolean shouldSkipField(FieldAttributes fieldAttributes) {
-//                    return fieldAttributes.getName().equals("_type");
-//                }
-//
-//                @Override
-//                public boolean shouldSkipClass(Class<?> aClass) {
-//                    return false;
-//                }
-//            }).create();
-//            String json = byteBufInputStream.readLine();
-//            Log.d(TAG, "Get json: " + json);
-//            JsonParser parser = new JsonParser();
-//            JsonObject obj = parser.parse(json).getAsJsonObject();
-//            String type = obj.get(COMMAND_TYPE_FIELD).getAsString();
-//            Log.d(TAG, "Parsec type: " + type);
-//            Class clazz = commands.get(type);
-//            out.add(gson.fromJson(json, clazz));
-//        }
 
         @Override
         public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {

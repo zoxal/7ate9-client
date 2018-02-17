@@ -5,6 +5,7 @@ import android.os.Handler;
 public class MoveRequest implements CommandInterface {
     public static final String COMMAND_TYPE = "MoveRequest";
     public final String _type = COMMAND_TYPE;
+    private String gameId;
     private int moveNumber;
     private int move;
 
@@ -23,6 +24,10 @@ public class MoveRequest implements CommandInterface {
 
     public int getMove() {
         return move;
+    }
+
+    public void setGameId(String gameId) {
+        this.gameId = gameId;
     }
 
     public void setMove(int move) {
