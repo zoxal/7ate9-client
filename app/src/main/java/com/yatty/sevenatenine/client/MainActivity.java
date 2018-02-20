@@ -1,5 +1,6 @@
 package com.yatty.sevenatenine.client;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -19,6 +20,11 @@ public class MainActivity extends AppCompatActivity {
 
     private Button connectButton;
     private EditText nameEditText;
+
+    public static Intent newInstance(Context context) {
+        Intent intent = new Intent(context, MainActivity.class);
+        return intent;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
