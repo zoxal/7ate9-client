@@ -21,6 +21,8 @@ import com.yatty.sevenatenine.api.NewStateEvent;
 public class GameActivity extends AppCompatActivity {
     private static final String GAME_ID_KEY = "game_id_game_activity";
     public static final String PLAYER_NAME_KEY = "player_name_game_activity";
+    public static final String PLUS_MINUS_SYMBOL = "±";
+    public static final String NEW_LINE_SYMBOL = "\n";
 
     private static final int VIBRATE_TIME_MS = 100;
     public static final String TAG = "TAG";
@@ -54,9 +56,6 @@ public class GameActivity extends AppCompatActivity {
         playerName = getIntent().getStringExtra(PLAYER_NAME_KEY);
         cardTextView = findViewById(R.id.card_tv);
         counterTextView = findViewById(R.id.counter_text_view);
-        firstButton = findViewById(R.id.first_button);
-        secondButton = findViewById(R.id.second_button);
-        thirdButton = findViewById(R.id.third_button);
         disconnectButton = findViewById(R.id.disconnect_button);
         ButtonsListener buttonsListener = new ButtonsListener();
         firstButton.setOnClickListener(buttonsListener);
@@ -73,7 +72,8 @@ public class GameActivity extends AppCompatActivity {
                 if (messageStr.equals(GameStartedEvent.COMMAND_TYPE)) {
                     cardOnTable = (Card) msg.getData().getSerializable(Constants.FIRST_CARD_KEY);
                     cardDeck = (Card[]) msg.getData().getSerializable(Constants.CARD_DECK_KEY);
-                    cardTextView.setText(String.valueOf(cardOnTable.getValue()));
+                    cardTextView.setText(String.valueOf(cardOnTable.getValue()) + PLUS_MINUS_SYMBOL +
+                            NEW_LINE_SYMBOL + String.valueOf(cardOnTable.getModifier()));
                 } else if (messageStr.equals(MoveRejectedResponse.COMMAND_TYPE)) {
                     vibrator.vibrate(VIBRATE_TIME_MS);
                 } else if (messageStr.equals(NewStateEvent.COMMAND_TYPE)) {
@@ -103,21 +103,9 @@ public class GameActivity extends AppCompatActivity {
             }
             int card;
             switch (view.getId()) {
-                case R.id.first_button:
-                    card = 1;
-                    break;
-                case R.id.second_button:
-                    card = 2;
-                    break;
-                case R.id.third_button:
-                    card = 3;
-                    break;
-                default:
-                    card = 1;
-                    break;
+
             }
             MoveRequest moveRequest = new MoveRequest();
-            moveRequest.setMove(card);
             moveRequest.setGameId(gameId);
             nettyClient.write(moveRequest);
         }
