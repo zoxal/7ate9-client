@@ -2,7 +2,6 @@ package com.yatty.sevenatenine.client;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
@@ -10,9 +9,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.yatty.sevenatenine.api.Card;
 import com.yatty.sevenatenine.api.DisconnectRequest;
 import com.yatty.sevenatenine.api.GameStartedEvent;
 import com.yatty.sevenatenine.api.MoveRejectedResponse;
@@ -22,7 +21,9 @@ import com.yatty.sevenatenine.api.NewStateEvent;
 public class GameActivity extends AppCompatActivity {
     private static final String GAME_ID_KEY = "game_id_game_activity";
     public static final String PLAYER_NAME_KEY = "player_name_game_activity";
-    //private static final String BUNDLE_ID = "bundle_game_activity";
+    public static final String PLUS_MINUS_SYMBOL = "±";
+    public static final String NEW_LINE_SYMBOL = "\n";
+
     private static final int VIBRATE_TIME_MS = 100;
     public static final String TAG = "TAG";
 
@@ -36,7 +37,9 @@ public class GameActivity extends AppCompatActivity {
     private Button thirdButton;
     private Button disconnectButton;
     private Vibrator vibrator;
-    private FrameLayout gameFrameLayout;
+
+    private Card cardOnTable;
+    private Card cardDeck[];
 
     public static Intent newIntent(Context context, String gameId, String playerName) {
         Intent intent = new Intent(context, GameActivity.class);
@@ -53,9 +56,6 @@ public class GameActivity extends AppCompatActivity {
         playerName = getIntent().getStringExtra(PLAYER_NAME_KEY);
         cardTextView = findViewById(R.id.card_tv);
         counterTextView = findViewById(R.id.counter_text_view);
-        firstButton = findViewById(R.id.first_button);
-        secondButton = findViewById(R.id.second_button);
-        thirdButton = findViewById(R.id.third_button);
         disconnectButton = findViewById(R.id.disconnect_button);
         ButtonsListener buttonsListener = new ButtonsListener();
         firstButton.setOnClickListener(buttonsListener);
@@ -64,21 +64,18 @@ public class GameActivity extends AppCompatActivity {
         disconnectButton.setOnClickListener(buttonsListener);
 
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-        gameFrameLayout = findViewById(R.id.game_frame_layout);
         Handler handler = new Handler() {
             @Override
             public void handleMessage(android.os.Message msg) {
                 Log.d(TAG, "GameActivity: handle");
                 String messageStr = (String) msg.obj;
                 if (messageStr.equals(GameStartedEvent.COMMAND_TYPE)) {
-                    int card = msg.getData().getInt(Constants.NEXT_CARD_KEY);
-                    cardTextView.setText(String.valueOf(card));
+                    cardOnTable = (Card) msg.getData().getSerializable(Constants.FIRST_CARD_KEY);
+                    cardDeck = (Card[]) msg.getData().getSerializable(Constants.CARD_DECK_KEY);
+                    cardTextView.setText(String.valueOf(cardOnTable.getValue()) + PLUS_MINUS_SYMBOL +
+                            NEW_LINE_SYMBOL + String.valueOf(cardOnTable.getModifier()));
                 } else if (messageStr.equals(MoveRejectedResponse.COMMAND_TYPE)) {
-                    //int color = ((ColorDrawable) gameFrameLayout.getBackground()).getColor();
-                    //gameFrameLayout.setBackgroundColor(getResources().getColor(R.color.red));
                     vibrator.vibrate(VIBRATE_TIME_MS);
-                    //gameFrameLayout.setBackgroundColor(color);
-                    //Toast.makeText(getApplicationContext(), "NO!", Toast.LENGTH_SHORT).show();
                 } else if (messageStr.equals(NewStateEvent.COMMAND_TYPE)) {
                     String player = msg.getData().getString(Constants.PLAYER_WITH_RIGHT_ANSWER_KEY);
                     if (player.equals(playerName)) {
@@ -106,21 +103,9 @@ public class GameActivity extends AppCompatActivity {
             }
             int card;
             switch (view.getId()) {
-                case R.id.first_button:
-                    card = 1;
-                    break;
-                case R.id.second_button:
-                    card = 2;
-                    break;
-                case R.id.third_button:
-                    card = 3;
-                    break;
-                default:
-                    card = 1;
-                    break;
+
             }
             MoveRequest moveRequest = new MoveRequest();
-            moveRequest.setMove(card);
             moveRequest.setGameId(gameId);
             nettyClient.write(moveRequest);
         }
