@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".GameOver">
+
+    <TextView
+        android:id="@+id/gameOver_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="27dp"
+        android:text="Game Over!"
+        android:textAppearance="@android:style/TextAppearance.Material.Small"
+        tools:layout_editor_absoluteX="134dp"
+        tools:layout_editor_absoluteY="62dp"
+        tools:ignore="MissingConstraints"
+        tools:targetApi="lollipop" />
+
+    <TextView
+        android:id="@+id/final_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="26dp"
+        android:text="Your final score:"
+        tools:layout_editor_absoluteX="129dp"
+        tools:layout_editor_absoluteY="129dp"
+        tools:ignore="MissingConstraints" />
+
+    <Button
+        android:id="@+id/goToMainMenu_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Main_Menu"
+        tools:layout_editor_absoluteX="127dp"
+        tools:layout_editor_absoluteY="413dp"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/finalScore_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:layout_editor_absoluteX="151dp"
+        tools:layout_editor_absoluteY="170dp"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/is_winner_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="_"
+        tools:layout_editor_absoluteX="151dp"
+        tools:layout_editor_absoluteY="98dp"
+        tools:ignore="MissingConstraints" />
+</android.support.constraint.ConstraintLayout>
