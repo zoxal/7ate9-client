@@ -5,7 +5,7 @@ public class DisconnectRequest {
     public final String _type = COMMAND_TYPE;
     private String gameId;
 
-    DisconnectRequest(String gameId) {
+    public DisconnectRequest(String gameId) {
         this.gameId = gameId;
     }
 

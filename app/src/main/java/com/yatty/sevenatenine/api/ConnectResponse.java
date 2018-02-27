@@ -20,7 +20,7 @@ public class ConnectResponse implements CommandInterface {
         Log.d(TAG, "in doLogic, ConnectResponse");
         Bundle bundle = new Bundle();
         bundle.putSerializable(Constants.GAME_ID_KEY, gameId);
-        bundle.putBoolean(Constants.IS_CONNECT_SUCCEED, succeed);
+        bundle.putBoolean(Constants.IS_CONNECT_SUCCEED_KEY, succeed);
         Message message = new Message();
         message.obj = COMMAND_TYPE;
         message.setData(bundle);

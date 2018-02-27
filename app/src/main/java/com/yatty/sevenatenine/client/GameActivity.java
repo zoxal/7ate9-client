@@ -19,7 +19,6 @@ import com.yatty.sevenatenine.api.MoveRejectedResponse;
 import com.yatty.sevenatenine.api.MoveRequest;
 import com.yatty.sevenatenine.api.NewStateEvent;
 
-import java.util.Arrays;
 import java.util.LinkedList;
 
 public class GameActivity extends AppCompatActivity {
@@ -30,6 +29,7 @@ public class GameActivity extends AppCompatActivity {
 
     private static final int VIBRATE_TIME_MS = 100;
     public static final int MAX_NUM_CARDS_ON_TABLE = 10;
+    public static final int MAX_CARD = 10;
     public static final String TAG = "TAG";
 
     private NettyClient nettyClient;
@@ -75,7 +75,7 @@ public class GameActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View view) {
-                DisconnectRequest disconnectRequest = new DisconnectRequest();
+                DisconnectRequest disconnectRequest = new DisconnectRequest(gameId);
                 nettyClient.write(disconnectRequest);
                 Intent nextActivity = MainActivity.newInstance(getApplicationContext());
                 startActivity(nextActivity);
@@ -89,12 +89,14 @@ public class GameActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (numOfCardsOnDesk < MAX_NUM_CARDS_ON_TABLE) {
                     cardsOnTableButtons[numOfCardsOnDesk].setVisibility(View.VISIBLE);
-                    Card card = cardDeckLinkedList.getFirst();
-                    cardDeckLinkedList.pollFirst();
-                    cardsOnTableButtons[numOfCardsOnDesk].setText(card.getValue() + NEW_LINE_SYMBOL +
-                            PLUS_MINUS_SYMBOL + card.getModifier());
-                    cardsOnTableButtons[numOfCardsOnDesk].setOnClickListener(new CardButtonOnClickListener(card));
-                    numOfCardsOnDesk++;
+                    if(!cardDeckLinkedList.isEmpty()) {
+                        Card card = cardDeckLinkedList.getFirst();
+                        cardDeckLinkedList.pollFirst();
+                        cardsOnTableButtons[numOfCardsOnDesk].setText(card.getValue() + NEW_LINE_SYMBOL +
+                                PLUS_MINUS_SYMBOL + card.getModifier());
+                        cardsOnTableButtons[numOfCardsOnDesk].setOnClickListener(new CardButtonOnClickListener(card));
+                        numOfCardsOnDesk++;
+                    }
                 }
             }
         });
@@ -117,21 +119,28 @@ public class GameActivity extends AppCompatActivity {
                 String messageStr = (String) msg.obj;
                 if (messageStr.equals(GameStartedEvent.COMMAND_TYPE)) {
                     currentCard = (Card) msg.getData().getSerializable(Constants.FIRST_CARD_KEY);
-                    cardDeckLinkedList = new LinkedList(Arrays.asList((Card[]) msg.getData().
-                            getSerializable(Constants.CARD_DECK_KEY)));
+                    Log.d(TAG, "GameStartedEvent: get currentCard");
+                    cardDeckLinkedList = (LinkedList<Card>) msg.getData().getSerializable(Constants.CARD_DECK_KEY);
+//                    cardDeckLinkedList = new LinkedList(Arrays.asList((Card[]) msg.getData().
+//                            getSerializable(Constants.CARD_DECK_KEY)));
+                    Log.d(TAG, "GameStartedEvent: get cardDeckLinkedList");
                     numOfCardsOnDesk = 0;
                     cardTextView.setText(String.valueOf(currentCard.getValue()) + PLUS_MINUS_SYMBOL +
                             NEW_LINE_SYMBOL + String.valueOf(currentCard.getModifier()));
                 } else if (messageStr.equals(MoveRejectedResponse.COMMAND_TYPE)) {
+                    cardsOnTableButtons[numOfCardsOnDesk - 1].setVisibility(View.VISIBLE);
                     vibrator.vibrate(VIBRATE_TIME_MS);
                 } else if (messageStr.equals(NewStateEvent.COMMAND_TYPE)) {
                     String player = msg.getData().getString(Constants.PLAYER_WITH_RIGHT_ANSWER_KEY);
                     if (player.equals(playerName)) {
                         counterTextView.setText(String.valueOf(Integer.parseInt(counterTextView.getText().toString()) + 1));
+                        numOfCardsOnDesk--;
+                        cardsOnTableButtons[numOfCardsOnDesk].setOnClickListener(null);
                     }
-                    int card = msg.getData().getInt(Constants.NEXT_CARD_KEY);
-                    cardTextView.setText(String.valueOf(card));
-                    moveNumber++;
+                    currentCard = (Card) msg.getData().getSerializable(Constants.NEXT_CARD_KEY);
+                    moveNumber = msg.getData().getInt(Constants.MOVE_NUMBER_KEY);
+                    cardTextView.setText(currentCard.getValue() + PLUS_MINUS_SYMBOL +
+                            NEW_LINE_SYMBOL + String.valueOf(currentCard.getModifier()));
                 }
             }
         };
@@ -147,13 +156,22 @@ public class GameActivity extends AppCompatActivity {
 
         @Override
         public void onClick(View view) {
-            if ((currentCard.getValue() + currentCard.getModifier()) == card.getValue() ||
-                    (currentCard.getValue() - currentCard.getModifier()) == card.getValue()) {
+            int rightValue1 = currentCard.getValue() + currentCard.getModifier();
+            if (rightValue1 > MAX_CARD) {
+                rightValue1 -= MAX_CARD;
+            }
+            int rightValue2 = currentCard.getValue() - currentCard.getModifier();
+            if (rightValue2 <= 0) {
+                rightValue2 += MAX_CARD;
+            }
+            if (card.getValue() == rightValue1 ||
+                    card.getValue() == rightValue2) {
                 MoveRequest moveRequest = new MoveRequest();
                 moveRequest.setGameId(gameId);
                 moveRequest.setMove(card);
                 moveRequest.setMoveNumber(moveNumber);
                 nettyClient.write(moveRequest);
+                view.setVisibility(View.INVISIBLE);
             } else {
                 vibrator.vibrate(VIBRATE_TIME_MS);
             }
@@ -162,8 +180,9 @@ public class GameActivity extends AppCompatActivity {
 
     @Override
     protected void onPause() {
-        DisconnectRequest disconnectRequest = new DisconnectRequest();
+        /*DisconnectRequest disconnectRequest = new DisconnectRequest(gameId);
         nettyClient.write(disconnectRequest);
+        */
         super.onPause();
     }
 }

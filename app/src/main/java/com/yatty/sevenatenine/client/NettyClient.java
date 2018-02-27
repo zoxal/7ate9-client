@@ -107,7 +107,6 @@ public class NettyClient {
         @Override
         protected void channelRead0(ChannelHandlerContext ctx, Object obj) throws Exception {
             Log.d(TAG, "Got class: " + obj.getClass());
-            Log.d(TAG, ctx.pipeline().names().toString());
             CommandInterface command = (CommandInterface) obj;
             command.doLogic(handler);
           /*  Message message = new Message();
