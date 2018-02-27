@@ -16,7 +16,6 @@ import com.yatty.sevenatenine.api.ConnectResponse;
 
 public class MainActivity extends AppCompatActivity {
     public static final String TAG = "TAG";
-    public static final String CONNECT_MESSAGE = "connect";
 
     private Button connectButton;
     private EditText nameEditText;

@@ -17,7 +17,7 @@ public class ConnectResponse implements CommandInterface {
 
     @Override
     public void doLogic(Handler handler) {
-        Log.d(TAG, "in doLogic, ConnectResponse");
+        Log.d(TAG, "ConnectResponse.doLogic");
         Bundle bundle = new Bundle();
         bundle.putSerializable(Constants.GAME_ID_KEY, gameId);
         bundle.putBoolean(Constants.IS_CONNECT_SUCCEED_KEY, succeed);

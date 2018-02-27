@@ -89,12 +89,16 @@ public class GameActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (numOfCardsOnDesk < MAX_NUM_CARDS_ON_TABLE) {
                     cardsOnTableButtons[numOfCardsOnDesk].setVisibility(View.VISIBLE);
-                    if(!cardDeckLinkedList.isEmpty()) {
+                    if (!cardDeckLinkedList.isEmpty()) {
                         Card card = cardDeckLinkedList.getFirst();
                         cardDeckLinkedList.pollFirst();
-                        cardsOnTableButtons[numOfCardsOnDesk].setText(card.getValue() + NEW_LINE_SYMBOL +
+                        int i = 0;
+                        while (cardsOnTableButtons[i].hasOnClickListeners()) {
+                            i++;
+                        }
+                        cardsOnTableButtons[i].setText(card.getValue() + NEW_LINE_SYMBOL +
                                 PLUS_MINUS_SYMBOL + card.getModifier());
-                        cardsOnTableButtons[numOfCardsOnDesk].setOnClickListener(new CardButtonOnClickListener(card));
+                        cardsOnTableButtons[i].setOnClickListener(new CardButtonOnClickListener(card));
                         numOfCardsOnDesk++;
                     }
                 }
@@ -120,22 +124,27 @@ public class GameActivity extends AppCompatActivity {
                 if (messageStr.equals(GameStartedEvent.COMMAND_TYPE)) {
                     currentCard = (Card) msg.getData().getSerializable(Constants.FIRST_CARD_KEY);
                     Log.d(TAG, "GameStartedEvent: get currentCard");
-                    cardDeckLinkedList = (LinkedList<Card>) msg.getData().getSerializable(Constants.CARD_DECK_KEY);
-//                    cardDeckLinkedList = new LinkedList(Arrays.asList((Card[]) msg.getData().
-//                            getSerializable(Constants.CARD_DECK_KEY)));
+                    cardDeckLinkedList = (LinkedList<Card>) msg.getData().getSerializable(Constants.CARD_DECK_LIST_KEY);
                     Log.d(TAG, "GameStartedEvent: get cardDeckLinkedList");
                     numOfCardsOnDesk = 0;
                     cardTextView.setText(String.valueOf(currentCard.getValue()) + PLUS_MINUS_SYMBOL +
                             NEW_LINE_SYMBOL + String.valueOf(currentCard.getModifier()));
                 } else if (messageStr.equals(MoveRejectedResponse.COMMAND_TYPE)) {
-                    cardsOnTableButtons[numOfCardsOnDesk - 1].setVisibility(View.VISIBLE);
+                    Card card = (Card) msg.getData().getSerializable(Constants.REJECTED_CARD_KEY);
+                    int i = 0;
+                    while (cardsOnTableButtons[i].hasOnClickListeners()) {
+                        i++;
+                    }
+                    cardsOnTableButtons[i].setText(card.getValue() + NEW_LINE_SYMBOL +
+                            PLUS_MINUS_SYMBOL + card.getModifier());
+                    cardsOnTableButtons[i].setOnClickListener(new CardButtonOnClickListener(card));
+                    cardsOnTableButtons[i].setVisibility(View.VISIBLE);
+                    numOfCardsOnDesk++;
                     vibrator.vibrate(VIBRATE_TIME_MS);
                 } else if (messageStr.equals(NewStateEvent.COMMAND_TYPE)) {
                     String player = msg.getData().getString(Constants.PLAYER_WITH_RIGHT_ANSWER_KEY);
                     if (player.equals(playerName)) {
                         counterTextView.setText(String.valueOf(Integer.parseInt(counterTextView.getText().toString()) + 1));
-                        numOfCardsOnDesk--;
-                        cardsOnTableButtons[numOfCardsOnDesk].setOnClickListener(null);
                     }
                     currentCard = (Card) msg.getData().getSerializable(Constants.NEXT_CARD_KEY);
                     moveNumber = msg.getData().getInt(Constants.MOVE_NUMBER_KEY);
@@ -172,6 +181,8 @@ public class GameActivity extends AppCompatActivity {
                 moveRequest.setMoveNumber(moveNumber);
                 nettyClient.write(moveRequest);
                 view.setVisibility(View.INVISIBLE);
+                view.setOnClickListener(null);
+                numOfCardsOnDesk--;
             } else {
                 vibrator.vibrate(VIBRATE_TIME_MS);
             }

@@ -14,6 +14,8 @@ public class GameStartedEvent implements CommandInterface {
     public static final String TAG = "TAG";
     public static final String COMMAND_TYPE = "GameStartedEvent";
     public final String _type = COMMAND_TYPE;
+
+
     private Card firstCard;
     private List<Card> playerCards;
 
@@ -28,7 +30,7 @@ public class GameStartedEvent implements CommandInterface {
         }
         Bundle bundle = new Bundle();
         bundle.putSerializable(Constants.FIRST_CARD_KEY, firstCard);
-        bundle.putSerializable(Constants.CARD_DECK_KEY, new LinkedList<>(playerCards));
+        bundle.putSerializable(Constants.CARD_DECK_LIST_KEY, new LinkedList<>(playerCards));
         Message message = new Message();
         message.obj = COMMAND_TYPE;
         message.setData(bundle);
