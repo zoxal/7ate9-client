@@ -2,7 +2,9 @@ package com.yatty.sevenatenine.api;
 
 import android.os.Handler;
 
-public class GameResult implements CommandInterface {
+import java.io.Serializable;
+
+public class GameResult implements CommandInterface, Serializable {
     public static final String COMMAND_TYPE = "GameResult";
     public final String _type = COMMAND_TYPE;
     private String winner;

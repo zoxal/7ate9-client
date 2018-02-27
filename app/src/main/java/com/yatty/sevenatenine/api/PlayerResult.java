@@ -1,6 +1,8 @@
 package com.yatty.sevenatenine.api;
 
-class PlayerResult {
+import java.io.Serializable;
+
+class PlayerResult implements Serializable {
     public static final String COMMAND_TYPE = "PlayerResult";
     public final String _type = COMMAND_TYPE;
     private String playerName;

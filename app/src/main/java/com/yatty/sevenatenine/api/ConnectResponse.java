@@ -18,10 +18,12 @@ public class ConnectResponse implements CommandInterface {
     @Override
     public void doLogic(Handler handler) {
         Log.d(TAG, "in doLogic, ConnectResponse");
-        Message message = new Message();
-        message.obj = COMMAND_TYPE;
         Bundle bundle = new Bundle();
         bundle.putSerializable(Constants.GAME_ID_KEY, gameId);
+        bundle.putBoolean(Constants.IS_CONNECT_SUCCEED, succeed);
+        Message message = new Message();
+        message.obj = COMMAND_TYPE;
+        message.setData(bundle);
         handler.sendMessage(message);
     }
 

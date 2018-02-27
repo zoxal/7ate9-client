@@ -17,11 +17,14 @@ public class NewStateEvent implements CommandInterface {
 
     @Override
     public void doLogic(Handler handler) {
-        Message message = new Message();
-        message.obj = COMMAND_TYPE;
         Bundle bundle = new Bundle();
         bundle.putSerializable(Constants.PLAYER_WITH_RIGHT_ANSWER_KEY, moveWinner);
         bundle.putSerializable(Constants.NEXT_CARD_KEY, nextCard);
+        bundle.putSerializable(Constants.IS_LAST_MOVE_KEY, lastMove);
+        bundle.putSerializable(Constants.MOVE_NUMBER_KEY, moveNumber);
+        bundle.putSerializable(Constants.GAME_RESULT_KEY, gameResult);
+        Message message = new Message();
+        message.obj = COMMAND_TYPE;
         message.setData(bundle);
         handler.sendMessage(message);
     }
