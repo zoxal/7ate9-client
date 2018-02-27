@@ -10,17 +10,17 @@ public class NewStateEvent implements CommandInterface {
     public static final String COMMAND_TYPE = "NewStateEvent";
     public final String _type = COMMAND_TYPE;
     private int moveNumber;
-    private int move;
-    private String player;
+    private String moveWinner;
     private boolean lastMove;
-    private int nextCard;
+    private Card nextCard;
+    private GameResult gameResult;
 
     @Override
     public void doLogic(Handler handler) {
         Message message = new Message();
         message.obj = COMMAND_TYPE;
         Bundle bundle = new Bundle();
-        bundle.putSerializable(Constants.PLAYER_WITH_RIGHT_ANSWER_KEY, player);
+        bundle.putSerializable(Constants.PLAYER_WITH_RIGHT_ANSWER_KEY, moveWinner);
         bundle.putSerializable(Constants.NEXT_CARD_KEY, nextCard);
         message.setData(bundle);
         handler.sendMessage(message);
@@ -30,19 +30,19 @@ public class NewStateEvent implements CommandInterface {
         return moveNumber;
     }
 
-    public int getMove() {
-        return move;
-    }
-
-    public String getPlayer() {
-        return player;
+    public String getMoveWinner() {
+        return moveWinner;
     }
 
     public boolean isLastMove() {
         return lastMove;
     }
 
-    public int getNextCard() {
+    public Card getNextCard() {
         return nextCard;
+    }
+
+    public GameResult getGameResult() {
+        return gameResult;
     }
 }

@@ -5,7 +5,7 @@ import android.os.Handler;
 public class ConnectRequest implements CommandInterface {
     public static final String COMMAND_TYPE = "ConnectRequest";
     public final String _type = COMMAND_TYPE;
-    String name;
+    private String name;
 
     public String getName() {
         return name;
