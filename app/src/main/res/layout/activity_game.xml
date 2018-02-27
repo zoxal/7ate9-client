@@ -13,7 +13,7 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/tv_current_card_modifier"
+            android:id="@+id/tv_top_card_modifier"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
@@ -21,7 +21,7 @@
             tools:text="+1"/>
 
         <TextView
-            android:id="@+id/card_tv"
+            android:id="@+id/tv_top_card_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingEnd="10dp"
