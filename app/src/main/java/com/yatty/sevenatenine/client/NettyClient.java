@@ -38,7 +38,7 @@ import io.netty.channel.socket.nio.NioDatagramChannel;
 import io.netty.handler.codec.MessageToMessageCodec;
 
 public class NettyClient {
-    private static final String HOST = "192.168.0.101";
+    private static final String HOST = "192.168.43.141";
     private static final int PORT = 6667;
     private static final String COMMAND_TYPE_FIELD = "_type";
     private static final String TAG = "TAG";
@@ -107,7 +107,6 @@ public class NettyClient {
         @Override
         protected void channelRead0(ChannelHandlerContext ctx, Object obj) throws Exception {
             Log.d(TAG, "Got class: " + obj.getClass());
-            Log.d(TAG, ctx.pipeline().names().toString());
             CommandInterface command = (CommandInterface) obj;
             command.doLogic(handler);
           /*  Message message = new Message();

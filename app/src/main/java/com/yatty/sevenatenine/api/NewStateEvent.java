@@ -3,25 +3,31 @@ package com.yatty.sevenatenine.api;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 
 import com.yatty.sevenatenine.client.Constants;
 
 public class NewStateEvent implements CommandInterface {
+    public static final String TAG = "TAG";
     public static final String COMMAND_TYPE = "NewStateEvent";
     public final String _type = COMMAND_TYPE;
     private int moveNumber;
-    private int move;
-    private String player;
+    private String moveWinner;
     private boolean lastMove;
-    private int nextCard;
+    private Card nextCard;
+    private GameResult gameResult;
 
     @Override
     public void doLogic(Handler handler) {
+        Log.d(TAG, "NewStateEvent.doLogic");
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(Constants.PLAYER_WITH_RIGHT_ANSWER_KEY, moveWinner);
+        bundle.putSerializable(Constants.NEXT_CARD_KEY, nextCard);
+        bundle.putSerializable(Constants.IS_LAST_MOVE_KEY, lastMove);
+        bundle.putSerializable(Constants.MOVE_NUMBER_KEY, moveNumber);
+        bundle.putSerializable(Constants.GAME_RESULT_KEY, gameResult);
         Message message = new Message();
         message.obj = COMMAND_TYPE;
-        Bundle bundle = new Bundle();
-        bundle.putSerializable(Constants.PLAYER_WITH_RIGHT_ANSWER_KEY, player);
-        bundle.putSerializable(Constants.NEXT_CARD_KEY, nextCard);
         message.setData(bundle);
         handler.sendMessage(message);
     }
@@ -30,19 +36,19 @@ public class NewStateEvent implements CommandInterface {
         return moveNumber;
     }
 
-    public int getMove() {
-        return move;
-    }
-
-    public String getPlayer() {
-        return player;
+    public String getMoveWinner() {
+        return moveWinner;
     }
 
     public boolean isLastMove() {
         return lastMove;
     }
 
-    public int getNextCard() {
+    public Card getNextCard() {
         return nextCard;
+    }
+
+    public GameResult getGameResult() {
+        return gameResult;
     }
 }

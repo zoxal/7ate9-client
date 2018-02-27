@@ -2,10 +2,10 @@ package com.yatty.sevenatenine.api;
 
 import android.os.Handler;
 
-public class ConnectRequest implements CommandInterface {
+public class ConnectRequest {
     public static final String COMMAND_TYPE = "ConnectRequest";
     public final String _type = COMMAND_TYPE;
-    String name;
+    private String name;
 
     public String getName() {
         return name;
@@ -13,10 +13,5 @@ public class ConnectRequest implements CommandInterface {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    @Override
-    public void doLogic(Handler handler) {
-
     }
 }

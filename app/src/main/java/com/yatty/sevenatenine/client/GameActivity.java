@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.yatty.sevenatenine.api.Card;
@@ -18,6 +19,8 @@ import com.yatty.sevenatenine.api.MoveRejectedResponse;
 import com.yatty.sevenatenine.api.MoveRequest;
 import com.yatty.sevenatenine.api.NewStateEvent;
 
+import java.util.LinkedList;
+
 public class GameActivity extends AppCompatActivity {
     private static final String GAME_ID_KEY = "game_id_game_activity";
     public static final String PLAYER_NAME_KEY = "player_name_game_activity";
@@ -25,6 +28,8 @@ public class GameActivity extends AppCompatActivity {
     public static final String NEW_LINE_SYMBOL = "\n";
 
     private static final int VIBRATE_TIME_MS = 100;
+    public static final int MAX_NUM_CARDS_ON_TABLE = 10;
+    public static final int MAX_CARD = 10;
     public static final String TAG = "TAG";
 
     private NettyClient nettyClient;
@@ -32,14 +37,16 @@ public class GameActivity extends AppCompatActivity {
     private String playerName;
     private TextView cardTextView;
     private TextView counterTextView;
-    private Button firstButton;
-    private Button secondButton;
-    private Button thirdButton;
+    private TextView currentCardModifierTextView;
     private Button disconnectButton;
+    private Button getCardButton;
+    private Button cardsOnTableButtons[];
     private Vibrator vibrator;
 
-    private Card cardOnTable;
-    private Card cardDeck[];
+    private Card currentCard;
+    private LinkedList<Card> cardDeckLinkedList;
+    private int numOfCardsOnDesk;
+    private int moveNumber;
 
     public static Intent newIntent(Context context, String gameId, String playerName) {
         Intent intent = new Intent(context, GameActivity.class);
@@ -48,20 +55,65 @@ public class GameActivity extends AppCompatActivity {
         return intent;
     }
 
+    private void initUi() {
+        cardTextView = findViewById(R.id.card_tv);
+        counterTextView = findViewById(R.id.counter_text_view);
+        currentCardModifierTextView = findViewById(R.id.tv_current_card_modifier);
+        disconnectButton = findViewById(R.id.disconnect_button);
+        TableRow firstCardRow = findViewById(R.id.tr_first_card_row);
+        TableRow secondCardRow = findViewById(R.id.tr_second_card_row);
+        cardsOnTableButtons = new Button[MAX_NUM_CARDS_ON_TABLE];
+        for (int i = 0; i < firstCardRow.getVirtualChildCount(); i++) {
+            cardsOnTableButtons[i] = (Button) firstCardRow.getVirtualChildAt(i);
+            cardsOnTableButtons[i].setVisibility(View.INVISIBLE);
+            cardsOnTableButtons[i + firstCardRow.getVirtualChildCount()] =
+                    (Button) secondCardRow.getVirtualChildAt(i);
+            cardsOnTableButtons[i + firstCardRow.getVirtualChildCount()].setVisibility(View.INVISIBLE);
+        }
+
+        disconnectButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                DisconnectRequest disconnectRequest = new DisconnectRequest(gameId);
+                nettyClient.write(disconnectRequest);
+                Intent nextActivity = MainActivity.newInstance(getApplicationContext());
+                startActivity(nextActivity);
+                finish();
+            }
+        });
+        getCardButton = findViewById(R.id.button_get_card);
+        getCardButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                if (numOfCardsOnDesk < MAX_NUM_CARDS_ON_TABLE) {
+                    cardsOnTableButtons[numOfCardsOnDesk].setVisibility(View.VISIBLE);
+                    if (!cardDeckLinkedList.isEmpty()) {
+                        Card card = cardDeckLinkedList.getFirst();
+                        cardDeckLinkedList.pollFirst();
+                        int i = 0;
+                        while (cardsOnTableButtons[i].hasOnClickListeners()) {
+                            i++;
+                        }
+                        cardsOnTableButtons[i].setText(card.getValue() + NEW_LINE_SYMBOL +
+                                PLUS_MINUS_SYMBOL + card.getModifier());
+                        cardsOnTableButtons[i].setOnClickListener(new CardButtonOnClickListener(card));
+                        numOfCardsOnDesk++;
+                    }
+                }
+            }
+        });
+
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
         gameId = getIntent().getStringExtra(GAME_ID_KEY);
         playerName = getIntent().getStringExtra(PLAYER_NAME_KEY);
-        cardTextView = findViewById(R.id.card_tv);
-        counterTextView = findViewById(R.id.counter_text_view);
-        disconnectButton = findViewById(R.id.disconnect_button);
-        ButtonsListener buttonsListener = new ButtonsListener();
-        firstButton.setOnClickListener(buttonsListener);
-        secondButton.setOnClickListener(buttonsListener);
-        thirdButton.setOnClickListener(buttonsListener);
-        disconnectButton.setOnClickListener(buttonsListener);
+        initUi();
 
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         Handler handler = new Handler() {
@@ -70,51 +122,78 @@ public class GameActivity extends AppCompatActivity {
                 Log.d(TAG, "GameActivity: handle");
                 String messageStr = (String) msg.obj;
                 if (messageStr.equals(GameStartedEvent.COMMAND_TYPE)) {
-                    cardOnTable = (Card) msg.getData().getSerializable(Constants.FIRST_CARD_KEY);
-                    cardDeck = (Card[]) msg.getData().getSerializable(Constants.CARD_DECK_KEY);
-                    cardTextView.setText(String.valueOf(cardOnTable.getValue()) + PLUS_MINUS_SYMBOL +
-                            NEW_LINE_SYMBOL + String.valueOf(cardOnTable.getModifier()));
+                    currentCard = (Card) msg.getData().getSerializable(Constants.FIRST_CARD_KEY);
+                    Log.d(TAG, "GameStartedEvent: get currentCard");
+                    cardDeckLinkedList = (LinkedList<Card>) msg.getData().getSerializable(Constants.CARD_DECK_LIST_KEY);
+                    Log.d(TAG, "GameStartedEvent: get cardDeckLinkedList");
+                    numOfCardsOnDesk = 0;
+                    cardTextView.setText(String.valueOf(currentCard.getValue()) + PLUS_MINUS_SYMBOL +
+                            NEW_LINE_SYMBOL + String.valueOf(currentCard.getModifier()));
                 } else if (messageStr.equals(MoveRejectedResponse.COMMAND_TYPE)) {
+                    Card card = (Card) msg.getData().getSerializable(Constants.REJECTED_CARD_KEY);
+                    int i = 0;
+                    while (cardsOnTableButtons[i].hasOnClickListeners()) {
+                        i++;
+                    }
+                    cardsOnTableButtons[i].setText(card.getValue() + NEW_LINE_SYMBOL +
+                            PLUS_MINUS_SYMBOL + card.getModifier());
+                    cardsOnTableButtons[i].setOnClickListener(new CardButtonOnClickListener(card));
+                    cardsOnTableButtons[i].setVisibility(View.VISIBLE);
+                    numOfCardsOnDesk++;
                     vibrator.vibrate(VIBRATE_TIME_MS);
                 } else if (messageStr.equals(NewStateEvent.COMMAND_TYPE)) {
                     String player = msg.getData().getString(Constants.PLAYER_WITH_RIGHT_ANSWER_KEY);
                     if (player.equals(playerName)) {
                         counterTextView.setText(String.valueOf(Integer.parseInt(counterTextView.getText().toString()) + 1));
                     }
-                    int card = msg.getData().getInt(Constants.NEXT_CARD_KEY);
-                    cardTextView.setText(String.valueOf(card));
+                    currentCard = (Card) msg.getData().getSerializable(Constants.NEXT_CARD_KEY);
+                    moveNumber = msg.getData().getInt(Constants.MOVE_NUMBER_KEY);
+                    cardTextView.setText(currentCard.getValue() + PLUS_MINUS_SYMBOL +
+                            NEW_LINE_SYMBOL + String.valueOf(currentCard.getModifier()));
                 }
             }
         };
         nettyClient = NettyClient.getInstance(handler);
     }
 
-    class ButtonsListener implements View.OnClickListener {
+    class CardButtonOnClickListener implements View.OnClickListener {
+        private Card card;
+
+        CardButtonOnClickListener(Card card) {
+            this.card = card;
+        }
 
         @Override
         public void onClick(View view) {
-            if (view.getId() == R.id.disconnect_button) {
-                DisconnectRequest disconnectRequest = new DisconnectRequest();
-                nettyClient.write(disconnectRequest);
-                Intent nextActivity = MainActivity.newInstance(getApplicationContext());
-                startActivity(nextActivity);
-                finish();
-                return;
+            int rightValue1 = currentCard.getValue() + currentCard.getModifier();
+            if (rightValue1 > MAX_CARD) {
+                rightValue1 -= MAX_CARD;
             }
-            int card;
-            switch (view.getId()) {
-
+            int rightValue2 = currentCard.getValue() - currentCard.getModifier();
+            if (rightValue2 <= 0) {
+                rightValue2 += MAX_CARD;
             }
-            MoveRequest moveRequest = new MoveRequest();
-            moveRequest.setGameId(gameId);
-            nettyClient.write(moveRequest);
+            if (card.getValue() == rightValue1 ||
+                    card.getValue() == rightValue2) {
+                MoveRequest moveRequest = new MoveRequest();
+                moveRequest.setGameId(gameId);
+                moveRequest.setMove(card);
+                moveRequest.setMoveNumber(moveNumber);
+                nettyClient.write(moveRequest);
+                view.setVisibility(View.INVISIBLE);
+                view.setOnClickListener(null);
+                numOfCardsOnDesk--;
+            } else {
+                vibrator.vibrate(VIBRATE_TIME_MS);
+            }
         }
     }
 
     @Override
     protected void onPause() {
-        DisconnectRequest disconnectRequest = new DisconnectRequest();
+        /*DisconnectRequest disconnectRequest = new DisconnectRequest(gameId);
         nettyClient.write(disconnectRequest);
+        */
         super.onPause();
     }
 }

@@ -16,7 +16,6 @@ import com.yatty.sevenatenine.api.ConnectResponse;
 
 public class MainActivity extends AppCompatActivity {
     public static final String TAG = "TAG";
-    public static final String CONNECT_MESSAGE = "connect";
 
     private Button connectButton;
     private EditText nameEditText;
@@ -35,17 +34,21 @@ public class MainActivity extends AppCompatActivity {
         final Handler h = new Handler() {
             @Override
             public void handleMessage(android.os.Message msg) {
-                Log.d(TAG, "Handler: Get obj: " + msg.obj);
+                Log.d(TAG, "MainActivity.Handler: Get obj: " + msg.obj);
                 String messageStr = (String) msg.obj;
                 if (messageStr.equals(ConnectResponse.COMMAND_TYPE)) {
-                    String gameId = msg.getData().getString(Constants.GAME_ID_KEY);
-                    Log.d(TAG, "msg what: " + msg.what);
-                    Log.d(TAG, "Connected");
-                    Toast.makeText(getApplicationContext(), "Connected", Toast.LENGTH_SHORT);
-                    Intent nextActivity = GameActivity.newIntent(getApplicationContext(), gameId,
-                            nameEditText.getText().toString());
-                    startActivity(nextActivity);
-                    finish();
+                    if (msg.getData().getBoolean(Constants.IS_CONNECT_SUCCEED_KEY)) {
+                        String gameId = msg.getData().getString(Constants.GAME_ID_KEY);
+                        Log.d(TAG, "msg what: " + msg.what);
+                        Log.d(TAG, "Connected");
+                        Toast.makeText(getApplicationContext(), "Connected", Toast.LENGTH_SHORT);
+                        Intent nextActivity = GameActivity.newIntent(getApplicationContext(), gameId,
+                                nameEditText.getText().toString());
+                        startActivity(nextActivity);
+                        finish();
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Connection refused", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         };
