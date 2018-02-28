@@ -9,13 +9,23 @@ import android.widget.Button;
 import android.widget.TextView;
 
 public class GameOver extends AppCompatActivity {
-    private static final String SCORE_KEY = "score_from_game_activity";
-    public static final String ISWINNER_KEY = "is_winner";
+    private static final String PLAYER_SCORE = "score_from_game_activity";
+    public static final String WINNER_NAME = "player2";
+    public static final String PLAYER_NAME = "player";
     private TextView gameScoreTextView;
     private TextView isWinnerTextView;
     private String score;
-    private Boolean isWinner;
+    private String winnerName;
+    private String playerName;
     private Button toMainMenuButton;
+
+    public static Intent newIntent(Context context, int score, String winnerName, String playerName) {
+        Intent intent = new Intent(context, GameActivity.class);
+        intent.putExtra(PLAYER_SCORE, score);
+        intent.putExtra(WINNER_NAME, winnerName);
+        intent.putExtra(PLAYER_NAME, playerName);
+        return intent;
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,13 +35,14 @@ public class GameOver extends AppCompatActivity {
         setContentView(R.layout.activity_game_over);
 
         Intent intent = getIntent();
-        score = intent.getStringExtra(SCORE_KEY);
-        isWinner = intent.getBooleanExtra(ISWINNER_KEY,false);
+        score = intent.getStringExtra(PLAYER_SCORE);
+        winnerName = intent.getStringExtra(WINNER_NAME);
+        playerName = intent.getStringExtra(PLAYER_NAME);
         gameScoreTextView.setText(score);
-        if(isWinner)
+        if(winnerName.equals(playerName))
             isWinnerTextView.setText("You Win!");
         else
-            isWinnerTextView.setText("You Lose(");
+            isWinnerTextView.setText("Winner is "+winnerName);
         toMainMenuButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -40,6 +51,8 @@ public class GameOver extends AppCompatActivity {
                 finish();
             }
         });
+
     }
+
 
 }
