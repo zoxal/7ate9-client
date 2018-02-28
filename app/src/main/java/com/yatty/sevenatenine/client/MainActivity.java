@@ -31,40 +31,55 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         connectButton = findViewById(R.id.connect_button);
         nameEditText = findViewById(R.id.name_edit_text);
-        final Handler h = new Handler() {
-            @Override
-            public void handleMessage(android.os.Message msg) {
-                Log.d(TAG, "MainActivity.Handler: Get obj: " + msg.obj);
-                String messageStr = (String) msg.obj;
-                if (messageStr.equals(ConnectResponse.COMMAND_TYPE)) {
-                    if (msg.getData().getBoolean(Constants.IS_CONNECT_SUCCEED_KEY)) {
-                        String gameId = msg.getData().getString(Constants.GAME_ID_KEY);
-                        Log.d(TAG, "msg what: " + msg.what);
-                        Log.d(TAG, "Connected");
-                        Toast.makeText(getApplicationContext(), "Connected", Toast.LENGTH_SHORT);
-                        Intent nextActivity = GameActivity.newIntent(getApplicationContext(), gameId,
-                                nameEditText.getText().toString());
-                        startActivity(nextActivity);
-                        finish();
-                    } else {
-                        Toast.makeText(getApplicationContext(), "Connection refused", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-        };
-
+        final MainActivityHandler mainActivityHandler = new MainActivityHandler(this, nameEditText,
+                connectButton);
         connectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 try {
-                    NettyClient nettyClient = NettyClient.getInstance(h);
+                    NettyClient nettyClient = NettyClient.getInstance(mainActivityHandler);
                     ConnectRequest connectRequest = new ConnectRequest();
                     connectRequest.setName(nameEditText.getText().toString());
                     nettyClient.write(connectRequest);
+                    view.setClickable(false);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         });
+    }
+
+    static class MainActivityHandler extends Handler {
+        private Context context;
+        private EditText nameEditText;
+        private Button connectButton;
+        private AppCompatActivity appCompatActivity;
+
+        MainActivityHandler(AppCompatActivity appCompatActivity, EditText nameEditText, Button connectButton) {
+            context = appCompatActivity.getApplicationContext();
+            this.nameEditText = nameEditText;
+            this.appCompatActivity = appCompatActivity;
+            this.connectButton = connectButton;
+        }
+
+        @Override
+        public void handleMessage(android.os.Message msg) {
+            Log.d(TAG, "MainActivity.Handler: Get obj: " + msg.obj);
+            String messageStr = (String) msg.obj;
+            if (messageStr.equals(ConnectResponse.COMMAND_TYPE)) {
+                if (msg.getData().getBoolean(Constants.IS_CONNECT_SUCCEED_KEY)) {
+                    String gameId = msg.getData().getString(Constants.GAME_ID_KEY);
+                    Log.d(TAG, "msg what: " + msg.what);
+                    Log.d(TAG, "Connected");
+                    Intent nextActivity = GameActivity.newIntent(context, gameId,
+                            nameEditText.getText().toString());
+                    context.startActivity(nextActivity);
+                    appCompatActivity.finish();
+                } else {
+                    connectButton.setClickable(true);
+                    Toast.makeText(context, "Connection refused", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
     }
 }

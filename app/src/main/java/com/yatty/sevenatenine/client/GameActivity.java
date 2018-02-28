@@ -35,15 +35,15 @@ public class GameActivity extends AppCompatActivity {
     private NettyClient nettyClient;
     private String gameId;
     private String playerName;
-    private TextView cardTextView;
+    private TextView topCardValueTextView;
     private TextView counterTextView;
-    private TextView currentCardModifierTextView;
+    private TextView topCardModifierTextView;
     private Button disconnectButton;
     private Button getCardButton;
     private Button cardsOnTableButtons[];
     private Vibrator vibrator;
 
-    private Card currentCard;
+    private Card topCard;
     private LinkedList<Card> cardDeckLinkedList;
     private int numOfCardsOnDesk;
     private int moveNumber;
@@ -56,9 +56,9 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void initUi() {
-        cardTextView = findViewById(R.id.card_tv);
+        topCardValueTextView = findViewById(R.id.tv_top_card_value);
+        topCardModifierTextView = findViewById(R.id.tv_top_card_modifier);
         counterTextView = findViewById(R.id.counter_text_view);
-        currentCardModifierTextView = findViewById(R.id.tv_current_card_modifier);
         disconnectButton = findViewById(R.id.disconnect_button);
         TableRow firstCardRow = findViewById(R.id.tr_first_card_row);
         TableRow secondCardRow = findViewById(R.id.tr_second_card_row);
@@ -99,6 +99,7 @@ public class GameActivity extends AppCompatActivity {
                         cardsOnTableButtons[i].setText(card.getValue() + NEW_LINE_SYMBOL +
                                 PLUS_MINUS_SYMBOL + card.getModifier());
                         cardsOnTableButtons[i].setOnClickListener(new CardButtonOnClickListener(card));
+                        cardsOnTableButtons[i].setVisibility(View.VISIBLE);
                         numOfCardsOnDesk++;
                     }
                 }
@@ -122,13 +123,13 @@ public class GameActivity extends AppCompatActivity {
                 Log.d(TAG, "GameActivity: handle");
                 String messageStr = (String) msg.obj;
                 if (messageStr.equals(GameStartedEvent.COMMAND_TYPE)) {
-                    currentCard = (Card) msg.getData().getSerializable(Constants.FIRST_CARD_KEY);
-                    Log.d(TAG, "GameStartedEvent: get currentCard");
+                    topCard = (Card) msg.getData().getSerializable(Constants.FIRST_CARD_KEY);
+                    Log.d(TAG, "GameStartedEvent: get topCard");
                     cardDeckLinkedList = (LinkedList<Card>) msg.getData().getSerializable(Constants.CARD_DECK_LIST_KEY);
                     Log.d(TAG, "GameStartedEvent: get cardDeckLinkedList");
                     numOfCardsOnDesk = 0;
-                    cardTextView.setText(String.valueOf(currentCard.getValue()) + PLUS_MINUS_SYMBOL +
-                            NEW_LINE_SYMBOL + String.valueOf(currentCard.getModifier()));
+                    topCardValueTextView.setText(String.valueOf(topCard.getValue()));
+                    topCardModifierTextView.setText(PLUS_MINUS_SYMBOL + topCard.getModifier());
                 } else if (messageStr.equals(MoveRejectedResponse.COMMAND_TYPE)) {
                     Card card = (Card) msg.getData().getSerializable(Constants.REJECTED_CARD_KEY);
                     int i = 0;
@@ -143,13 +144,13 @@ public class GameActivity extends AppCompatActivity {
                     vibrator.vibrate(VIBRATE_TIME_MS);
                 } else if (messageStr.equals(NewStateEvent.COMMAND_TYPE)) {
                     String player = msg.getData().getString(Constants.PLAYER_WITH_RIGHT_ANSWER_KEY);
-                    if (player.equals(playerName)) {
+                    if (playerName.equals(player)) {
                         counterTextView.setText(String.valueOf(Integer.parseInt(counterTextView.getText().toString()) + 1));
                     }
-                    currentCard = (Card) msg.getData().getSerializable(Constants.NEXT_CARD_KEY);
+                    topCard = (Card) msg.getData().getSerializable(Constants.NEXT_CARD_KEY);
                     moveNumber = msg.getData().getInt(Constants.MOVE_NUMBER_KEY);
-                    cardTextView.setText(currentCard.getValue() + PLUS_MINUS_SYMBOL +
-                            NEW_LINE_SYMBOL + String.valueOf(currentCard.getModifier()));
+                    topCardValueTextView.setText(String.valueOf(topCard.getValue()));
+                    topCardModifierTextView.setText(PLUS_MINUS_SYMBOL + topCard.getModifier());
                 }
             }
         };
@@ -165,11 +166,11 @@ public class GameActivity extends AppCompatActivity {
 
         @Override
         public void onClick(View view) {
-            int rightValue1 = currentCard.getValue() + currentCard.getModifier();
+            int rightValue1 = topCard.getValue() + topCard.getModifier();
             if (rightValue1 > MAX_CARD) {
                 rightValue1 -= MAX_CARD;
             }
-            int rightValue2 = currentCard.getValue() - currentCard.getModifier();
+            int rightValue2 = topCard.getValue() - topCard.getModifier();
             if (rightValue2 <= 0) {
                 rightValue2 += MAX_CARD;
             }
