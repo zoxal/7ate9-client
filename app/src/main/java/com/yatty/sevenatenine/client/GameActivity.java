@@ -77,7 +77,7 @@ public class GameActivity extends AppCompatActivity {
             public void onClick(View view) {
                 DisconnectRequest disconnectRequest = new DisconnectRequest(gameId);
                 nettyClient.write(disconnectRequest);
-                Intent nextActivity = MainActivity.newInstance(getApplicationContext());
+                Intent nextActivity = MainActivity.newIntent(getApplicationContext());
                 startActivity(nextActivity);
                 finish();
             }

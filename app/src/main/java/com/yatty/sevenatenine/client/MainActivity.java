@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
     private Button connectButton;
     private EditText nameEditText;
 
-    public static Intent newInstance(Context context) {
+    public static Intent newIntent(Context context) {
         Intent intent = new Intent(context, MainActivity.class);
         return intent;
     }
