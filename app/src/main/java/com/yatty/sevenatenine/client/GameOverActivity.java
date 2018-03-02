@@ -1,5 +1,6 @@
 package com.yatty.sevenatenine.client;
 
+import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -22,11 +23,9 @@ public class GameOverActivity extends AppCompatActivity {
     private static final String WINNER_NAME_KEY = "winner_name_key";
     private static final String PLAYER_NAME_KEY = "player_name_key";
     private TextView gameScoreTextView;
-    private TextView isWinnerTextView;
     private Button toMainMenuButton;
     private String playerName;
     private String winnerName;
-    private Context context;
     PlayerResult[] scores;
     private ListView scoreBoard;
 
@@ -38,11 +37,11 @@ public class GameOverActivity extends AppCompatActivity {
         return intent;
     }
 
-    private class scoreBoardAdapter extends ArrayAdapter<PlayerResult>{
-        public scoreBoardAdapter(Context context){
+    private class ScoreBoardAdapter extends ArrayAdapter<PlayerResult>{
+        public ScoreBoardAdapter(Context context){
             super(context,android.R.layout.simple_list_item_2,scores);
         }
-
+        @Override
         public View getView(int position, View listView, ViewGroup parent){
             PlayerResult result = getItem(position);
 
@@ -61,39 +60,38 @@ public class GameOverActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        gameScoreTextView = findViewById(R.id.counter_text_view);
-        isWinnerTextView = findViewById(R.id.is_winner_text_view);
-        toMainMenuButton = findViewById(R.id.goToMainMenu_button);
-        scoreBoard = findViewById(R.id.scoreBoard_list_view);
         setContentView(R.layout.activity_game_over);
+        gameScoreTextView =findViewById(R.id.counter_text_view);
+        toMainMenuButton = new Button(this);
+        toMainMenuButton = findViewById(R.id.goToMainMenu_button);
+        scoreBoard = new ListView(this);
+        scoreBoard = findViewById(R.id.list);
 
         Intent intent = getIntent();
         playerName = intent.getStringExtra(PLAYER_NAME_KEY);
         winnerName = intent.getStringExtra(WINNER_NAME_KEY);
         scores = (PlayerResult[]) intent.getSerializableExtra(CARDS_LEFT_KEY);
-        scores[0].sortByCardCount(scores);
-
-
+        if(scores==null)
+        {
+            PlayerResult pr1 = new PlayerResult();
+            scores = new PlayerResult[1];
+            scores[0] = pr1;
+        }
+        //scores[0].sortByCardCount(scores);
         Log.d(TAG, "Winner: " + winnerName);
         Log.d(TAG, "Player name: " + playerName);
         Log.d(TAG, "Scores:");
         for (int i = 0; i < scores.length; i++) {
             Log.d(TAG, scores[i].getPlayerName() + ": " + scores[i].getCardsLeft());
         }
-
-        ArrayAdapter<PlayerResult> adapter = new scoreBoardAdapter(this);
+        ScoreBoardAdapter adapter = new ScoreBoardAdapter(this);
         scoreBoard.setAdapter(adapter);
-
-        toMainMenuButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent mainIntent = MainActivity.newIntent(getApplicationContext());
-                startActivity(mainIntent);
-                finish();
-            }
-        });
-
     }
 
+    public void clickToMainMenu_button(View view) {
+        Intent mainIntent = MainActivity.newIntent(getApplicationContext());
+        startActivity(mainIntent);
+        finish();
 
+    }
 }

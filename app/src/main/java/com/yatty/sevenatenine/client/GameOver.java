@@ -1,4 +1,4 @@
-package com.yatty.sevenatenine.client;
+/*package com.yatty.sevenatenine.client;
 
 import android.content.Context;
 import android.content.Intent;
@@ -55,4 +55,4 @@ public class GameOver extends AppCompatActivity {
     }
 
 
-}
+}*/
