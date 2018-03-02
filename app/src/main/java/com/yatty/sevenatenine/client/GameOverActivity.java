@@ -8,7 +8,7 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.yatty.sevenatenine.api.PlayerResult;
+import com.yatty.sevenatenine.api.commands_with_data.PlayerResult;
 
 public class GameOverActivity extends AppCompatActivity {
     public static final String TAG = "TAG";

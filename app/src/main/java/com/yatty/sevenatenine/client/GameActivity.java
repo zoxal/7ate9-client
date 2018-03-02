@@ -12,12 +12,12 @@ import android.widget.Button;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import com.yatty.sevenatenine.api.Card;
-import com.yatty.sevenatenine.api.DisconnectRequest;
-import com.yatty.sevenatenine.api.GameStartedEvent;
-import com.yatty.sevenatenine.api.MoveRejectedResponse;
-import com.yatty.sevenatenine.api.MoveRequest;
-import com.yatty.sevenatenine.api.NewStateEvent;
+import com.yatty.sevenatenine.api.commands_with_data.Card;
+import com.yatty.sevenatenine.api.in_commands.GameStartedEvent;
+import com.yatty.sevenatenine.api.in_commands.MoveRejectedResponse;
+import com.yatty.sevenatenine.api.in_commands.NewStateEvent;
+import com.yatty.sevenatenine.api.out_commands.DisconnectRequest;
+import com.yatty.sevenatenine.api.out_commands.MoveRequest;
 
 import java.util.LinkedList;
 
@@ -121,17 +121,18 @@ public class GameActivity extends AppCompatActivity {
             @Override
             public void handleMessage(android.os.Message msg) {
                 Log.d(TAG, "GameActivity: handle");
-                String messageStr = (String) msg.obj;
-                if (messageStr.equals(GameStartedEvent.COMMAND_TYPE)) {
-                    topCard = (Card) msg.getData().getSerializable(Constants.FIRST_CARD_KEY);
+                if (msg.sendingUid == GameStartedEvent.UID) {
+                    GameStartedEvent gameStartedEvent = (GameStartedEvent) msg.obj;
+                    topCard = gameStartedEvent.getFirstCard();
                     Log.d(TAG, "GameStartedEvent: get topCard");
-                    cardDeckLinkedList = (LinkedList<Card>) msg.getData().getSerializable(Constants.CARD_DECK_LIST_KEY);
+                    cardDeckLinkedList = (LinkedList<Card>) gameStartedEvent.getPlayerCards();
                     Log.d(TAG, "GameStartedEvent: get cardDeckLinkedList");
                     numOfCardsOnDesk = 0;
                     topCardValueTextView.setText(String.valueOf(topCard.getValue()));
                     topCardModifierTextView.setText(PLUS_MINUS_SYMBOL + topCard.getModifier());
-                } else if (messageStr.equals(MoveRejectedResponse.COMMAND_TYPE)) {
-                    Card card = (Card) msg.getData().getSerializable(Constants.REJECTED_CARD_KEY);
+                } else if (msg.sendingUid == MoveRejectedResponse.UID) {
+                    MoveRejectedResponse moveRejectedResponse = (MoveRejectedResponse) msg.obj;
+                    Card card = moveRejectedResponse.getMove();
                     int i = 0;
                     while (cardsOnTableButtons[i].hasOnClickListeners()) {
                         i++;
@@ -142,13 +143,14 @@ public class GameActivity extends AppCompatActivity {
                     cardsOnTableButtons[i].setVisibility(View.VISIBLE);
                     numOfCardsOnDesk++;
                     vibrator.vibrate(VIBRATE_TIME_MS);
-                } else if (messageStr.equals(NewStateEvent.COMMAND_TYPE)) {
-                    String player = msg.getData().getString(Constants.PLAYER_WITH_RIGHT_ANSWER_KEY);
-                    if (playerName.equals(player)) {
+                } else if (msg.sendingUid == NewStateEvent.UID) {
+                    NewStateEvent newStateEvent = (NewStateEvent) msg.obj;
+                    String moveWinner = newStateEvent.getMoveWinner();
+                    if (playerName.equals(moveWinner)) {
                         counterTextView.setText(String.valueOf(Integer.parseInt(counterTextView.getText().toString()) + 1));
                     }
-                    topCard = (Card) msg.getData().getSerializable(Constants.NEXT_CARD_KEY);
-                    moveNumber = msg.getData().getInt(Constants.MOVE_NUMBER_KEY);
+                    topCard = newStateEvent.getNextCard();
+                    moveNumber = newStateEvent.getMoveNumber();
                     topCardValueTextView.setText(String.valueOf(topCard.getValue()));
                     topCardModifierTextView.setText(PLUS_MINUS_SYMBOL + topCard.getModifier());
                 }

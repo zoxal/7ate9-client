@@ -11,8 +11,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.yatty.sevenatenine.api.ConnectRequest;
-import com.yatty.sevenatenine.api.ConnectResponse;
+import com.yatty.sevenatenine.api.out_commands.ConnectRequest;
+import com.yatty.sevenatenine.api.in_commands.ConnectResponse;
 
 public class MainActivity extends AppCompatActivity {
     public static final String TAG = "TAG";

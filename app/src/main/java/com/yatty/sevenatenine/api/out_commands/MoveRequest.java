@@ -1,4 +1,6 @@
-package com.yatty.sevenatenine.api;
+package com.yatty.sevenatenine.api.out_commands;
+
+import com.yatty.sevenatenine.api.commands_with_data.Card;
 
 public class MoveRequest {
     public static final String COMMAND_TYPE = "MoveRequest";

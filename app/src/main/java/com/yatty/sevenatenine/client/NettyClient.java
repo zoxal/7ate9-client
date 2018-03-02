@@ -9,13 +9,13 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.yatty.sevenatenine.api.CommandInterface;
-import com.yatty.sevenatenine.api.ConnectRequest;
-import com.yatty.sevenatenine.api.ConnectResponse;
-import com.yatty.sevenatenine.api.GameStartedEvent;
-import com.yatty.sevenatenine.api.MoveRejectedResponse;
-import com.yatty.sevenatenine.api.MoveRequest;
-import com.yatty.sevenatenine.api.NewStateEvent;
+import com.yatty.sevenatenine.api.in_commands.InCommandInterface;
+import com.yatty.sevenatenine.api.out_commands.ConnectRequest;
+import com.yatty.sevenatenine.api.in_commands.ConnectResponse;
+import com.yatty.sevenatenine.api.in_commands.GameStartedEvent;
+import com.yatty.sevenatenine.api.in_commands.MoveRejectedResponse;
+import com.yatty.sevenatenine.api.out_commands.MoveRequest;
+import com.yatty.sevenatenine.api.in_commands.NewStateEvent;
 
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
@@ -38,7 +38,7 @@ import io.netty.channel.socket.nio.NioDatagramChannel;
 import io.netty.handler.codec.MessageToMessageCodec;
 
 public class NettyClient {
-    private static final String HOST = "192.168.0.101";
+    private static final String HOST = "192.168.43.141";
     private static final int PORT = 6667;
     private static final String COMMAND_TYPE_FIELD = "_type";
     private static final String TAG = "TAG";
@@ -107,7 +107,7 @@ public class NettyClient {
         @Override
         protected void channelRead0(ChannelHandlerContext ctx, Object obj) throws Exception {
             Log.d(TAG, "Got class: " + obj.getClass());
-            CommandInterface command = (CommandInterface) obj;
+            InCommandInterface command = (InCommandInterface) obj;
             command.doLogic(handler);
           /*  Message message = new Message();
             message.obj = ConnectResponse.COMMAND_TYPE;

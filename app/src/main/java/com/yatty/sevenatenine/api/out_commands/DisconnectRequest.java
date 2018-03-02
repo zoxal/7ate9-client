@@ -1,4 +1,4 @@
-package com.yatty.sevenatenine.api;
+package com.yatty.sevenatenine.api.out_commands;
 
 public class DisconnectRequest {
     public static final String COMMAND_TYPE = "DisconnectRequest";
