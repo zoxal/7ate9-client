@@ -145,14 +145,21 @@ public class GameActivity extends AppCompatActivity {
                     vibrator.vibrate(VIBRATE_TIME_MS);
                 } else if (msg.sendingUid == NewStateEvent.UID) {
                     NewStateEvent newStateEvent = (NewStateEvent) msg.obj;
-                    String moveWinner = newStateEvent.getMoveWinner();
-                    if (playerName.equals(moveWinner)) {
-                        counterTextView.setText(String.valueOf(Integer.parseInt(counterTextView.getText().toString()) + 1));
+                    if (newStateEvent.isLastMove()) {
+                        Intent nextActivity = GameOverActivity.newIntent(getApplicationContext(), playerName,
+                                newStateEvent.getGameResult().getWinner(), newStateEvent.getGameResult().getScores());
+                        startActivity(nextActivity);
+                        finish();
+                    } else {
+                        String moveWinner = newStateEvent.getMoveWinner();
+                        if (playerName.equals(moveWinner)) {
+                            counterTextView.setText(String.valueOf(Integer.parseInt(counterTextView.getText().toString()) + 1));
+                        }
+                        topCard = newStateEvent.getNextCard();
+                        moveNumber = newStateEvent.getMoveNumber();
+                        topCardValueTextView.setText(String.valueOf(topCard.getValue()));
+                        topCardModifierTextView.setText(PLUS_MINUS_SYMBOL + topCard.getModifier());
                     }
-                    topCard = newStateEvent.getNextCard();
-                    moveNumber = newStateEvent.getMoveNumber();
-                    topCardValueTextView.setText(String.valueOf(topCard.getValue()));
-                    topCardModifierTextView.setText(PLUS_MINUS_SYMBOL + topCard.getModifier());
                 }
             }
         };
