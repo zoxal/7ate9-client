@@ -15,4 +15,8 @@ public class PlayerResult implements Serializable {
     public int getCardsLeft() {
         return cardsLeft;
     }
+
+    public void sortByCardCount(PlayerResult[] res){
+
+    }
 }

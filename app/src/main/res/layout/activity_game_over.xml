@@ -5,49 +5,51 @@
     android:layout_height="match_parent"
     tools:context=".GameOverActivity">
 
-    <TextView
-        android:id="@+id/gameOver_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="27dp"
-        android:text="Game Over!"
-        android:textAppearance="@android:style/TextAppearance.Material.Small"
-        tools:layout_editor_absoluteX="134dp"
-        tools:layout_editor_absoluteY="62dp"
-        tools:ignore="MissingConstraints"
-        tools:targetApi="lollipop" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/final_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="26dp"
-        android:text="Your final score:"
-        tools:layout_editor_absoluteX="129dp"
-        tools:layout_editor_absoluteY="129dp"
-        tools:ignore="MissingConstraints" />
+        <TextView
+            android:id="@+id/gameOver_text_view"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:text="Game Over!"
+            android:textAppearance="@android:style/TextAppearance.Material.Small"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="134dp"
+            tools:layout_editor_absoluteY="62dp"
+            tools:targetApi="lollipop" />
 
-    <Button
-        android:id="@+id/goToMainMenu_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Main_Menu"
-        tools:layout_editor_absoluteX="127dp"
-        tools:layout_editor_absoluteY="413dp"
-        tools:ignore="MissingConstraints" />
+        <TextView
+            android:id="@+id/scoreBoard_text_view"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="ScoreBoard"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="151dp"
+            tools:layout_editor_absoluteY="98dp" />
 
-    <TextView
-        android:id="@+id/finalScore_textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:layout_editor_absoluteX="151dp"
-        tools:layout_editor_absoluteY="170dp"
-        tools:ignore="MissingConstraints" />
+        <ListView
+            android:id="@+id/scoreBoard_list_view"
+            android:layout_width="match_parent"
+            android:layout_height="394dp" />
 
-    <TextView
-        android:id="@+id/is_winner_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="_"
-        tools:layout_editor_absoluteX="151dp"
-        tools:layout_editor_absoluteY="98dp"
-        tools:ignore="MissingConstraints" />
+        <Button
+            android:id="@+id/goToMainMenu_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center"
+            android:text="Main_Menu"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="127dp"
+            tools:layout_editor_absoluteY="413dp" />
+    </LinearLayout>
+
 </android.support.constraint.ConstraintLayout>
