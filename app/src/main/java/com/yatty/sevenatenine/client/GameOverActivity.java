@@ -28,19 +28,20 @@ public class GameOverActivity extends AppCompatActivity {
     private ListView scoreBoard;
 
     public static Intent newIntent(Context context, String playerName, String winnerName, PlayerResult[] scores) {
-        Intent intent = new Intent(context, GameActivity.class);
+        Intent intent = new Intent(context, GameOverActivity.class);
         intent.putExtra(PLAYER_NAME_KEY, playerName);
         intent.putExtra(WINNER_NAME_KEY, winnerName);
         intent.putExtra(CARDS_LEFT_KEY, scores);
         return intent;
     }
 
-    private class ScoreBoardAdapter extends ArrayAdapter<PlayerResult>{
-        public ScoreBoardAdapter(Context context){
-            super(context,android.R.layout.simple_list_item_2,scores);
+    private class ScoreBoardAdapter extends ArrayAdapter<PlayerResult> {
+        public ScoreBoardAdapter(Context context) {
+            super(context, android.R.layout.simple_list_item_2, scores);
         }
+
         @Override
-        public View getView(int position, View listView, ViewGroup parent){
+        public View getView(int position, View listView, ViewGroup parent) {
             PlayerResult result = getItem(position);
 
             if (listView == null) {
@@ -50,7 +51,7 @@ public class GameOverActivity extends AppCompatActivity {
             ((TextView) listView.findViewById(android.R.id.text1))
                     .setText(result.getPlayerName());
             ((TextView) listView.findViewById(android.R.id.text2))
-                    .setText("Cards left: "+result.getCardsLeft());
+                    .setText("Cards left: " + result.getCardsLeft());
             return listView;
         }
     }
@@ -59,7 +60,7 @@ public class GameOverActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_over);
-        gameScoreTextView =findViewById(R.id.counter_text_view);
+        gameScoreTextView = findViewById(R.id.counter_text_view);
         toMainMenuButton = new Button(this);
         toMainMenuButton = findViewById(R.id.goToMainMenu_button);
         scoreBoard = new ListView(this);
@@ -69,8 +70,7 @@ public class GameOverActivity extends AppCompatActivity {
         playerName = intent.getStringExtra(PLAYER_NAME_KEY);
         winnerName = intent.getStringExtra(WINNER_NAME_KEY);
         scores = (PlayerResult[]) intent.getSerializableExtra(CARDS_LEFT_KEY);
-        if(scores==null)
-        {
+        if (scores == null) {
             PlayerResult pr1 = new PlayerResult();
             scores = new PlayerResult[1];
             scores[0] = pr1;

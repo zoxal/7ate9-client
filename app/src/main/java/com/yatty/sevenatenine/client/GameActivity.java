@@ -8,12 +8,16 @@ import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.ProgressBar;
 import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.yatty.sevenatenine.api.Card;
 import com.yatty.sevenatenine.api.DisconnectRequest;
+import com.yatty.sevenatenine.api.GameResult;
 import com.yatty.sevenatenine.api.GameStartedEvent;
 import com.yatty.sevenatenine.api.MoveRejectedResponse;
 import com.yatty.sevenatenine.api.MoveRequest;
@@ -42,6 +46,7 @@ public class GameActivity extends AppCompatActivity {
     private Button getCardButton;
     private Button cardsOnTableButtons[];
     private Vibrator vibrator;
+    ProgressBar progressBar;
 
     private Card topCard;
     private LinkedList<Card> cardDeckLinkedList;
@@ -114,8 +119,15 @@ public class GameActivity extends AppCompatActivity {
         setContentView(R.layout.activity_game);
         gameId = getIntent().getStringExtra(GAME_ID_KEY);
         playerName = getIntent().getStringExtra(PLAYER_NAME_KEY);
-        initUi();
 
+        progressBar = new ProgressBar(getApplicationContext());
+        FrameLayout frameLayout = findViewById(R.id.fl_main_layout);
+        frameLayout.addView(progressBar, FrameLayout.LayoutParams.MATCH_PARENT);
+        progressBar.setVisibility(View.VISIBLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+
+        initUi();
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         Handler handler = new Handler() {
             @Override
@@ -130,6 +142,8 @@ public class GameActivity extends AppCompatActivity {
                     numOfCardsOnDesk = 0;
                     topCardValueTextView.setText(String.valueOf(topCard.getValue()));
                     topCardModifierTextView.setText(PLUS_MINUS_SYMBOL + topCard.getModifier());
+                    progressBar.setVisibility(View.GONE);
+                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                 } else if (messageStr.equals(MoveRejectedResponse.COMMAND_TYPE)) {
                     Card card = (Card) msg.getData().getSerializable(Constants.REJECTED_CARD_KEY);
                     int i = 0;
@@ -143,14 +157,22 @@ public class GameActivity extends AppCompatActivity {
                     numOfCardsOnDesk++;
                     vibrator.vibrate(VIBRATE_TIME_MS);
                 } else if (messageStr.equals(NewStateEvent.COMMAND_TYPE)) {
-                    String player = msg.getData().getString(Constants.PLAYER_WITH_RIGHT_ANSWER_KEY);
-                    if (playerName.equals(player)) {
-                        counterTextView.setText(String.valueOf(Integer.parseInt(counterTextView.getText().toString()) + 1));
+                    if (msg.getData().getBoolean(Constants.IS_LAST_MOVE_KEY)) {
+                        Intent nextActivity = GameOverActivity.newIntent(getApplicationContext(), playerName,
+                                ((GameResult) msg.getData().getSerializable(Constants.GAME_RESULT_KEY)).getWinner(),
+                                ((GameResult) msg.getData().getSerializable(Constants.GAME_RESULT_KEY)).getScores());
+                        startActivity(nextActivity);
+                        finish();
+                    } else {
+                        String player = msg.getData().getString(Constants.PLAYER_WITH_RIGHT_ANSWER_KEY);
+                        if (playerName.equals(player)) {
+                            counterTextView.setText(String.valueOf(Integer.parseInt(counterTextView.getText().toString()) + 1));
+                        }
+                        topCard = (Card) msg.getData().getSerializable(Constants.NEXT_CARD_KEY);
+                        moveNumber = msg.getData().getInt(Constants.MOVE_NUMBER_KEY);
+                        topCardValueTextView.setText(String.valueOf(topCard.getValue()));
+                        topCardModifierTextView.setText(PLUS_MINUS_SYMBOL + topCard.getModifier());
                     }
-                    topCard = (Card) msg.getData().getSerializable(Constants.NEXT_CARD_KEY);
-                    moveNumber = msg.getData().getInt(Constants.MOVE_NUMBER_KEY);
-                    topCardValueTextView.setText(String.valueOf(topCard.getValue()));
-                    topCardModifierTextView.setText(PLUS_MINUS_SYMBOL + topCard.getModifier());
                 }
             }
         };
