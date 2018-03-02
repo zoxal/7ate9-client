@@ -38,7 +38,7 @@ public class MoveRejectedResponse implements InCommandInterface {
         Log.d(TAG, "value: " + move.getValue());
         Log.d(TAG, "modifier: " + move.getModifier());
         Message message = new Message();
-        message.obj = COMMAND_TYPE;
+        message.obj = this;
         message.sendingUid = UID;
         handler.sendMessage(message);
     }

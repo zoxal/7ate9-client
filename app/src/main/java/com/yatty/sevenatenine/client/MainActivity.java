@@ -11,14 +11,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.yatty.sevenatenine.api.out_commands.ConnectRequest;
 import com.yatty.sevenatenine.api.in_commands.ConnectResponse;
+import com.yatty.sevenatenine.api.out_commands.ConnectRequest;
 
 public class MainActivity extends AppCompatActivity {
     public static final String TAG = "TAG";
 
     private Button connectButton;
     private EditText nameEditText;
+    private NettyClient nettyClient;
 
     public static Intent newIntent(Context context) {
         Intent intent = new Intent(context, MainActivity.class);
@@ -31,13 +32,15 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         connectButton = findViewById(R.id.connect_button);
         nameEditText = findViewById(R.id.name_edit_text);
+
         final MainActivityHandler mainActivityHandler = new MainActivityHandler(this, nameEditText,
                 connectButton);
+        nettyClient = NettyClient.getInstance(mainActivityHandler);
+
         connectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 try {
-                    NettyClient nettyClient = NettyClient.getInstance(mainActivityHandler);
                     ConnectRequest connectRequest = new ConnectRequest();
                     connectRequest.setName(nameEditText.getText().toString());
                     nettyClient.write(connectRequest);
@@ -65,12 +68,13 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void handleMessage(android.os.Message msg) {
             Log.d(TAG, "MainActivity.Handler: Get obj: " + msg.obj);
-            String messageStr = (String) msg.obj;
-            if (messageStr.equals(ConnectResponse.COMMAND_TYPE)) {
-                if (msg.getData().getBoolean(Constants.IS_CONNECT_SUCCEED_KEY)) {
-                    String gameId = msg.getData().getString(Constants.GAME_ID_KEY);
-                    Log.d(TAG, "msg what: " + msg.what);
+            if (msg.sendingUid == ConnectResponse.UID) {
+                ConnectResponse connectResponse = (ConnectResponse) msg.obj;
+                if (connectResponse.isSucceed()) {
+                    String gameId = connectResponse.getGameId();
                     Log.d(TAG, "Connected");
+                    // Test this method call!!!
+                    NettyClient.getInstance(null);
                     Intent nextActivity = GameActivity.newIntent(context, gameId,
                             nameEditText.getText().toString());
                     context.startActivity(nextActivity);

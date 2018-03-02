@@ -43,7 +43,7 @@ public class NewStateEvent implements InCommandInterface {
     public void doLogic(Handler handler) {
         Log.d(TAG, "NewStateEvent.doLogic");
         Message message = new Message();
-        message.obj = COMMAND_TYPE;
+        message.obj = this;
         message.sendingUid = UID;
         handler.sendMessage(message);
     }

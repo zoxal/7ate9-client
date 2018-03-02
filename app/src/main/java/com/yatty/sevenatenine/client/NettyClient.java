@@ -9,13 +9,13 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.yatty.sevenatenine.api.in_commands.InCommandInterface;
-import com.yatty.sevenatenine.api.out_commands.ConnectRequest;
 import com.yatty.sevenatenine.api.in_commands.ConnectResponse;
 import com.yatty.sevenatenine.api.in_commands.GameStartedEvent;
+import com.yatty.sevenatenine.api.in_commands.InCommandInterface;
 import com.yatty.sevenatenine.api.in_commands.MoveRejectedResponse;
-import com.yatty.sevenatenine.api.out_commands.MoveRequest;
 import com.yatty.sevenatenine.api.in_commands.NewStateEvent;
+import com.yatty.sevenatenine.api.out_commands.ConnectRequest;
+import com.yatty.sevenatenine.api.out_commands.MoveRequest;
 
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
@@ -38,15 +38,16 @@ import io.netty.channel.socket.nio.NioDatagramChannel;
 import io.netty.handler.codec.MessageToMessageCodec;
 
 public class NettyClient {
-    private static final String HOST = "192.168.43.141";
+    private static final String HOST = "192.168.0.109";
     private static final int PORT = 6667;
     private static final String COMMAND_TYPE_FIELD = "_type";
     private static final String TAG = "TAG";
+    private static final int SLEEP_TIME_IF_HAS_NO_HANDLER_MS = 5;
 
     private static NettyClient nettyClient;
     private HashMap<String, Class> commands;
     private Channel channel;
-    private Handler handler;
+    private volatile Handler handler;
 
     private NettyClient(Handler handler) {
         commands = new HashMap<>();
@@ -108,10 +109,12 @@ public class NettyClient {
         protected void channelRead0(ChannelHandlerContext ctx, Object obj) throws Exception {
             Log.d(TAG, "Got class: " + obj.getClass());
             InCommandInterface command = (InCommandInterface) obj;
+            // Test this while!!!
+            while (handler == null) {
+                Log.d(TAG, "SLEEP_TIME_IF_HAS_NO_HANDLER_MS");
+                Thread.sleep(SLEEP_TIME_IF_HAS_NO_HANDLER_MS);
+            }
             command.doLogic(handler);
-          /*  Message message = new Message();
-            message.obj = ConnectResponse.COMMAND_TYPE;
-            handler.sendMessage(message);*/
         }
     }
 
@@ -155,7 +158,7 @@ public class NettyClient {
         }
     }
 
-    private void setHandler(Handler handler) {
+    public void setHandler(Handler handler) {
         this.handler = handler;
     }
 }

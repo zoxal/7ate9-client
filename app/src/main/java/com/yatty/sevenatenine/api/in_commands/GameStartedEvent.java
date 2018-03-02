@@ -1,15 +1,13 @@
 package com.yatty.sevenatenine.api.in_commands;
 
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Parcel;
 import android.util.Log;
 
 import com.yatty.sevenatenine.api.commands_with_data.Card;
-import com.yatty.sevenatenine.client.Constants;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 public class GameStartedEvent implements InCommandInterface {
@@ -23,6 +21,7 @@ public class GameStartedEvent implements InCommandInterface {
 
     protected GameStartedEvent(Parcel in) {
         firstCard = in.readParcelable(Card.class.getClassLoader());
+        Log.d(TAG, "wtf");
         playerCards = in.createTypedArrayList(Card.CREATOR);
     }
 
@@ -43,12 +42,8 @@ public class GameStartedEvent implements InCommandInterface {
         Log.d(TAG, "GameStartedEvent.doLogic");
         Log.d(TAG, "First card value: " + firstCard.getValue());
         Log.d(TAG, "First card modifier: " + firstCard.getModifier());
-        for (int i = 0; i < playerCards.size(); i++) {
-            Log.d(TAG, "Gard.value: " + playerCards.get(i).getValue());
-            Log.d(TAG, "Gard.modifier: " + playerCards.get(i).getModifier());
-        }
         Message message = new Message();
-        message.obj = COMMAND_TYPE;
+        message.obj = this;
         message.sendingUid = UID;
         handler.sendMessage(message);
     }
@@ -68,7 +63,7 @@ public class GameStartedEvent implements InCommandInterface {
         return firstCard;
     }
 
-    public List<Card> getPlayerCards() {
-        return playerCards;
+    public ArrayList<Card> getPlayerCards() {
+        return (ArrayList<Card>) playerCards;
     }
 }

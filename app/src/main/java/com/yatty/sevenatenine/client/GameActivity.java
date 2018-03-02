@@ -19,7 +19,7 @@ import com.yatty.sevenatenine.api.in_commands.NewStateEvent;
 import com.yatty.sevenatenine.api.out_commands.DisconnectRequest;
 import com.yatty.sevenatenine.api.out_commands.MoveRequest;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 
 public class GameActivity extends AppCompatActivity {
     private static final String GAME_ID_KEY = "game_id_game_activity";
@@ -44,7 +44,7 @@ public class GameActivity extends AppCompatActivity {
     private Vibrator vibrator;
 
     private Card topCard;
-    private LinkedList<Card> cardDeckLinkedList;
+    private ArrayList<Card> cardDeckArrayList;
     private int numOfCardsOnDesk;
     private int moveNumber;
 
@@ -89,9 +89,9 @@ public class GameActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (numOfCardsOnDesk < MAX_NUM_CARDS_ON_TABLE) {
                     cardsOnTableButtons[numOfCardsOnDesk].setVisibility(View.VISIBLE);
-                    if (!cardDeckLinkedList.isEmpty()) {
-                        Card card = cardDeckLinkedList.getFirst();
-                        cardDeckLinkedList.pollFirst();
+                    if (!cardDeckArrayList.isEmpty()) {
+                        Card card = cardDeckArrayList.get(0);
+                        cardDeckArrayList.remove(0);
                         int i = 0;
                         while (cardsOnTableButtons[i].hasOnClickListeners()) {
                             i++;
@@ -125,8 +125,8 @@ public class GameActivity extends AppCompatActivity {
                     GameStartedEvent gameStartedEvent = (GameStartedEvent) msg.obj;
                     topCard = gameStartedEvent.getFirstCard();
                     Log.d(TAG, "GameStartedEvent: get topCard");
-                    cardDeckLinkedList = (LinkedList<Card>) gameStartedEvent.getPlayerCards();
-                    Log.d(TAG, "GameStartedEvent: get cardDeckLinkedList");
+                    cardDeckArrayList = gameStartedEvent.getPlayerCards();
+                    Log.d(TAG, "GameStartedEvent: get cardDeckArrayList");
                     numOfCardsOnDesk = 0;
                     topCardValueTextView.setText(String.valueOf(topCard.getValue()));
                     topCardModifierTextView.setText(PLUS_MINUS_SYMBOL + topCard.getModifier());
@@ -146,6 +146,8 @@ public class GameActivity extends AppCompatActivity {
                 } else if (msg.sendingUid == NewStateEvent.UID) {
                     NewStateEvent newStateEvent = (NewStateEvent) msg.obj;
                     if (newStateEvent.isLastMove()) {
+                        // Test this method call!!!
+                        nettyClient.setHandler(null);
                         Intent nextActivity = GameOverActivity.newIntent(getApplicationContext(), playerName,
                                 newStateEvent.getGameResult().getWinner(), newStateEvent.getGameResult().getScores());
                         startActivity(nextActivity);
