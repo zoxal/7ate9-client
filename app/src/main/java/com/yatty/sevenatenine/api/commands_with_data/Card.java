@@ -3,6 +3,8 @@ package com.yatty.sevenatenine.api.commands_with_data;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.io.Serializable;
+
 public class Card implements Parcelable {
     private int value;
     private int modifier;

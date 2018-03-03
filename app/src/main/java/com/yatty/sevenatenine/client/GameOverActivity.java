@@ -3,6 +3,7 @@ package com.yatty.sevenatenine.client;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,6 +15,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.yatty.sevenatenine.api.commands_with_data.PlayerResult;
+
+import java.util.Arrays;
 
 public class GameOverActivity extends AppCompatActivity {
     public static final String TAG = "TAG";
@@ -69,7 +72,10 @@ public class GameOverActivity extends AppCompatActivity {
         Intent intent = getIntent();
         playerName = intent.getStringExtra(PLAYER_NAME_KEY);
         winnerName = intent.getStringExtra(WINNER_NAME_KEY);
-        scores = (PlayerResult[]) intent.getSerializableExtra(CARDS_LEFT_KEY);
+        Parcelable parcelableArray[] = intent.getParcelableArrayExtra(CARDS_LEFT_KEY);
+        if (parcelableArray != null) {
+            scores = Arrays.copyOf(parcelableArray, parcelableArray.length, PlayerResult[].class);
+        }
         if (scores == null) {
             /*PlayerResult pr1 = new PlayerResult();
             scores = new PlayerResult[1];

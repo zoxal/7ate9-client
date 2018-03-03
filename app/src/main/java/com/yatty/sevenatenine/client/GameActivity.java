@@ -88,7 +88,6 @@ public class GameActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (numOfCardsOnDesk < MAX_NUM_CARDS_ON_TABLE) {
-                    cardsOnTableButtons[numOfCardsOnDesk].setVisibility(View.VISIBLE);
                     if (!cardDeckArrayList.isEmpty()) {
                         Card card = cardDeckArrayList.get(0);
                         cardDeckArrayList.remove(0);

@@ -11,6 +11,7 @@ public class GameResult implements Parcelable {
 
     protected GameResult(Parcel in) {
         winner = in.readString();
+        scores = in.createTypedArray(PlayerResult.CREATOR);
     }
 
     public static final Creator<GameResult> CREATOR = new Creator<GameResult>() {
@@ -33,6 +34,7 @@ public class GameResult implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(winner);
+        dest.writeTypedArray(scores, 0);
     }
 
     public String getWinner() {
