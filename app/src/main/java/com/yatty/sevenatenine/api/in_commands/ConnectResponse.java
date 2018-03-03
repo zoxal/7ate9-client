@@ -1,13 +1,12 @@
 package com.yatty.sevenatenine.api.in_commands;
 
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Parcel;
 import android.util.Log;
 
 public class ConnectResponse implements InCommandInterface {
-    public static final int UID = ConnectResponse.COMMAND_TYPE.hashCode();
+    public static final int UID = ConnectResponse.class.getSimpleName().hashCode();
     public static final String TAG = "TAG";
     public static final String COMMAND_TYPE = "ConnectResponse";
     public final String _type = COMMAND_TYPE;

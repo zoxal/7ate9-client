@@ -9,7 +9,7 @@ import android.util.Log;
 import com.yatty.sevenatenine.api.commands_with_data.Card;
 
 public class MoveRejectedResponse implements InCommandInterface {
-    public static final int UID = MoveRejectedResponse.COMMAND_TYPE.hashCode();
+    public static final int UID = MoveRejectedResponse.class.getSimpleName().hashCode();
     public static final String TAG = "TAG";
     public static final String COMMAND_TYPE = "MoveRejectedResponse";
     public final String _type = COMMAND_TYPE;

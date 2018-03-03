@@ -9,7 +9,7 @@ import com.yatty.sevenatenine.api.commands_with_data.Card;
 import com.yatty.sevenatenine.api.commands_with_data.GameResult;
 
 public class NewStateEvent implements InCommandInterface {
-    public static final int UID = NewStateEvent.COMMAND_TYPE.hashCode();
+    public static final int UID = NewStateEvent.class.getSimpleName().hashCode();
     public static final String TAG = "TAG";
     public static final String COMMAND_TYPE = "NewStateEvent";
     public final String _type = COMMAND_TYPE;
