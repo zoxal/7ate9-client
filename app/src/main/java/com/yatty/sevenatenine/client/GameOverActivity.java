@@ -15,13 +15,16 @@ import android.widget.TextView;
 
 import com.yatty.sevenatenine.api.PlayerResult;
 
+import java.util.Comparator;
+
 public class GameOverActivity extends AppCompatActivity {
     public static final String TAG = "TAG";
     private static final String CARDS_LEFT_KEY = "cards_left_key";
     private static final String WINNER_NAME_KEY = "winner_name_key";
     private static final String PLAYER_NAME_KEY = "player_name_key";
-    private TextView gameScoreTextView;
+    private TextView winnerNameTextView;
     private Button toMainMenuButton;
+    private TextView gameOverText;
     private String playerName;
     private String winnerName;
     PlayerResult[] scores;
@@ -38,6 +41,7 @@ public class GameOverActivity extends AppCompatActivity {
     private class ScoreBoardAdapter extends ArrayAdapter<PlayerResult> {
         public ScoreBoardAdapter(Context context) {
             super(context, android.R.layout.simple_list_item_2, scores);
+            //this.sort();
         }
 
         @Override
@@ -60,22 +64,28 @@ public class GameOverActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_over);
-        gameScoreTextView = findViewById(R.id.counter_text_view);
-        toMainMenuButton = new Button(this);
-        toMainMenuButton = findViewById(R.id.goToMainMenu_button);
-        scoreBoard = new ListView(this);
-        scoreBoard = findViewById(R.id.list);
-
+        gameOverText=findViewById(R.id.tv_gameOver);
+        winnerNameTextView= findViewById(R.id.tv_winnerName);
+        toMainMenuButton = findViewById(R.id.btn_toMainMenu);
+        scoreBoard = findViewById(R.id.lv_scoreBoard);
         Intent intent = getIntent();
         playerName = intent.getStringExtra(PLAYER_NAME_KEY);
         winnerName = intent.getStringExtra(WINNER_NAME_KEY);
         scores = (PlayerResult[]) intent.getSerializableExtra(CARDS_LEFT_KEY);
         if (scores == null) {
-            PlayerResult pr1 = new PlayerResult();
-            scores = new PlayerResult[1];
+            PlayerResult pr1 = new PlayerResult("Ivan",12);
+            PlayerResult pr2 = new PlayerResult("Petr",11);
+            PlayerResult pr3 = new PlayerResult("Fedor",13);
+            scores = new PlayerResult[3];
             scores[0] = pr1;
+            scores[1] = pr2;
+            scores[2] = pr3;
         }
-        //scores[0].sortByCardCount(scores);
+        scores[0].sortByCardCount(scores);
+        if(winnerName == null) winnerName = scores[0].getPlayerName();
+        if (playerName.equals(winnerName)) gameOverText.setText("You Win!");
+            else gameOverText.setText("Better luck next time!");
+        winnerNameTextView.setText(winnerName);
         Log.d(TAG, "Winner: " + winnerName);
         Log.d(TAG, "Player name: " + playerName);
         Log.d(TAG, "Scores:");

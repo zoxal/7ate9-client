@@ -8,10 +8,8 @@ public class PlayerResult implements Serializable {
     private String playerName;
     private int cardsLeft;
 
-    public PlayerResult(){
-        String pName = "Вася Пупкин";
-        int cLeft = 47;
-        this.playerName = pName;
+    public PlayerResult(String name,int cLeft){
+        this.playerName = name;
         this.cardsLeft = cLeft;
     }
 
@@ -24,6 +22,14 @@ public class PlayerResult implements Serializable {
     }
 
     public void sortByCardCount(PlayerResult[] res) {
+        PlayerResult tmp;
+        for (int i = 0; i < res.length; i++)
+            for (int j = i + 1; j < res.length; j++)
+                if (res[j].getCardsLeft() < res[i].getCardsLeft()) {
+                    tmp = res[i];
+                    res[i] = res[j];
+                    res[j] = tmp;
+                }
 
     }
 }
