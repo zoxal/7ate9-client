@@ -8,7 +8,10 @@ import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.ProgressBar;
 import android.widget.TableRow;
 import android.widget.TextView;
 
@@ -42,6 +45,7 @@ public class GameActivity extends AppCompatActivity {
     private Button getCardButton;
     private Button cardsOnTableButtons[];
     private Vibrator vibrator;
+    private ProgressBar progressBar;
 
     private Card topCard;
     private ArrayList<Card> cardDeckArrayList;
@@ -115,6 +119,13 @@ public class GameActivity extends AppCompatActivity {
         playerName = getIntent().getStringExtra(PLAYER_NAME_KEY);
         initUi();
 
+        progressBar = new ProgressBar(getApplicationContext());
+        FrameLayout frameLayout = findViewById(R.id.fl_main_layout);
+        frameLayout.addView(progressBar, FrameLayout.LayoutParams.MATCH_PARENT);
+        progressBar.setVisibility(View.VISIBLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         Handler handler = new Handler() {
             @Override
@@ -129,6 +140,8 @@ public class GameActivity extends AppCompatActivity {
                     numOfCardsOnDesk = 0;
                     topCardValueTextView.setText(String.valueOf(topCard.getValue()));
                     topCardModifierTextView.setText(PLUS_MINUS_SYMBOL + topCard.getModifier());
+                    progressBar.setVisibility(View.GONE);
+                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                 } else if (msg.sendingUid == MoveRejectedResponse.UID) {
                     MoveRejectedResponse moveRejectedResponse = (MoveRejectedResponse) msg.obj;
                     Card card = moveRejectedResponse.getMove();

@@ -27,8 +27,8 @@
             android:layout_height="wrap_content"
             android:paddingEnd="10dp"
             android:paddingStart="10dp"
-            android:text="7"
-            android:textSize="70sp"/>
+            android:textSize="70sp"
+            tools:text="7"/>
     </LinearLayout>
 
     <Button

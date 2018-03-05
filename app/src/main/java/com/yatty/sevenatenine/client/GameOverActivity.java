@@ -33,7 +33,7 @@ public class GameOverActivity extends AppCompatActivity {
 
 
     public static Intent newIntent(Context context, String playerName, String winnerName, PlayerResult[] scores) {
-        Intent intent = new Intent(context, GameActivity.class);
+        Intent intent = new Intent(context, GameOverActivity.class);
         intent.putExtra(PLAYER_NAME_KEY, playerName);
         intent.putExtra(WINNER_NAME_KEY, winnerName);
         intent.putExtra(CARDS_LEFT_KEY, scores);
