@@ -1,12 +1,12 @@
 1. Желаемая архитектура:
 
-   ![as_be](E:\Projects\AndroidStudio\SevenAteNine\architecture_refactoring\as_be.jpg)
+   ![as_be](./as_be.jpg)
 
 На рисунке выше представлена желательная диагрмма классов для API. Объекты классов API передаются между потоком, который отвечает за сетевое взаимодействие, и UI потоком. Для того, чтобы это было возможно классы API должны или реализовать интерфейс Serializable или интерфейс Parcelable. Использование Parcelable более удобно т.к. это позволяет передать объкты API целиком. При использовании Serializable необходимо каждое поле класса передавать через ключ.
 
 2. Текущая архитектура:
 
-![as_is](E:\Projects\AndroidStudio\SevenAteNine\architecture_refactoring\as_is.jpg)
+![as_is](./as_is.jpg)
 
 Из диаграммы выше видно, что использование интерфейса Serializable порождает дополнительного класса для хранения ключей: Constants.
 
