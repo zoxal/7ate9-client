@@ -13,25 +13,32 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/gameOver_text_view"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:id="@+id/tv_gameOver"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Game Over!"
-            android:textAppearance="@android:style/TextAppearance.Material.Small"
-            android:textSize="18sp"
-            android:textStyle="bold"
+            android:text="Winner is"
+            android:textAppearance="@android:style/TextAppearance.Material.Medium"
             tools:ignore="MissingConstraints"
             tools:layout_editor_absoluteX="134dp"
             tools:layout_editor_absoluteY="62dp"
             tools:targetApi="lollipop" />
 
         <TextView
-            android:id="@+id/scoreBoard_text_view"
-            android:layout_width="match_parent"
+            android:id="@+id/tv_winnerName"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="ScoreBoard"
+            android:text="TextView"
+            android:textAppearance="@android:style/TextAppearance.Material.Large"
+            android:textColor="?android:attr/colorFocusedHighlight" />
+
+        <TextView
+            android:id="@+id/tv_scoreBoard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="\nScoreBoard"
             android:textSize="18sp"
             android:textStyle="bold"
             tools:ignore="MissingConstraints"
@@ -45,7 +52,8 @@
         android:orientation="horizontal">
 
         <ListView
-            android:id="@+id/list"
+            android:id="@+id/lv_scoreBoard"
+            style="@style/Widget.AppCompat.ListView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:choiceMode="multipleChoice">
@@ -60,7 +68,7 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/goToMainMenu_button"
+            android:id="@+id/btn_toMainMenu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|center"
