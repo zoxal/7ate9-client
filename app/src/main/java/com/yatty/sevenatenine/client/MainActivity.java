@@ -15,7 +15,7 @@ import com.yatty.sevenatenine.api.in_commands.ConnectResponse;
 import com.yatty.sevenatenine.api.out_commands.ConnectRequest;
 
 public class MainActivity extends AppCompatActivity {
-    public static final String TAG = "TAG";
+    public static final String TAG = MainActivity.class.getSimpleName();
 
     private Button mConnectButton;
     private EditText mNameEditText;

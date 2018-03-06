@@ -19,10 +19,10 @@ import com.yatty.sevenatenine.api.commands_with_data.PlayerResult;
 import java.util.Arrays;
 
 public class GameOverActivity extends AppCompatActivity {
-    public static final String TAG = "TAG";
-    private static final String CARDS_LEFT_KEY = "cards_left_key";
-    private static final String WINNER_NAME_KEY = "winner_name_key";
-    private static final String PLAYER_NAME_KEY = "player_name_key";
+    public static final String TAG = GameOverActivity.class.getSimpleName();
+    private static final String EXTRA_CARDS_LEFT = "cards_left_key";
+    private static final String EXTRA_WINNER_NAME = "winner_name_key";
+    private static final String EXTRA_PLAYER_NAME = "player_name_key";
     private TextView mWinnerNameTextView;
     private Button mToMainMenuButton;
     private TextView mGameOverText;
@@ -34,9 +34,9 @@ public class GameOverActivity extends AppCompatActivity {
 
     public static Intent newIntent(Context context, String playerName, String winnerName, PlayerResult[] scores) {
         Intent intent = new Intent(context, GameOverActivity.class);
-        intent.putExtra(PLAYER_NAME_KEY, playerName);
-        intent.putExtra(WINNER_NAME_KEY, winnerName);
-        intent.putExtra(CARDS_LEFT_KEY, scores);
+        intent.putExtra(EXTRA_PLAYER_NAME, playerName);
+        intent.putExtra(EXTRA_WINNER_NAME, winnerName);
+        intent.putExtra(EXTRA_CARDS_LEFT, scores);
         return intent;
     }
 
@@ -71,9 +71,9 @@ public class GameOverActivity extends AppCompatActivity {
         mToMainMenuButton = findViewById(R.id.button_to_main_menu);
         mScoreBoard = findViewById(R.id.lv_score_board);
         Intent intent = getIntent();
-        mPlayerName = intent.getStringExtra(PLAYER_NAME_KEY);
-        mWinnerName = intent.getStringExtra(WINNER_NAME_KEY);
-        Parcelable parcelableArray[] = intent.getParcelableArrayExtra(CARDS_LEFT_KEY);
+        mPlayerName = intent.getStringExtra(EXTRA_PLAYER_NAME);
+        mWinnerName = intent.getStringExtra(EXTRA_WINNER_NAME);
+        Parcelable parcelableArray[] = intent.getParcelableArrayExtra(EXTRA_CARDS_LEFT);
         if (parcelableArray != null) {
             mScores = Arrays.copyOf(parcelableArray, parcelableArray.length, PlayerResult[].class);
         }

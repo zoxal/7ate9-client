@@ -12,7 +12,7 @@ import java.util.List;
 
 public class GameStartedEvent implements InCommandInterface {
     public static final int UID = GameStartedEvent.class.getSimpleName().hashCode();
-    public static final String TAG = "TAG";
+    public static final String TAG = GameStartedEvent.class.getSimpleName();
     public static final String COMMAND_TYPE = "GameStartedEvent";
     public final String _type = COMMAND_TYPE;
 

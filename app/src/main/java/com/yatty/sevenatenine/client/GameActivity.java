@@ -25,15 +25,15 @@ import com.yatty.sevenatenine.api.out_commands.MoveRequest;
 import java.util.ArrayList;
 
 public class GameActivity extends AppCompatActivity {
-    private static final String GAME_ID_KEY = "game_id_game_activity";
-    public static final String PLAYER_NAME_KEY = "player_name_game_activity";
+    public static final String TAG = GameActivity.class.getSimpleName();
+    private static final String EXTRA_GAME_ID = "game_id_game_activity";
+    public static final String EXTRA_PLAYER_NAME = "player_name_game_activity";
     public static final String PLUS_MINUS_SYMBOL = "±";
     public static final String NEW_LINE_SYMBOL = "\n";
 
     private static final int VIBRATE_TIME_MS = 100;
     public static final int MAX_NUM_CARDS_ON_TABLE = 10;
     public static final int MAX_CARD = 10;
-    public static final String TAG = "TAG";
 
     private NettyClient mNettyClient;
     private String mGameId;
@@ -54,8 +54,8 @@ public class GameActivity extends AppCompatActivity {
 
     public static Intent newIntent(Context context, String gameId, String playerName) {
         Intent intent = new Intent(context, GameActivity.class);
-        intent.putExtra(GAME_ID_KEY, gameId);
-        intent.putExtra(PLAYER_NAME_KEY, playerName);
+        intent.putExtra(EXTRA_GAME_ID, gameId);
+        intent.putExtra(EXTRA_PLAYER_NAME, playerName);
         return intent;
     }
 
@@ -115,8 +115,8 @@ public class GameActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
-        mGameId = getIntent().getStringExtra(GAME_ID_KEY);
-        mPlayerName = getIntent().getStringExtra(PLAYER_NAME_KEY);
+        mGameId = getIntent().getStringExtra(EXTRA_GAME_ID);
+        mPlayerName = getIntent().getStringExtra(EXTRA_PLAYER_NAME);
         initUi();
 
         mProgressBar = new ProgressBar(getApplicationContext());

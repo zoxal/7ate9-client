@@ -7,7 +7,7 @@ import android.util.Log;
 
 public class ConnectResponse implements InCommandInterface {
     public static final int UID = ConnectResponse.class.getSimpleName().hashCode();
-    public static final String TAG = "TAG";
+    public static final String TAG = ConnectResponse.class.getSimpleName();
     public static final String COMMAND_TYPE = "ConnectResponse";
     public final String _type = COMMAND_TYPE;
     private boolean succeed;

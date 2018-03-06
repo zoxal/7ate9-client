@@ -1,6 +1,5 @@
 package com.yatty.sevenatenine.api.in_commands;
 
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Parcel;
@@ -10,7 +9,7 @@ import com.yatty.sevenatenine.api.commands_with_data.Card;
 
 public class MoveRejectedResponse implements InCommandInterface {
     public static final int UID = MoveRejectedResponse.class.getSimpleName().hashCode();
-    public static final String TAG = "TAG";
+    public static final String TAG = MoveRejectedResponse.class.getSimpleName();
     public static final String COMMAND_TYPE = "MoveRejectedResponse";
     public final String _type = COMMAND_TYPE;
     private Card move;
