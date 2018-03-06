@@ -32,15 +32,15 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/disconnect_button"
+        android:id="@+id/button_disconnect"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="top|right"
         android:layout_margin="10dp"
-        android:text="disconnect"/>
+        android:text="@string/action_disconnect"/>
 
     <TextView
-        android:id="@+id/counter_text_view"
+        android:id="@+id/tv_counter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
@@ -147,8 +147,8 @@
             android:id="@+id/button_get_card"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:text="get Card"/>
+            android:layout_gravity="end"
+            android:text="@string/action_get_card"/>
     </LinearLayout>
 
 </FrameLayout>

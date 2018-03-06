@@ -38,40 +38,37 @@ import io.netty.channel.socket.nio.NioDatagramChannel;
 import io.netty.handler.codec.MessageToMessageCodec;
 
 public class NettyClient {
-    private static final String HOST = "192.168.0.101";
+    private static final String HOST = "192.168.43.117";
     private static final int PORT = 6667;
     private static final String COMMAND_TYPE_FIELD = "_type";
     private static final String TAG = "TAG";
     private static final int SLEEP_TIME_IF_HAS_NO_HANDLER_MS = 5;
 
-    private static NettyClient nettyClient;
-    private HashMap<String, Class> commands;
-    private Channel channel;
-    private volatile Handler handler;
+    private static NettyClient sNettyClient;
+    private HashMap<String, Class> mCommands;
+    private Channel mChannel;
+    private volatile Handler mHandler;
 
-    private NettyClient(Handler handler) {
-        commands = new HashMap<>();
-        commands.put(ConnectRequest.COMMAND_TYPE, ConnectRequest.class);
-        commands.put(ConnectResponse.COMMAND_TYPE, ConnectResponse.class);
-        commands.put(GameStartedEvent.COMMAND_TYPE, GameStartedEvent.class);
-        commands.put(MoveRejectedResponse.COMMAND_TYPE, MoveRejectedResponse.class);
-        commands.put(MoveRequest.COMMAND_TYPE, MoveRequest.class);
-        commands.put(NewStateEvent.COMMAND_TYPE, NewStateEvent.class);
-        this.handler = handler;
+    private NettyClient() {
+        mCommands = new HashMap<>();
+        mCommands.put(ConnectRequest.COMMAND_TYPE, ConnectRequest.class);
+        mCommands.put(ConnectResponse.COMMAND_TYPE, ConnectResponse.class);
+        mCommands.put(GameStartedEvent.COMMAND_TYPE, GameStartedEvent.class);
+        mCommands.put(MoveRejectedResponse.COMMAND_TYPE, MoveRejectedResponse.class);
+        mCommands.put(MoveRequest.COMMAND_TYPE, MoveRequest.class);
+        mCommands.put(NewStateEvent.COMMAND_TYPE, NewStateEvent.class);
     }
 
-    public static NettyClient getInstance(Handler handler) {
-        if (nettyClient == null) {
-            nettyClient = new NettyClient(handler);
+    public static NettyClient getInstance() {
+        if (sNettyClient == null) {
             try {
-                nettyClient.run();
+                sNettyClient = new NettyClient();
+                sNettyClient.run();
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        } else {
-            nettyClient.setHandler(handler);
         }
-        return nettyClient;
+        return sNettyClient;
     }
 
     private void run() throws Exception {
@@ -79,11 +76,11 @@ public class NettyClient {
         Bootstrap bootstrap = new Bootstrap();
         bootstrap.group(eventLoopGroup).channel(NioDatagramChannel.class).handler(new PipeLineInitializer());
         SocketAddress socketAddress = new InetSocketAddress(HOST, PORT);
-        channel = bootstrap.connect(socketAddress).sync().channel();
+        mChannel = bootstrap.connect(socketAddress).sync().channel();
     }
 
     public void write(Object obj) {
-        channel.writeAndFlush(obj).addListener(new ChannelFutureListener() {
+        mChannel.writeAndFlush(obj).addListener(new ChannelFutureListener() {
             @Override
             public void operationComplete(ChannelFuture future) throws Exception {
                 if (future.isSuccess()) {
@@ -110,11 +107,11 @@ public class NettyClient {
             Log.d(TAG, "Got class: " + obj.getClass());
             InCommandInterface command = (InCommandInterface) obj;
             // Test this while!!!
-            while (handler == null) {
+            while (mHandler == null) {
                 Log.d(TAG, "SLEEP_TIME_IF_HAS_NO_HANDLER_MS");
                 Thread.sleep(SLEEP_TIME_IF_HAS_NO_HANDLER_MS);
             }
-            command.doLogic(handler);
+            command.doLogic(mHandler);
         }
     }
 
@@ -153,12 +150,12 @@ public class NettyClient {
             JsonObject obj = parser.parse(json).getAsJsonObject();
             String type = obj.get(COMMAND_TYPE_FIELD).getAsString();
             Log.d(TAG, "Parsed type: " + type);
-            Class clazz = commands.get(type);
+            Class clazz = mCommands.get(type);
             out.add(gson.fromJson(json, clazz));
         }
     }
 
     public void setHandler(Handler handler) {
-        this.handler = handler;
+        this.mHandler = handler;
     }
 }

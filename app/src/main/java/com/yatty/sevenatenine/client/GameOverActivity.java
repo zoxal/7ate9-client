@@ -23,13 +23,13 @@ public class GameOverActivity extends AppCompatActivity {
     private static final String CARDS_LEFT_KEY = "cards_left_key";
     private static final String WINNER_NAME_KEY = "winner_name_key";
     private static final String PLAYER_NAME_KEY = "player_name_key";
-    private TextView winnerNameTextView;
-    private Button toMainMenuButton;
-    private TextView gameOverText;
-    private String playerName;
-    private String winnerName;
-    private ListView scoreBoard;
-    PlayerResult[] scores;
+    private TextView mWinnerNameTextView;
+    private Button mToMainMenuButton;
+    private TextView mGameOverText;
+    private String mPlayerName;
+    private String mWinnerName;
+    private ListView mScoreBoard;
+    PlayerResult[] mScores;
 
 
     public static Intent newIntent(Context context, String playerName, String winnerName, PlayerResult[] scores) {
@@ -42,7 +42,7 @@ public class GameOverActivity extends AppCompatActivity {
 
     private class ScoreBoardAdapter extends ArrayAdapter<PlayerResult> {
         public ScoreBoardAdapter(Context context) {
-            super(context, android.R.layout.simple_list_item_2, scores);
+            super(context, android.R.layout.simple_list_item_2, mScores);
             //this.sort();
         }
 
@@ -66,39 +66,39 @@ public class GameOverActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_over);
-        gameOverText = findViewById(R.id.tv_gameOver);
-        winnerNameTextView = findViewById(R.id.tv_winnerName);
-        toMainMenuButton = findViewById(R.id.btn_toMainMenu);
-        scoreBoard = findViewById(R.id.lv_scoreBoard);
+        mGameOverText = findViewById(R.id.tv_game_over);
+        mWinnerNameTextView = findViewById(R.id.tv_winner_name);
+        mToMainMenuButton = findViewById(R.id.button_to_main_menu);
+        mScoreBoard = findViewById(R.id.lv_score_board);
         Intent intent = getIntent();
-        playerName = intent.getStringExtra(PLAYER_NAME_KEY);
-        winnerName = intent.getStringExtra(WINNER_NAME_KEY);
+        mPlayerName = intent.getStringExtra(PLAYER_NAME_KEY);
+        mWinnerName = intent.getStringExtra(WINNER_NAME_KEY);
         Parcelable parcelableArray[] = intent.getParcelableArrayExtra(CARDS_LEFT_KEY);
         if (parcelableArray != null) {
-            scores = Arrays.copyOf(parcelableArray, parcelableArray.length, PlayerResult[].class);
+            mScores = Arrays.copyOf(parcelableArray, parcelableArray.length, PlayerResult[].class);
         }
-        if (scores == null) {
+        if (mScores == null) {
             /*PlayerResult pr1 = new PlayerResult("Ivan",12);
             PlayerResult pr2 = new PlayerResult("Petr",11);
             PlayerResult pr3 = new PlayerResult("Fedor",13);
-            scores = new PlayerResult[3];
-            scores[0] = pr1;
-            scores[1] = pr2;
-            scores[2] = pr3;*/
+            mScores = new PlayerResult[3];
+            mScores[0] = pr1;
+            mScores[1] = pr2;
+            mScores[2] = pr3;*/
         }
-        sortByCardCount(scores);
-        if (winnerName == null) winnerName = scores[0].getPlayerName();
-        if (playerName.equals(winnerName)) gameOverText.setText("You Win!");
-        else gameOverText.setText("Better luck next time!");
-        winnerNameTextView.setText(winnerName);
-        Log.d(TAG, "Winner: " + winnerName);
-        Log.d(TAG, "Player name: " + playerName);
+        sortByCardCount(mScores);
+        if (mWinnerName == null) mWinnerName = mScores[0].getPlayerName();
+        if (mPlayerName.equals(mWinnerName)) mGameOverText.setText("You Win!");
+        else mGameOverText.setText("Better luck next time!");
+        mWinnerNameTextView.setText(mWinnerName);
+        Log.d(TAG, "Winner: " + mWinnerName);
+        Log.d(TAG, "Player name: " + mPlayerName);
         Log.d(TAG, "Scores:");
-        for (int i = 0; i < scores.length; i++) {
-            Log.d(TAG, scores[i].getPlayerName() + ": " + scores[i].getCardsLeft());
+        for (int i = 0; i < mScores.length; i++) {
+            Log.d(TAG, mScores[i].getPlayerName() + ": " + mScores[i].getCardsLeft());
         }
         ScoreBoardAdapter adapter = new ScoreBoardAdapter(this);
-        scoreBoard.setAdapter(adapter);
+        mScoreBoard.setAdapter(adapter);
     }
 
     public void clickToMainMenu_button(View view) {

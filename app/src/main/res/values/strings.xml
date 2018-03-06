@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">SevenAteNine</string>
+    <string name="action_connect">Connect</string>
+    <string name="action_disconnect">Disconnect</string>
+    <string name="action_get_card">Get card</string>
+    <string name="action_to_main_menu">main menu</string>
+    <string name="login_name_hint">Name</string>
+    <string name="title_winner">Winner is</string>
+    <string name="title_score_board">ScoreBoard</string>
 </resources>

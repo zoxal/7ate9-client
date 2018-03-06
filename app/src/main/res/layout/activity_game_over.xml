@@ -3,8 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:orientation="vertical"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.yatty.sevenatenine.client.GameOverActivity">
 
     <LinearLayout
@@ -13,70 +13,46 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/tv_gameOver"
+            android:id="@+id/tv_game_over"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Winner is"
-            android:textAppearance="@android:style/TextAppearance.Material.Medium"
-            tools:ignore="MissingConstraints"
-            tools:layout_editor_absoluteX="134dp"
-            tools:layout_editor_absoluteY="62dp"
-            tools:targetApi="lollipop" />
+            android:text="@string/title_winner"/>
 
         <TextView
-            android:id="@+id/tv_winnerName"
+            android:id="@+id/tv_winner_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="TextView"
-            android:textColor="?android:attr/colorFocusedHighlight" />
+            android:textColor="?android:attr/colorFocusedHighlight"
+            tools:text="TextView"/>
 
         <TextView
-            android:id="@+id/tv_scoreBoard"
+            android:id="@+id/tv_score_board"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="\nScoreBoard"
+            android:text="@string/title_score_board"
             android:textSize="18sp"
-            android:textStyle="bold"
-            tools:ignore="MissingConstraints"
-            tools:layout_editor_absoluteX="151dp"
-            tools:layout_editor_absoluteY="98dp" />
+            android:textStyle="bold"/>
     </LinearLayout>
 
-    <LinearLayout
+
+    <ListView
+        android:id="@+id/lv_score_board"
+        style="@style/Widget.AppCompat.ListView"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </ListView>
+
+
+    <Button
+        android:id="@+id/button_to_main_menu"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <ListView
-            android:id="@+id/lv_scoreBoard"
-            style="@style/Widget.AppCompat.ListView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:choiceMode="multipleChoice">
-
-        </ListView>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/btn_toMainMenu"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|center"
-            android:layout_weight="1"
-            android:onClick="clickToMainMenu_button"
-            android:text="Main_Menu"
-            tools:ignore="MissingConstraints"
-            tools:layout_editor_absoluteX="127dp"
-            tools:layout_editor_absoluteY="413dp" />
-    </LinearLayout>
+        android:layout_gravity="center"
+        android:onClick="clickToMainMenu_button"
+        android:text="@string/action_to_main_menu"/>
 
 </LinearLayout>

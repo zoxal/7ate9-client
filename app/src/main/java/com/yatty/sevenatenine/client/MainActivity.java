@@ -17,9 +17,9 @@ import com.yatty.sevenatenine.api.out_commands.ConnectRequest;
 public class MainActivity extends AppCompatActivity {
     public static final String TAG = "TAG";
 
-    private Button connectButton;
-    private EditText nameEditText;
-    private NettyClient nettyClient;
+    private Button mConnectButton;
+    private EditText mNameEditText;
+    private NettyClient mNettyClient;
 
     public static Intent newIntent(Context context) {
         Intent intent = new Intent(context, MainActivity.class);
@@ -30,20 +30,21 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        connectButton = findViewById(R.id.connect_button);
-        nameEditText = findViewById(R.id.name_edit_text);
+        mConnectButton = findViewById(R.id.button_connect);
+        mNameEditText = findViewById(R.id.et_name);
 
-        final MainActivityHandler mainActivityHandler = new MainActivityHandler(this, nameEditText,
-                connectButton);
-        nettyClient = NettyClient.getInstance(mainActivityHandler);
+        final MainActivityHandler mainActivityHandler = new MainActivityHandler(this, mNameEditText,
+                mConnectButton);
+        mNettyClient = NettyClient.getInstance();
+        mNettyClient.setHandler(mainActivityHandler);
 
-        connectButton.setOnClickListener(new View.OnClickListener() {
+        mConnectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 try {
                     ConnectRequest connectRequest = new ConnectRequest();
-                    connectRequest.setName(nameEditText.getText().toString());
-                    nettyClient.write(connectRequest);
+                    connectRequest.setName(mNameEditText.getText().toString());
+                    mNettyClient.write(connectRequest);
                     view.setClickable(false);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -74,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
                     String gameId = connectResponse.getGameId();
                     Log.d(TAG, "Connected");
                     // Test this method call!!!
-                    NettyClient.getInstance(null);
+                    NettyClient.getInstance().setHandler(null);
                     Intent nextActivity = GameActivity.newIntent(context, gameId,
                             nameEditText.getText().toString());
                     context.startActivity(nextActivity);

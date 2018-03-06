@@ -35,22 +35,22 @@ public class GameActivity extends AppCompatActivity {
     public static final int MAX_CARD = 10;
     public static final String TAG = "TAG";
 
-    private NettyClient nettyClient;
-    private String gameId;
-    private String playerName;
-    private TextView topCardValueTextView;
-    private TextView counterTextView;
-    private TextView topCardModifierTextView;
-    private Button disconnectButton;
-    private Button getCardButton;
-    private Button cardsOnTableButtons[];
-    private Vibrator vibrator;
-    private ProgressBar progressBar;
+    private NettyClient mNettyClient;
+    private String mGameId;
+    private String mPlayerName;
+    private TextView mTopCardValueTextView;
+    private TextView mCounterTextView;
+    private TextView mTopCardModifierTextView;
+    private Button mDisconnectButton;
+    private Button mGetCardButton;
+    private Button mCardsOnTableButtons[];
+    private Vibrator mVibrator;
+    private ProgressBar mProgressBar;
 
-    private Card topCard;
-    private ArrayList<Card> cardDeckArrayList;
-    private int numOfCardsOnDesk;
-    private int moveNumber;
+    private Card mTopCard;
+    private ArrayList<Card> mCardArrayList;
+    private int mNumOfCardsOnDesk;
+    private int mMoveNumber;
 
     public static Intent newIntent(Context context, String gameId, String playerName) {
         Intent intent = new Intent(context, GameActivity.class);
@@ -60,50 +60,50 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void initUi() {
-        topCardValueTextView = findViewById(R.id.tv_top_card_value);
-        topCardModifierTextView = findViewById(R.id.tv_top_card_modifier);
-        counterTextView = findViewById(R.id.counter_text_view);
-        disconnectButton = findViewById(R.id.disconnect_button);
+        mTopCardValueTextView = findViewById(R.id.tv_top_card_value);
+        mTopCardModifierTextView = findViewById(R.id.tv_top_card_modifier);
+        mCounterTextView = findViewById(R.id.tv_counter);
+        mDisconnectButton = findViewById(R.id.button_disconnect);
         TableRow firstCardRow = findViewById(R.id.tr_first_card_row);
         TableRow secondCardRow = findViewById(R.id.tr_second_card_row);
-        cardsOnTableButtons = new Button[MAX_NUM_CARDS_ON_TABLE];
+        mCardsOnTableButtons = new Button[MAX_NUM_CARDS_ON_TABLE];
         for (int i = 0; i < firstCardRow.getVirtualChildCount(); i++) {
-            cardsOnTableButtons[i] = (Button) firstCardRow.getVirtualChildAt(i);
-            cardsOnTableButtons[i].setVisibility(View.INVISIBLE);
-            cardsOnTableButtons[i + firstCardRow.getVirtualChildCount()] =
+            mCardsOnTableButtons[i] = (Button) firstCardRow.getVirtualChildAt(i);
+            mCardsOnTableButtons[i].setVisibility(View.INVISIBLE);
+            mCardsOnTableButtons[i + firstCardRow.getVirtualChildCount()] =
                     (Button) secondCardRow.getVirtualChildAt(i);
-            cardsOnTableButtons[i + firstCardRow.getVirtualChildCount()].setVisibility(View.INVISIBLE);
+            mCardsOnTableButtons[i + firstCardRow.getVirtualChildCount()].setVisibility(View.INVISIBLE);
         }
 
-        disconnectButton.setOnClickListener(new View.OnClickListener() {
+        mDisconnectButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
-                DisconnectRequest disconnectRequest = new DisconnectRequest(gameId);
-                nettyClient.write(disconnectRequest);
+                DisconnectRequest disconnectRequest = new DisconnectRequest(mGameId);
+                mNettyClient.write(disconnectRequest);
                 Intent nextActivity = MainActivity.newIntent(getApplicationContext());
                 startActivity(nextActivity);
                 finish();
             }
         });
-        getCardButton = findViewById(R.id.button_get_card);
-        getCardButton.setOnClickListener(new View.OnClickListener() {
+        mGetCardButton = findViewById(R.id.button_get_card);
+        mGetCardButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
-                if (numOfCardsOnDesk < MAX_NUM_CARDS_ON_TABLE) {
-                    if (!cardDeckArrayList.isEmpty()) {
-                        Card card = cardDeckArrayList.get(0);
-                        cardDeckArrayList.remove(0);
+                if (mNumOfCardsOnDesk < MAX_NUM_CARDS_ON_TABLE) {
+                    if (!mCardArrayList.isEmpty()) {
+                        Card card = mCardArrayList.get(0);
+                        mCardArrayList.remove(0);
                         int i = 0;
-                        while (cardsOnTableButtons[i].hasOnClickListeners()) {
+                        while (mCardsOnTableButtons[i].hasOnClickListeners()) {
                             i++;
                         }
-                        cardsOnTableButtons[i].setText(card.getValue() + NEW_LINE_SYMBOL +
+                        mCardsOnTableButtons[i].setText(card.getValue() + NEW_LINE_SYMBOL +
                                 PLUS_MINUS_SYMBOL + card.getModifier());
-                        cardsOnTableButtons[i].setOnClickListener(new CardButtonOnClickListener(card));
-                        cardsOnTableButtons[i].setVisibility(View.VISIBLE);
-                        numOfCardsOnDesk++;
+                        mCardsOnTableButtons[i].setOnClickListener(new CardButtonOnClickListener(card));
+                        mCardsOnTableButtons[i].setVisibility(View.VISIBLE);
+                        mNumOfCardsOnDesk++;
                     }
                 }
             }
@@ -115,69 +115,21 @@ public class GameActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
-        gameId = getIntent().getStringExtra(GAME_ID_KEY);
-        playerName = getIntent().getStringExtra(PLAYER_NAME_KEY);
+        mGameId = getIntent().getStringExtra(GAME_ID_KEY);
+        mPlayerName = getIntent().getStringExtra(PLAYER_NAME_KEY);
         initUi();
 
-        progressBar = new ProgressBar(getApplicationContext());
+        mProgressBar = new ProgressBar(getApplicationContext());
         FrameLayout frameLayout = findViewById(R.id.fl_main_layout);
-        frameLayout.addView(progressBar, FrameLayout.LayoutParams.MATCH_PARENT);
-        progressBar.setVisibility(View.VISIBLE);
+        frameLayout.addView(mProgressBar, FrameLayout.LayoutParams.MATCH_PARENT);
+        mProgressBar.setVisibility(View.VISIBLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
 
-        vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-        Handler handler = new Handler() {
-            @Override
-            public void handleMessage(android.os.Message msg) {
-                Log.d(TAG, "GameActivity: handle");
-                if (msg.sendingUid == GameStartedEvent.UID) {
-                    GameStartedEvent gameStartedEvent = (GameStartedEvent) msg.obj;
-                    topCard = gameStartedEvent.getFirstCard();
-                    Log.d(TAG, "GameStartedEvent: get topCard");
-                    cardDeckArrayList = gameStartedEvent.getPlayerCards();
-                    Log.d(TAG, "GameStartedEvent: get cardDeckArrayList");
-                    numOfCardsOnDesk = 0;
-                    topCardValueTextView.setText(String.valueOf(topCard.getValue()));
-                    topCardModifierTextView.setText(PLUS_MINUS_SYMBOL + topCard.getModifier());
-                    progressBar.setVisibility(View.GONE);
-                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                } else if (msg.sendingUid == MoveRejectedResponse.UID) {
-                    MoveRejectedResponse moveRejectedResponse = (MoveRejectedResponse) msg.obj;
-                    Card card = moveRejectedResponse.getMove();
-                    int i = 0;
-                    while (cardsOnTableButtons[i].hasOnClickListeners()) {
-                        i++;
-                    }
-                    cardsOnTableButtons[i].setText(card.getValue() + NEW_LINE_SYMBOL +
-                            PLUS_MINUS_SYMBOL + card.getModifier());
-                    cardsOnTableButtons[i].setOnClickListener(new CardButtonOnClickListener(card));
-                    cardsOnTableButtons[i].setVisibility(View.VISIBLE);
-                    numOfCardsOnDesk++;
-                    vibrator.vibrate(VIBRATE_TIME_MS);
-                } else if (msg.sendingUid == NewStateEvent.UID) {
-                    NewStateEvent newStateEvent = (NewStateEvent) msg.obj;
-                    if (newStateEvent.isLastMove()) {
-                        // Test this method call!!!
-                        nettyClient.setHandler(null);
-                        Intent nextActivity = GameOverActivity.newIntent(getApplicationContext(), playerName,
-                                newStateEvent.getGameResult().getWinner(), newStateEvent.getGameResult().getScores());
-                        startActivity(nextActivity);
-                        finish();
-                    } else {
-                        String moveWinner = newStateEvent.getMoveWinner();
-                        if (playerName.equals(moveWinner)) {
-                            counterTextView.setText(String.valueOf(Integer.parseInt(counterTextView.getText().toString()) + 1));
-                        }
-                        topCard = newStateEvent.getNextCard();
-                        moveNumber = newStateEvent.getMoveNumber();
-                        topCardValueTextView.setText(String.valueOf(topCard.getValue()));
-                        topCardModifierTextView.setText(PLUS_MINUS_SYMBOL + topCard.getModifier());
-                    }
-                }
-            }
-        };
-        nettyClient = NettyClient.getInstance(handler);
+        mVibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        Handler handler = new GameActivityHandler();
+        mNettyClient = NettyClient.getInstance();
+        mNettyClient.setHandler(handler);
     }
 
     class CardButtonOnClickListener implements View.OnClickListener {
@@ -189,35 +141,85 @@ public class GameActivity extends AppCompatActivity {
 
         @Override
         public void onClick(View view) {
-            int rightValue1 = topCard.getValue() + topCard.getModifier();
+            int rightValue1 = mTopCard.getValue() + mTopCard.getModifier();
             if (rightValue1 > MAX_CARD) {
                 rightValue1 -= MAX_CARD;
             }
-            int rightValue2 = topCard.getValue() - topCard.getModifier();
+            int rightValue2 = mTopCard.getValue() - mTopCard.getModifier();
             if (rightValue2 <= 0) {
                 rightValue2 += MAX_CARD;
             }
             if (card.getValue() == rightValue1 ||
                     card.getValue() == rightValue2) {
                 MoveRequest moveRequest = new MoveRequest();
-                moveRequest.setGameId(gameId);
+                moveRequest.setGameId(mGameId);
                 moveRequest.setMove(card);
-                moveRequest.setMoveNumber(moveNumber);
-                nettyClient.write(moveRequest);
+                moveRequest.setMoveNumber(mMoveNumber);
+                mNettyClient.write(moveRequest);
                 view.setVisibility(View.INVISIBLE);
                 view.setOnClickListener(null);
-                numOfCardsOnDesk--;
+                mNumOfCardsOnDesk--;
             } else {
-                vibrator.vibrate(VIBRATE_TIME_MS);
+                mVibrator.vibrate(VIBRATE_TIME_MS);
             }
         }
     }
 
     @Override
     protected void onPause() {
-        /*DisconnectRequest disconnectRequest = new DisconnectRequest(gameId);
-        nettyClient.write(disconnectRequest);
+        /*DisconnectRequest disconnectRequest = new DisconnectRequest(mGameId);
+        mNettyClient.write(disconnectRequest);
         */
         super.onPause();
+    }
+
+    private class GameActivityHandler extends Handler {
+        @Override
+        public void handleMessage(android.os.Message msg) {
+            Log.d(TAG, "GameActivity: handle");
+            if (msg.sendingUid == GameStartedEvent.UID) {
+                GameStartedEvent gameStartedEvent = (GameStartedEvent) msg.obj;
+                mTopCard = gameStartedEvent.getFirstCard();
+                Log.d(TAG, "GameStartedEvent: get mTopCard");
+                mCardArrayList = gameStartedEvent.getPlayerCards();
+                Log.d(TAG, "GameStartedEvent: get mCardArrayList");
+                mNumOfCardsOnDesk = 0;
+                mTopCardValueTextView.setText(String.valueOf(mTopCard.getValue()));
+                mTopCardModifierTextView.setText(PLUS_MINUS_SYMBOL + mTopCard.getModifier());
+                mProgressBar.setVisibility(View.GONE);
+                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            } else if (msg.sendingUid == MoveRejectedResponse.UID) {
+                MoveRejectedResponse moveRejectedResponse = (MoveRejectedResponse) msg.obj;
+                Card card = moveRejectedResponse.getMove();
+                int i = 0;
+                while (mCardsOnTableButtons[i].hasOnClickListeners()) {
+                    i++;
+                }
+                mCardsOnTableButtons[i].setText(card.getValue() + NEW_LINE_SYMBOL +
+                        PLUS_MINUS_SYMBOL + card.getModifier());
+                mCardsOnTableButtons[i].setOnClickListener(new CardButtonOnClickListener(card));
+                mCardsOnTableButtons[i].setVisibility(View.VISIBLE);
+                mNumOfCardsOnDesk++;
+                mVibrator.vibrate(VIBRATE_TIME_MS);
+            } else if (msg.sendingUid == NewStateEvent.UID) {
+                NewStateEvent newStateEvent = (NewStateEvent) msg.obj;
+                if (newStateEvent.isLastMove()) {
+                    mNettyClient.setHandler(null);
+                    Intent nextActivity = GameOverActivity.newIntent(getApplicationContext(), mPlayerName,
+                            newStateEvent.getGameResult().getWinner(), newStateEvent.getGameResult().getScores());
+                    startActivity(nextActivity);
+                    finish();
+                } else {
+                    String moveWinner = newStateEvent.getMoveWinner();
+                    if (mPlayerName.equals(moveWinner)) {
+                        mCounterTextView.setText(String.valueOf(Integer.parseInt(mCounterTextView.getText().toString()) + 1));
+                    }
+                    mTopCard = newStateEvent.getNextCard();
+                    mMoveNumber = newStateEvent.getMoveNumber();
+                    mTopCardValueTextView.setText(String.valueOf(mTopCard.getValue()));
+                    mTopCardModifierTextView.setText(PLUS_MINUS_SYMBOL + mTopCard.getModifier());
+                }
+            }
+        }
     }
 }
