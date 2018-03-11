@@ -25,11 +25,11 @@
         <activity
             android:name=".GameActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/ActivityStyle"></activity>
+            android:theme="@style/ActivityStyle"/>
         <activity
             android:name=".GameOverActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/ActivityStyle"></activity>
+            android:theme="@style/ActivityStyle"/>
     </application>
 
 </manifest>
