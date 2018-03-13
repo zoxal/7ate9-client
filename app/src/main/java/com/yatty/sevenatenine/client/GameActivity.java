@@ -19,7 +19,7 @@ import com.yatty.sevenatenine.api.commands_with_data.Card;
 import com.yatty.sevenatenine.api.in_commands.GameStartedEvent;
 import com.yatty.sevenatenine.api.in_commands.MoveRejectedResponse;
 import com.yatty.sevenatenine.api.in_commands.NewStateEvent;
-import com.yatty.sevenatenine.api.out_commands.DisconnectRequest;
+import com.yatty.sevenatenine.api.out_commands.LogOutRequest;
 import com.yatty.sevenatenine.api.out_commands.MoveRequest;
 
 import java.util.ArrayList;
@@ -79,8 +79,9 @@ public class GameActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View view) {
-                DisconnectRequest disconnectRequest = new DisconnectRequest(mGameId);
-                mNettyClient.write(disconnectRequest);
+                LogOutRequest logOutRequest = new LogOutRequest(mGameId);
+                mNettyClient.write(logOutRequest);
+                mNettyClient.setHandler(null);
                 Intent nextActivity = MainActivity.newIntent(getApplicationContext());
                 startActivity(nextActivity);
                 finish();
@@ -167,7 +168,7 @@ public class GameActivity extends AppCompatActivity {
 
     @Override
     protected void onPause() {
-        /*DisconnectRequest disconnectRequest = new DisconnectRequest(mGameId);
+        /*LogOutRequest disconnectRequest = new LogOutRequest(mGameId);
         mNettyClient.write(disconnectRequest);
         */
         super.onPause();

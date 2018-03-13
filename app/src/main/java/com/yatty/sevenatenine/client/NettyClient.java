@@ -7,14 +7,15 @@ import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.yatty.sevenatenine.api.in_commands.ConnectResponse;
+import com.yatty.sevenatenine.api.in_commands.LogInResponse;
 import com.yatty.sevenatenine.api.in_commands.GameStartedEvent;
 import com.yatty.sevenatenine.api.in_commands.InCommandInterface;
 import com.yatty.sevenatenine.api.in_commands.MoveRejectedResponse;
 import com.yatty.sevenatenine.api.in_commands.NewStateEvent;
-import com.yatty.sevenatenine.api.out_commands.ConnectRequest;
+import com.yatty.sevenatenine.api.out_commands.LogInRequest;
 import com.yatty.sevenatenine.api.out_commands.MoveRequest;
 
 import java.net.InetSocketAddress;
@@ -40,6 +41,7 @@ import io.netty.handler.codec.MessageToMessageCodec;
 public class NettyClient {
     private static final String TAG = NettyClient.class.getSimpleName();
     private static final String HOST = "192.168.43.117";
+    private static final String TYPE_FIELD = "_type";
     private static final int PORT = 6667;
     private static final String COMMAND_TYPE_FIELD = "_type";
     private static final int SLEEP_TIME_IF_HAS_NO_HANDLER_MS = 5;
@@ -51,8 +53,8 @@ public class NettyClient {
 
     private NettyClient() {
         mCommands = new HashMap<>();
-        mCommands.put(ConnectRequest.COMMAND_TYPE, ConnectRequest.class);
-        mCommands.put(ConnectResponse.COMMAND_TYPE, ConnectResponse.class);
+        mCommands.put(LogInRequest.COMMAND_TYPE, LogInRequest.class);
+        mCommands.put(LogInResponse.COMMAND_TYPE, LogInResponse.class);
         mCommands.put(GameStartedEvent.COMMAND_TYPE, GameStartedEvent.class);
         mCommands.put(MoveRejectedResponse.COMMAND_TYPE, MoveRejectedResponse.class);
         mCommands.put(MoveRequest.COMMAND_TYPE, MoveRequest.class);
@@ -126,7 +128,9 @@ public class NettyClient {
         protected void encode(ChannelHandlerContext ctx, Object msg, List<Object> out) throws Exception {
             Log.d(TAG, "Encoding...");
             Gson gson = new Gson();
-            String json = gson.toJson(msg);
+            JsonElement jsonElement = gson.toJsonTree(msg);
+            jsonElement.getAsJsonObject().addProperty(TYPE_FIELD, msg.getClass().getSimpleName());
+            String json = gson.toJson(jsonElement);
             out.add(Unpooled.wrappedBuffer(json.getBytes()));
         }
 

@@ -5,7 +5,7 @@ import android.os.Parcelable;
 
 public class GameResult implements Parcelable {
     public static final String COMMAND_TYPE = "GameResult";
-    public final String _type = COMMAND_TYPE;
+    //public final String _type = COMMAND_TYPE;
     private String winner;
     private PlayerResult scores[];
 
@@ -13,18 +13,6 @@ public class GameResult implements Parcelable {
         winner = in.readString();
         scores = in.createTypedArray(PlayerResult.CREATOR);
     }
-
-    public static final Creator<GameResult> CREATOR = new Creator<GameResult>() {
-        @Override
-        public GameResult createFromParcel(Parcel in) {
-            return new GameResult(in);
-        }
-
-        @Override
-        public GameResult[] newArray(int size) {
-            return new GameResult[size];
-        }
-    };
 
     @Override
     public int describeContents() {
@@ -44,4 +32,17 @@ public class GameResult implements Parcelable {
     public PlayerResult[] getScores() {
         return scores;
     }
+
+    public static final Creator<GameResult> CREATOR = new Creator<GameResult>() {
+        @Override
+        public GameResult createFromParcel(Parcel in) {
+            return new GameResult(in);
+        }
+
+        @Override
+        public GameResult[] newArray(int size) {
+            return new GameResult[size];
+        }
+    };
+
 }

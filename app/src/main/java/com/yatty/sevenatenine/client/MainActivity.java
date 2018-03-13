@@ -4,15 +4,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
-import com.yatty.sevenatenine.api.in_commands.ConnectResponse;
-import com.yatty.sevenatenine.api.out_commands.ConnectRequest;
+import com.yatty.sevenatenine.api.in_commands.LogInResponse;
+import com.yatty.sevenatenine.api.out_commands.LogInRequest;
 
 public class MainActivity extends AppCompatActivity {
     public static final String TAG = MainActivity.class.getSimpleName();
@@ -42,9 +42,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 try {
-                    ConnectRequest connectRequest = new ConnectRequest();
-                    connectRequest.setName(mNameEditText.getText().toString());
-                    mNettyClient.write(connectRequest);
+                    LogInRequest logInRequest = new LogInRequest();
+                    logInRequest.setAuthToken(mNameEditText.getText().toString());
+                    mNettyClient.write(logInRequest);
                     view.setClickable(false);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -67,23 +67,19 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        public void handleMessage(android.os.Message msg) {
+        public void handleMessage(Message msg) {
             Log.d(TAG, "MainActivity.Handler: Get obj: " + msg.obj);
-            if (msg.sendingUid == ConnectResponse.UID) {
-                ConnectResponse connectResponse = (ConnectResponse) msg.obj;
-                if (connectResponse.isSucceed()) {
-                    String gameId = connectResponse.getGameId();
-                    Log.d(TAG, "Connected");
-                    // Test this method call!!!
-                    NettyClient.getInstance().setHandler(null);
-                    Intent nextActivity = GameActivity.newIntent(context, gameId,
-                            nameEditText.getText().toString());
-                    context.startActivity(nextActivity);
-                    appCompatActivity.finish();
-                } else {
-                    connectButton.setClickable(true);
-                    Toast.makeText(context, "Connection refused", Toast.LENGTH_SHORT).show();
-                }
+            if (msg.sendingUid == LogInResponse.UID) {
+                /*LogInResponse logInResponse = (LogInResponse) msg.obj;
+                //String gameId = logInResponse.
+                Log.d(TAG, "Connected");
+                // Test this method call!!!
+                NettyClient.getInstance().setHandler(null);
+                Intent nextActivity = GameActivity.newIntent(context, gameId,
+                        nameEditText.getText().toString());
+                context.startActivity(nextActivity);
+                appCompatActivity.finish();
+                */
             }
         }
     }

@@ -17,6 +17,26 @@ public class Card implements Parcelable {
         modifier = in.readInt();
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(value);
+        dest.writeInt(modifier);
+    }
+
+    public int getValue() {
+        return value;
+    }
+
+    public int getModifier() {
+        return modifier;
+    }
+
+
     public static final Creator<Card> CREATOR = new Creator<Card>() {
         @Override
         public Card createFromParcel(Parcel in) {
@@ -28,23 +48,4 @@ public class Card implements Parcelable {
             return new Card[size];
         }
     };
-
-    public int getValue() {
-        return value;
-    }
-
-    public int getModifier() {
-        return modifier;
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(value);
-        dest.writeInt(modifier);
-    }
 }
