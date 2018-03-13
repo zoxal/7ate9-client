@@ -10,7 +10,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import com.yatty.sevenatenine.api.in_commands.ErrorResponse;
 import com.yatty.sevenatenine.api.in_commands.LogInResponse;
 import com.yatty.sevenatenine.api.out_commands.LogInRequest;
 
@@ -69,17 +71,19 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void handleMessage(Message msg) {
             Log.d(TAG, "MainActivity.Handler: Get obj: " + msg.obj);
-            if (msg.sendingUid == LogInResponse.UID) {
-                /*LogInResponse logInResponse = (LogInResponse) msg.obj;
-                //String gameId = logInResponse.
+            if (msg.obj instanceof LogInResponse) {
+                LogInResponse logInResponse = (LogInResponse) msg.obj;
+                String authToken = logInResponse.getAuthToken();
                 Log.d(TAG, "Connected");
-                // Test this method call!!!
                 NettyClient.getInstance().setHandler(null);
-                Intent nextActivity = GameActivity.newIntent(context, gameId,
+                Intent nextActivity = GameActivity.newIntent(context, authToken,
                         nameEditText.getText().toString());
                 context.startActivity(nextActivity);
                 appCompatActivity.finish();
-                */
+            } else if (msg.obj instanceof ErrorResponse) {
+                ErrorResponse errorResponse = (ErrorResponse) msg.obj;
+                Toast.makeText(context, errorResponse.getShortDescription(), Toast.LENGTH_LONG);
+                connectButton.setClickable(true);
             }
         }
     }

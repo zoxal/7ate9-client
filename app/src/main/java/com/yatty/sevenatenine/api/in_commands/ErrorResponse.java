@@ -31,6 +31,18 @@ public class ErrorResponse implements InCommandInterface {
 
     }
 
+    public String getErrorUUID() {
+        return errorUUID;
+    }
+
+    public String getShortDescription() {
+        return shortDescription;
+    }
+
+    public String getAdditionalInfo() {
+        return additionalInfo;
+    }
+
     public static final Creator<ErrorResponse> CREATOR = new Creator<ErrorResponse>() {
         @Override
         public ErrorResponse createFromParcel(Parcel in) {

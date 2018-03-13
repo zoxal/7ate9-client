@@ -178,7 +178,7 @@ public class GameActivity extends AppCompatActivity {
         @Override
         public void handleMessage(android.os.Message msg) {
             Log.d(TAG, "GameActivity: handle");
-            if (msg.sendingUid == GameStartedEvent.UID) {
+            if (msg.obj instanceof GameStartedEvent) {
                 GameStartedEvent gameStartedEvent = (GameStartedEvent) msg.obj;
                 mTopCard = gameStartedEvent.getFirstCard();
                 Log.d(TAG, "GameStartedEvent: get mTopCard");
@@ -189,7 +189,7 @@ public class GameActivity extends AppCompatActivity {
                 mTopCardModifierTextView.setText(PLUS_MINUS_SYMBOL + mTopCard.getModifier());
                 mProgressBar.setVisibility(View.GONE);
                 getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-            } else if (msg.sendingUid == MoveRejectedResponse.UID) {
+            } else if (msg.obj instanceof MoveRejectedResponse) {
                 MoveRejectedResponse moveRejectedResponse = (MoveRejectedResponse) msg.obj;
                 Card card = moveRejectedResponse.getMove();
                 int i = 0;
@@ -202,7 +202,7 @@ public class GameActivity extends AppCompatActivity {
                 mCardsOnTableButtons[i].setVisibility(View.VISIBLE);
                 mNumOfCardsOnDesk++;
                 mVibrator.vibrate(VIBRATE_TIME_MS);
-            } else if (msg.sendingUid == NewStateEvent.UID) {
+            } else if (msg.obj instanceof NewStateEvent) {
                 NewStateEvent newStateEvent = (NewStateEvent) msg.obj;
                 if (newStateEvent.isLastMove()) {
                     mNettyClient.setHandler(null);

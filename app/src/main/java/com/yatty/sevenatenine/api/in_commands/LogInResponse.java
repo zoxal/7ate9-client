@@ -3,7 +3,6 @@ package com.yatty.sevenatenine.api.in_commands;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Parcel;
-import android.os.Parcelable;
 
 public class LogInResponse implements InCommandInterface {
     public static final int UID = LogInResponse.class.getSimpleName().hashCode();
@@ -32,6 +31,10 @@ public class LogInResponse implements InCommandInterface {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(authToken);
+    }
+
+    public String getAuthToken() {
+        return authToken;
     }
 
     public static final Creator<LogInResponse> CREATOR = new Creator<LogInResponse>() {

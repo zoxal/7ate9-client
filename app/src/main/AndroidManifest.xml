@@ -30,6 +30,8 @@
             android:name=".GameOverActivity"
             android:screenOrientation="portrait"
             android:theme="@style/ActivityStyle"/>
+        <activity android:name=".LobbyListActivity">
+        </activity>
     </application>
 
 </manifest>
