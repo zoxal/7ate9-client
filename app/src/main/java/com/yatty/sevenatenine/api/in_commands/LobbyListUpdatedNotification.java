@@ -4,22 +4,24 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import com.yatty.sevenatenine.api.commands_with_data.PublicLobbyInfo;
 
 import java.util.ArrayList;
 
 public class LobbyListUpdatedNotification implements Parcelable, InCommandInterface {
-    private ArrayList<PublicLobbyInfo> publicLobbyInfoList;
+    private static final String TAG = LobbyListUpdatedNotification.class.getSimpleName();
+    private ArrayList<PublicLobbyInfo> lobbyList;
 
 
     protected LobbyListUpdatedNotification(Parcel in) {
-        publicLobbyInfoList = in.createTypedArrayList(PublicLobbyInfo.CREATOR);
+        lobbyList = in.createTypedArrayList(PublicLobbyInfo.CREATOR);
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeTypedList(publicLobbyInfoList);
+        dest.writeTypedList(lobbyList);
     }
 
     @Override
@@ -27,15 +29,20 @@ public class LobbyListUpdatedNotification implements Parcelable, InCommandInterf
         return 0;
     }
 
+
     @Override
     public void doLogic(Handler handler) {
+        Log.d(TAG, "LobbyList do logic");
+        if (lobbyList == null) {
+            Log.d(TAG, "lobbyList is null!!!!!!!!!");
+        }
         Message message = new Message();
         message.obj = this;
         handler.sendMessage(message);
     }
 
-    public ArrayList<PublicLobbyInfo> getPublicLobbyInfoList() {
-        return publicLobbyInfoList;
+    public ArrayList<PublicLobbyInfo> getLobbyList() {
+        return lobbyList;
     }
 
     public static final Creator<LobbyListUpdatedNotification> CREATOR = new Creator<LobbyListUpdatedNotification>() {

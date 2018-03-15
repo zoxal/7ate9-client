@@ -167,13 +167,11 @@ public class NettyClient {
             }
             Log.d(TAG, "Got class: " + obj.getClass());
             InCommandInterface command = (InCommandInterface) obj;
-            // Test this while!!!
             while (mHandler == null) {
                 Log.d(TAG, "SLEEP_TIME_IF_HAS_NO_HANDLER_MS");
                 Thread.sleep(SLEEP_TIME_IF_HAS_NO_HANDLER_MS);
             }
             command.doLogic(mHandler);
-
         }
     }
 

@@ -41,7 +41,6 @@ public class LobbyListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lobby_list);
-        retrieveInfoFromIntent();
         mLobbyListRecyclerView = findViewById(R.id.rv_lobby_list);
         mLobbyListRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         final LobbyListActivityHandler lobbyListActivityHandler =
@@ -87,11 +86,6 @@ public class LobbyListActivity extends AppCompatActivity {
         return intent;
     }
 
-    private void retrieveInfoFromIntent() {
-        Intent intent = getIntent();
-        //mAuthToken = intent.getStringExtra(EXTRA_AUTH_TOKEN);
-    }
-
     private class LobbyHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private TextView mLobbyNameTextView;
@@ -99,6 +93,7 @@ public class LobbyListActivity extends AppCompatActivity {
 
         public LobbyHolder(View itemView) {
             super(itemView);
+            itemView.setOnClickListener(this);
             mLobbyNameTextView = itemView.findViewById(R.id.tv_lobby_name);
         }
 
@@ -136,7 +131,7 @@ public class LobbyListActivity extends AppCompatActivity {
         public void onBindViewHolder(@NonNull LobbyHolder holder, int position) {
             PublicLobbyInfo lobbyInfo = mLobbyInfoArrayList.get(position);
             if (BuildConfig.DEBUG) {
-                Log.d(TAG, "Binding task: " + lobbyInfo.getLobbyName());
+                Log.d(TAG, "Binding lobbye: " + lobbyInfo.getLobbyName());
             }
             holder.bindLobby(lobbyInfo);
         }
@@ -147,6 +142,7 @@ public class LobbyListActivity extends AppCompatActivity {
 
         @Override
         public int getItemCount() {
+            if (mLobbyInfoArrayList == null) return 0;
             return mLobbyInfoArrayList.size();
         }
     }
@@ -166,16 +162,22 @@ public class LobbyListActivity extends AppCompatActivity {
         public void handleMessage(Message msg) {
             Log.d(TAG, "LobbyListActivityHandler called");
             if (msg.obj instanceof LobbyListUpdatedNotification) {
+                Log.d(TAG, "LobbyListActivityHandler: LobbyListUpdatedNotification");
                 LobbyListUpdatedNotification lobbyListUpdatedNotification = (LobbyListUpdatedNotification) msg.obj;
-                updateLobbyList(lobbyListUpdatedNotification.getPublicLobbyInfoList());
+                if (lobbyListUpdatedNotification.getLobbyList() == null) {
+                    Log.d(TAG, "getLobbyList is null");
+                }
+                updateLobbyList(lobbyListUpdatedNotification.getLobbyList());
             } else if (msg.obj instanceof EnterLobbyResponse) {
+                Log.d(TAG, "LobbyListActivityHandler: LobbyListUpdatedNotification");
                 EnterLobbyResponse enterLobbyResponse = (EnterLobbyResponse) msg.obj;
+                mNettyClient.setHandler(null);
                 Intent nextActivity = LobbyActivity.getStartIntent(getApplicationContext(),
                         enterLobbyResponse.getPrivateLobbyInfo());
                 startActivity(nextActivity);
                 finish();
             } else if (msg.obj instanceof CreateLobbyResponse) {
-                Log.d(TAG, "LobbyListActivityHandler catch CreateLobbyResponse");
+                Log.d(TAG, "LobbyListActivityHandler: CreateLobbyResponse");
                 CreateLobbyResponse createLobbyResponse = (CreateLobbyResponse) msg.obj;
                 mNettyClient.write(new LobbyUnsubscribeRequest(UserInfo.getAuthToken()), false);
                 mNettyClient.setHandler(null);

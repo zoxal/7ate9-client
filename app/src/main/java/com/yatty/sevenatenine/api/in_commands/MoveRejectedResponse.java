@@ -10,8 +10,6 @@ import com.yatty.sevenatenine.api.commands_with_data.Card;
 public class MoveRejectedResponse implements InCommandInterface {
     public static final int UID = MoveRejectedResponse.class.getSimpleName().hashCode();
     public static final String TAG = MoveRejectedResponse.class.getSimpleName();
-    public static final String COMMAND_TYPE = "MoveRejectedResponse";
-    //public final String _type = COMMAND_TYPE;
     private Card move;
 
     protected MoveRejectedResponse(Parcel in) {
