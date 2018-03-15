@@ -10,17 +10,24 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.yatty.sevenatenine.api.in_commands.LogInResponse;
+import com.yatty.sevenatenine.api.in_commands.CreateLobbyResponse;
+import com.yatty.sevenatenine.api.in_commands.EnterLobbyResponse;
+import com.yatty.sevenatenine.api.in_commands.ErrorResponse;
 import com.yatty.sevenatenine.api.in_commands.GameStartedEvent;
 import com.yatty.sevenatenine.api.in_commands.InCommandInterface;
+import com.yatty.sevenatenine.api.in_commands.LobbyListUpdatedNotification;
+import com.yatty.sevenatenine.api.in_commands.LogInResponse;
 import com.yatty.sevenatenine.api.in_commands.MoveRejectedResponse;
 import com.yatty.sevenatenine.api.in_commands.NewStateEvent;
+import com.yatty.sevenatenine.api.out_commands.CreateLobbyRequest;
+import com.yatty.sevenatenine.api.out_commands.EnterLobbyRequest;
 import com.yatty.sevenatenine.api.out_commands.KeepAliveRequest;
+import com.yatty.sevenatenine.api.out_commands.LobbySubscribeRequest;
 import com.yatty.sevenatenine.api.out_commands.LogInRequest;
+import com.yatty.sevenatenine.api.out_commands.LogOutRequest;
 import com.yatty.sevenatenine.api.out_commands.MoveRequest;
 
 import java.net.InetSocketAddress;
-import java.net.SocketAddress;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.List;
@@ -37,12 +44,9 @@ import io.netty.channel.ChannelInitializer;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.DatagramPacket;
 import io.netty.channel.socket.SocketChannel;
-import io.netty.channel.socket.nio.NioDatagramChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.ByteToMessageDecoder;
-import io.netty.handler.codec.MessageToMessageCodec;
 import io.netty.handler.codec.MessageToMessageEncoder;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
@@ -64,12 +68,25 @@ public class NettyClient {
 
     private NettyClient() {
         mCommands = new HashMap<>();
-        mCommands.put(LogInRequest.COMMAND_TYPE, LogInRequest.class);
-        mCommands.put(LogInResponse.COMMAND_TYPE, LogInResponse.class);
-        mCommands.put(GameStartedEvent.COMMAND_TYPE, GameStartedEvent.class);
-        mCommands.put(MoveRejectedResponse.COMMAND_TYPE, MoveRejectedResponse.class);
-        mCommands.put(MoveRequest.COMMAND_TYPE, MoveRequest.class);
-        mCommands.put(NewStateEvent.COMMAND_TYPE, NewStateEvent.class);
+        // in commands
+        mCommands.put(CreateLobbyResponse.class.getSimpleName(), CreateLobbyResponse.class);
+        mCommands.put(EnterLobbyResponse.class.getSimpleName(), EnterLobbyResponse.class);
+        mCommands.put(ErrorResponse.class.getSimpleName(), ErrorResponse.class);
+        mCommands.put(LobbyListUpdatedNotification.class.getSimpleName(), LobbyListUpdatedNotification.class);
+        mCommands.put(LogInResponse.class.getSimpleName(), LogInResponse.class);
+        mCommands.put(GameStartedEvent.class.getSimpleName(), GameStartedEvent.class);
+        mCommands.put(MoveRejectedResponse.class.getSimpleName(), MoveRejectedResponse.class);
+        mCommands.put(NewStateEvent.class.getSimpleName(), NewStateEvent.class);
+
+        // out commands
+        mCommands.put(CreateLobbyRequest.class.getSimpleName(), CreateLobbyRequest.class);
+        mCommands.put(EnterLobbyRequest.class.getSimpleName(), EnterLobbyRequest.class);
+        mCommands.put(KeepAliveRequest.class.getSimpleName(), KeepAliveRequest.class);
+        mCommands.put(LobbySubscribeRequest.class.getSimpleName(), LobbySubscribeRequest.class);
+        mCommands.put(LogInRequest.class.getSimpleName(), LogInRequest.class);
+        mCommands.put(LogOutRequest.class.getSimpleName(), LogOutRequest.class);
+        mCommands.put(MoveRequest.class.getSimpleName(), MoveRequest.class);
+
     }
 
     public static NettyClient getInstance() {

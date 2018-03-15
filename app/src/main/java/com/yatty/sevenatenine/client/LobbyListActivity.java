@@ -41,12 +41,14 @@ public class LobbyListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_lobby_list);
         retrieveInfoFromIntent();
         mAddFloatingActionButton = findViewById(R.id.fab_add_lobby);
+        mAddFloatingActionButton.bringToFront();
         mAddFloatingActionButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 Intent startIntent = CreateLobbyActivity.getStartIntent(getApplicationContext());
                 startActivityForResult(startIntent, CreateLobbyActivity.REQUEST_CODE);
+                Log.d(TAG, "mAddFloatingActionButton was pressed");
             }
         });
         mLobbyListRecyclerView = findViewById(R.id.rv_lobby_list);
