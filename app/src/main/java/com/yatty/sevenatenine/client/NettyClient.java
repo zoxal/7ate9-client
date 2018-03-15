@@ -49,9 +49,9 @@ import io.netty.util.concurrent.GenericFutureListener;
 
 public class NettyClient {
     private static final String TAG = NettyClient.class.getSimpleName();
-    private static final String HOST = "192.168.43.117";
+    private static final String HOST = "192.168.0.103";
     private static final String TYPE_FIELD = "_type";
-    private static final int PORT = 6667;
+    private static final int PORT = 39405;
     private static final String COMMAND_TYPE_FIELD = "_type";
     private static final int SLEEP_TIME_IF_HAS_NO_HANDLER_MS = 5;
 

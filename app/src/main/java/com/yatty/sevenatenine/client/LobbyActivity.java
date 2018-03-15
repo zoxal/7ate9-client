@@ -26,7 +26,7 @@ public class LobbyActivity extends AppCompatActivity {
 
     }
 
-    public Intent getStartIntent(Context context, PrivateLobbyInfo privateLobbyInfo) {
+    public static Intent getStartIntent(Context context, PrivateLobbyInfo privateLobbyInfo) {
         Intent intent = new Intent(context, LobbyActivity.class);
         intent.putExtra(EXTRA_PRIVATE_LOBBY_INFO, privateLobbyInfo);
         return intent;

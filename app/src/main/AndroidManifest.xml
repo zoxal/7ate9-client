@@ -34,6 +34,8 @@
         </activity>
         <activity android:name=".LobbyActivity">
         </activity>
+        <activity android:name=".CreateLobbyActivity">
+        </activity>
     </application>
 
 </manifest>

@@ -27,7 +27,7 @@ import java.util.ArrayList;
 public class GameActivity extends AppCompatActivity {
     public static final String TAG = GameActivity.class.getSimpleName();
     private static final String EXTRA_GAME_ID = "game_id_game_activity";
-    public static final String EXTRA_PLAYER_NAME = "player_name_game_activity";
+    //    public static final String EXTRA_PLAYER_NAME = "player_name_game_activity";
     public static final String PLUS_MINUS_SYMBOL = "±";
     public static final String NEW_LINE_SYMBOL = "\n";
 
@@ -37,7 +37,6 @@ public class GameActivity extends AppCompatActivity {
 
     private NettyClient mNettyClient;
     private String mGameId;
-    private String mPlayerName;
     private TextView mTopCardValueTextView;
     private TextView mCounterTextView;
     private TextView mTopCardModifierTextView;
@@ -52,10 +51,9 @@ public class GameActivity extends AppCompatActivity {
     private int mNumOfCardsOnDesk;
     private int mMoveNumber;
 
-    public static Intent newIntent(Context context, String gameId, String playerName) {
+    public static Intent newIntent(Context context, String gameId) {
         Intent intent = new Intent(context, GameActivity.class);
         intent.putExtra(EXTRA_GAME_ID, gameId);
-        intent.putExtra(EXTRA_PLAYER_NAME, playerName);
         return intent;
     }
 
@@ -117,7 +115,7 @@ public class GameActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
         mGameId = getIntent().getStringExtra(EXTRA_GAME_ID);
-        mPlayerName = getIntent().getStringExtra(EXTRA_PLAYER_NAME);
+//        mPlayerName = getIntent().getStringExtra(EXTRA_PLAYER_NAME);
         initUi();
 
         mProgressBar = new ProgressBar(getApplicationContext());
@@ -206,13 +204,13 @@ public class GameActivity extends AppCompatActivity {
                 NewStateEvent newStateEvent = (NewStateEvent) msg.obj;
                 if (newStateEvent.isLastMove()) {
                     mNettyClient.setHandler(null);
-                    Intent nextActivity = GameOverActivity.newIntent(getApplicationContext(), mPlayerName,
+                    Intent nextActivity = GameOverActivity.newIntent(getApplicationContext(), UserInfo.getUserName(),
                             newStateEvent.getGameResult().getWinner(), newStateEvent.getGameResult().getScores());
                     startActivity(nextActivity);
                     finish();
                 } else {
                     String moveWinner = newStateEvent.getMoveWinner();
-                    if (mPlayerName.equals(moveWinner)) {
+                    if (UserInfo.getUserName().equals(moveWinner)) {
                         mCounterTextView.setText(String.valueOf(Integer.parseInt(mCounterTextView.getText().toString()) + 1));
                     }
                     mTopCard = newStateEvent.getNextCard();

@@ -25,17 +25,18 @@ import java.util.ArrayList;
 
 public class LobbyListActivity extends AppCompatActivity {
     private static final String TAG = LobbyListActivity.class.getSimpleName();
-    private static final String EXTRA_AUTH_TOKEN = "auth_token";
+   // private static final String EXTRA_AUTH_TOKEN = "auth_token";
 
     private RecyclerView mLobbyListRecyclerView;
     private LobbyAdapter mLobbyAdapter;
     private NettyClient mNettyClient;
-    private String mAuthToken;
+    // private String mAuthToken;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getInfoFromIntent();
+        setContentView(R.layout.activity_lobby_list);
+        retrieveInfoFromIntent();
         mLobbyListRecyclerView = findViewById(R.id.rv_lobby_list);
         mLobbyListRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         final LobbyListActivityHandler lobbyListActivityHandler =
@@ -43,20 +44,20 @@ public class LobbyListActivity extends AppCompatActivity {
         mNettyClient = NettyClient.getInstance();
         mNettyClient.setHandler(lobbyListActivityHandler);
 
-        LobbySubscribeRequest lobbySubscribeRequest = new LobbySubscribeRequest(mAuthToken);
+        LobbySubscribeRequest lobbySubscribeRequest = new LobbySubscribeRequest(UserInfo.getAuthToken());
         mNettyClient.write(lobbySubscribeRequest, true);
 
         setContentView(R.layout.activity_lobby_list);
     }
 
-    private void getInfoFromIntent() {
+    private void retrieveInfoFromIntent() {
         Intent intent = getIntent();
-        mAuthToken = intent.getStringExtra(EXTRA_AUTH_TOKEN);
+        //mAuthToken = intent.getStringExtra(EXTRA_AUTH_TOKEN);
     }
 
-    public static Intent getStartIntent(Context context, String authToken) {
+    public static Intent getStartIntent(Context context) {
         Intent intent = new Intent(context, LobbyListActivity.class);
-        intent.putExtra(EXTRA_AUTH_TOKEN, authToken);
+        //intent.putExtra(EXTRA_AUTH_TOKEN, authToken);
         return intent;
     }
 
@@ -78,7 +79,7 @@ public class LobbyListActivity extends AppCompatActivity {
 
         @Override
         public void onClick(View v) {
-            EnterLobbyRequest enterLobbyRequest = new EnterLobbyRequest(mPublicLobbyInfo, mAuthToken);
+            EnterLobbyRequest enterLobbyRequest = new EnterLobbyRequest(mPublicLobbyInfo, UserInfo.getAuthToken());
             mNettyClient.write(enterLobbyRequest, true);
         }
     }
@@ -136,7 +137,11 @@ public class LobbyListActivity extends AppCompatActivity {
                 LobbyListUpdatedNotification lobbyListUpdatedNotification = (LobbyListUpdatedNotification) msg.obj;
                 updateLobbyList(lobbyListUpdatedNotification.getPublicLobbyInfoList());
             } else if (msg.obj instanceof EnterLobbyResponse) {
-                
+                EnterLobbyResponse enterLobbyResponse = (EnterLobbyResponse) msg.obj;
+                Intent nextActivity = LobbyActivity.getStartIntent(getApplicationContext(),
+                        enterLobbyResponse.getPrivateLobbyInfo());
+                startActivity(nextActivity);
+                finish();
             }
         }
     }
