@@ -12,6 +12,8 @@ import android.widget.Spinner;
 import com.yatty.sevenatenine.api.out_commands.CreateLobbyRequest;
 
 public class CreateLobbyActivity extends AppCompatActivity {
+    public static final String TAG = CreateLobbyActivity.class.getSimpleName();
+
     private Spinner mPlayersNumberSpinner;
     private EditText mLobbyNameEditText;
     private Button mCreateLobbyButton;
@@ -29,7 +31,7 @@ public class CreateLobbyActivity extends AppCompatActivity {
             public void onClick(View v) {
                 CreateLobbyRequest createLobbyRequest = new CreateLobbyRequest();
                 createLobbyRequest.setLobbyName(mLobbyNameEditText.getText().toString());
-                createLobbyRequest.setMaxPlayersNumber((Integer) mPlayersNumberSpinner.getSelectedItem());
+                createLobbyRequest.setMaxPlayersNumber(Integer.parseInt(mPlayersNumberSpinner.getSelectedItem().toString()));
                 createLobbyRequest.setAuthToken(UserInfo.getAuthToken());
                 Intent intentWithData = LobbyListActivity.getIntentWithData(createLobbyRequest);
                 setResult(RESULT_OK, intentWithData);

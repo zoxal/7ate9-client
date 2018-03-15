@@ -223,7 +223,7 @@ public class NettyClient {
             JsonElement jsonElement = gson.toJsonTree(msg);
             jsonElement.getAsJsonObject().addProperty(TYPE_FIELD, msg.getClass().getSimpleName());
             String json = gson.toJson(jsonElement);
-            Log.d(TAG, "Send: " + json);
+            Log.d(TAG, "Sending: " + json);
             out.add(Unpooled.wrappedBuffer(json.getBytes()));
         }
     }

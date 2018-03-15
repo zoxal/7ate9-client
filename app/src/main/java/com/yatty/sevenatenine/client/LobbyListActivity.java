@@ -53,18 +53,21 @@ public class LobbyListActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent startIntent = CreateLobbyActivity.getStartIntent(getApplicationContext());
                 startActivityForResult(startIntent, REQUEST_CODE);
-                Log.d(TAG, "mAddFloatingActionButton was pressed");
             }
         });
         LobbySubscribeRequest lobbySubscribeRequest = new LobbySubscribeRequest(UserInfo.getAuthToken());
         mNettyClient.write(lobbySubscribeRequest, true);
-
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (data == null) return;
-        if (requestCode == RESULT_OK) {
+        Log.d(TAG, "onActivityResult");
+        if (data == null) {
+            Log.d(TAG, "data is Null!!!!!!!!!!");
+            return;
+        }
+        if (resultCode == RESULT_OK) {
+            Log.d(TAG, "sending creating");
             CreateLobbyRequest createLobbyRequest = (CreateLobbyRequest) data
                     .getSerializableExtra(EXTRA_CREATE_LOBBY_REQUEST);
             mNettyClient.write(createLobbyRequest, false);
@@ -170,6 +173,7 @@ public class LobbyListActivity extends AppCompatActivity {
                 startActivity(nextActivity);
                 finish();
             } else if (msg.obj instanceof CreateLobbyResponse) {
+                CreateLobbyResponse createLobbyResponse = (CreateLobbyResponse) msg.obj;
 
             }
         }
