@@ -12,8 +12,6 @@ import android.widget.Spinner;
 import com.yatty.sevenatenine.api.out_commands.CreateLobbyRequest;
 
 public class CreateLobbyActivity extends AppCompatActivity {
-    public static final int REQUEST_CODE = CreateLobbyActivity.class.getSimpleName().hashCode();
-
     private Spinner mPlayersNumberSpinner;
     private EditText mLobbyNameEditText;
     private Button mCreateLobbyButton;

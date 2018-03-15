@@ -119,8 +119,9 @@ public class NettyClient {
                     if (keepAlive.get()) {
                         Log.d(TAG, "Connection closed, reopening...");
                         NettyClient.this.connect();
-                        // TODO send real auth token
-                        mChannel.writeAndFlush(new KeepAliveRequest());
+                        if (UserInfo.getAuthToken() != null) {
+                            mChannel.writeAndFlush(new KeepAliveRequest(UserInfo.getAuthToken()));
+                        }
                     } else {
                         Log.d(TAG, "Connection closed, do not reopen");
                     }
@@ -217,11 +218,12 @@ public class NettyClient {
 
         @Override
         protected void encode(ChannelHandlerContext ctx, Object msg, List<Object> out) throws Exception {
-            Log.d(TAG, "Encoding...");
+            //Log.d(TAG, "Encoding...");
             Gson gson = new Gson();
             JsonElement jsonElement = gson.toJsonTree(msg);
             jsonElement.getAsJsonObject().addProperty(TYPE_FIELD, msg.getClass().getSimpleName());
             String json = gson.toJson(jsonElement);
+            Log.d(TAG, "Send: " + json);
             out.add(Unpooled.wrappedBuffer(json.getBytes()));
         }
     }

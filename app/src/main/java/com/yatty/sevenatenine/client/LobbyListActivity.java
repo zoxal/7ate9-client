@@ -27,6 +27,7 @@ import com.yatty.sevenatenine.api.out_commands.LobbySubscribeRequest;
 import java.util.ArrayList;
 
 public class LobbyListActivity extends AppCompatActivity {
+    private static final int REQUEST_CODE = 1;
     private static final String TAG = LobbyListActivity.class.getSimpleName();
     private static final String EXTRA_CREATE_LOBBY_REQUEST = "create_lobby_request";
 
@@ -40,28 +41,24 @@ public class LobbyListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lobby_list);
         retrieveInfoFromIntent();
-        mAddFloatingActionButton = findViewById(R.id.fab_add_lobby);
-        mAddFloatingActionButton.bringToFront();
-        mAddFloatingActionButton.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                Intent startIntent = CreateLobbyActivity.getStartIntent(getApplicationContext());
-                startActivityForResult(startIntent, CreateLobbyActivity.REQUEST_CODE);
-                Log.d(TAG, "mAddFloatingActionButton was pressed");
-            }
-        });
         mLobbyListRecyclerView = findViewById(R.id.rv_lobby_list);
         mLobbyListRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         final LobbyListActivityHandler lobbyListActivityHandler =
                 new LobbyListActivityHandler();
         mNettyClient = NettyClient.getInstance();
         mNettyClient.setHandler(lobbyListActivityHandler);
-
+        mAddFloatingActionButton = findViewById(R.id.fab_add_lobby);
+        mAddFloatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent startIntent = CreateLobbyActivity.getStartIntent(getApplicationContext());
+                startActivityForResult(startIntent, REQUEST_CODE);
+                Log.d(TAG, "mAddFloatingActionButton was pressed");
+            }
+        });
         LobbySubscribeRequest lobbySubscribeRequest = new LobbySubscribeRequest(UserInfo.getAuthToken());
         mNettyClient.write(lobbySubscribeRequest, true);
 
-        setContentView(R.layout.activity_lobby_list);
     }
 
     @Override
