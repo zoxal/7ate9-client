@@ -9,4 +9,5 @@
     <string name="title_score_board">ScoreBoard</string>
     <string name="title_enter_lobby_name">Enter lobby name:</string>
     <string name="title_max_players_number">Max number of players:</string>
+    <string name="action_create_lobby">create</string>
 </resources>
