@@ -80,7 +80,7 @@ public class GameActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 LogOutRequest logOutRequest = new LogOutRequest(mGameId);
-                mNettyClient.write(logOutRequest);
+                mNettyClient.write(logOutRequest, false);
                 mNettyClient.setHandler(null);
                 Intent nextActivity = MainActivity.newIntent(getApplicationContext());
                 startActivity(nextActivity);
@@ -156,7 +156,7 @@ public class GameActivity extends AppCompatActivity {
                 moveRequest.setGameId(mGameId);
                 moveRequest.setMove(card);
                 moveRequest.setMoveNumber(mMoveNumber);
-                mNettyClient.write(moveRequest);
+                mNettyClient.write(moveRequest, true);
                 view.setVisibility(View.INVISIBLE);
                 view.setOnClickListener(null);
                 mNumOfCardsOnDesk--;

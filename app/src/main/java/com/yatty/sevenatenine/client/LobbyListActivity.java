@@ -16,7 +16,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.yatty.sevenatenine.api.commands_with_data.PublicLobbyInfo;
+import com.yatty.sevenatenine.api.in_commands.EnterLobbyResponse;
 import com.yatty.sevenatenine.api.in_commands.LobbyListUpdatedNotification;
+import com.yatty.sevenatenine.api.out_commands.EnterLobbyRequest;
 import com.yatty.sevenatenine.api.out_commands.LobbySubscribeRequest;
 
 import java.util.ArrayList;
@@ -42,7 +44,7 @@ public class LobbyListActivity extends AppCompatActivity {
         mNettyClient.setHandler(lobbyListActivityHandler);
 
         LobbySubscribeRequest lobbySubscribeRequest = new LobbySubscribeRequest(mAuthToken);
-        mNettyClient.write(lobbySubscribeRequest);
+        mNettyClient.write(lobbySubscribeRequest, true);
 
         setContentView(R.layout.activity_lobby_list);
     }
@@ -58,9 +60,10 @@ public class LobbyListActivity extends AppCompatActivity {
         return intent;
     }
 
-    private class LobbyHolder extends RecyclerView.ViewHolder {
+    private class LobbyHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private TextView mLobbyNameTextView;
+        private PublicLobbyInfo mPublicLobbyInfo;
 
         public LobbyHolder(View itemView) {
             super(itemView);
@@ -69,7 +72,14 @@ public class LobbyListActivity extends AppCompatActivity {
 
         public void bindLobby(PublicLobbyInfo publicLobbyInfo) {
             Log.d(TAG, "bindLobby: " + publicLobbyInfo.getLobbyName());
-            mLobbyNameTextView.setText(publicLobbyInfo.getLobbyName());
+            mPublicLobbyInfo = publicLobbyInfo;
+            mLobbyNameTextView.setText(mPublicLobbyInfo.getLobbyName());
+        }
+
+        @Override
+        public void onClick(View v) {
+            EnterLobbyRequest enterLobbyRequest = new EnterLobbyRequest(mPublicLobbyInfo, mAuthToken);
+            mNettyClient.write(enterLobbyRequest, true);
         }
     }
 
@@ -125,6 +135,8 @@ public class LobbyListActivity extends AppCompatActivity {
             if (msg.obj instanceof LobbyListUpdatedNotification) {
                 LobbyListUpdatedNotification lobbyListUpdatedNotification = (LobbyListUpdatedNotification) msg.obj;
                 updateLobbyList(lobbyListUpdatedNotification.getPublicLobbyInfoList());
+            } else if (msg.obj instanceof EnterLobbyResponse) {
+                
             }
         }
     }

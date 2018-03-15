@@ -15,6 +15,7 @@ import com.yatty.sevenatenine.api.in_commands.GameStartedEvent;
 import com.yatty.sevenatenine.api.in_commands.InCommandInterface;
 import com.yatty.sevenatenine.api.in_commands.MoveRejectedResponse;
 import com.yatty.sevenatenine.api.in_commands.NewStateEvent;
+import com.yatty.sevenatenine.api.out_commands.KeepAliveRequest;
 import com.yatty.sevenatenine.api.out_commands.LogInRequest;
 import com.yatty.sevenatenine.api.out_commands.MoveRequest;
 
@@ -23,8 +24,10 @@ import java.net.SocketAddress;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import io.netty.bootstrap.Bootstrap;
+import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -35,8 +38,14 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.DatagramPacket;
+import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioDatagramChannel;
+import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.ByteToMessageDecoder;
 import io.netty.handler.codec.MessageToMessageCodec;
+import io.netty.handler.codec.MessageToMessageEncoder;
+import io.netty.util.concurrent.Future;
+import io.netty.util.concurrent.GenericFutureListener;
 
 public class NettyClient {
     private static final String TAG = NettyClient.class.getSimpleName();
@@ -48,8 +57,10 @@ public class NettyClient {
 
     private static NettyClient sNettyClient;
     private HashMap<String, Class> mCommands;
+    private EventLoopGroup eventLoopGroup = new NioEventLoopGroup();
     private Channel mChannel;
     private volatile Handler mHandler;
+    private volatile AtomicBoolean keepAlive = new AtomicBoolean(false);
 
     private NettyClient() {
         mCommands = new HashMap<>();
@@ -74,14 +85,40 @@ public class NettyClient {
     }
 
     private void run() throws Exception {
-        EventLoopGroup eventLoopGroup = new NioEventLoopGroup();
-        Bootstrap bootstrap = new Bootstrap();
-        bootstrap.group(eventLoopGroup).channel(NioDatagramChannel.class).handler(new PipeLineInitializer());
-        SocketAddress socketAddress = new InetSocketAddress(HOST, PORT);
-        mChannel = bootstrap.connect(socketAddress).sync().channel();
+        connect();
     }
 
-    public void write(Object obj) {
+    private void connect() {
+        try {
+            Bootstrap bootstrap = new Bootstrap();
+            bootstrap.group(eventLoopGroup)
+                    .channel(NioSocketChannel.class)
+                    .remoteAddress(new InetSocketAddress(HOST, PORT))
+                    .handler(new PipeLineInitializer());
+            mChannel = bootstrap.connect().sync().channel();
+            mChannel.closeFuture().addListener(new GenericFutureListener<Future<? super Void>>() {
+                @Override
+                public void operationComplete(Future<? super Void> e) throws Exception {
+                    if (keepAlive.get()) {
+                        Log.d(TAG, "Connection closed, reopening...");
+                        NettyClient.this.connect();
+                        // TODO send real auth token
+                        mChannel.writeAndFlush(new KeepAliveRequest());
+                    } else {
+                        Log.d(TAG, "Connection closed, do not reopen");
+                    }
+                }
+            });
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void write(Object obj, boolean keepAlive) {
+        this.keepAlive.set(keepAlive);
+        if (!mChannel.isOpen()) {
+            connect();
+        }
         mChannel.writeAndFlush(obj).addListener(new ChannelFutureListener() {
             @Override
             public void operationComplete(ChannelFuture future) throws Exception {
@@ -95,17 +132,21 @@ public class NettyClient {
         });
     }
 
-    private class PipeLineInitializer extends ChannelInitializer<NioDatagramChannel> {
+    private class PipeLineInitializer extends ChannelInitializer<SocketChannel> {
         @Override
-        protected void initChannel(NioDatagramChannel ch) throws Exception {
-            ch.pipeline().addFirst(new GsonCodec());
+        protected void initChannel(SocketChannel ch) throws Exception {
+            ch.pipeline().addFirst(new GsonDecoder());
             ch.pipeline().addLast(new LogicHandler());
+            ch.pipeline().addLast(new GsonEncoder());
         }
     }
 
     private class LogicHandler extends SimpleChannelInboundHandler<Object> {
         @Override
         protected void channelRead0(ChannelHandlerContext ctx, Object obj) throws Exception {
+            if (!keepAlive.get()) {
+                ctx.channel().close();
+            }
             Log.d(TAG, "Got class: " + obj.getClass());
             InCommandInterface command = (InCommandInterface) obj;
             // Test this while!!!
@@ -114,10 +155,43 @@ public class NettyClient {
                 Thread.sleep(SLEEP_TIME_IF_HAS_NO_HANDLER_MS);
             }
             command.doLogic(mHandler);
+
         }
     }
 
-    public class GsonCodec extends MessageToMessageCodec<DatagramPacket, Object> {
+    public class GsonDecoder extends ByteToMessageDecoder {
+
+        @Override
+        public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+            cause.printStackTrace();
+        }
+
+        @Override
+        protected void decode(ChannelHandlerContext ctx, ByteBuf msg, List<Object> out) throws Exception {
+            Log.d(TAG, "Decoding...");
+            Gson gson = new GsonBuilder().setExclusionStrategies(new ExclusionStrategy() {
+                @Override
+                public boolean shouldSkipField(FieldAttributes fieldAttributes) {
+                    return fieldAttributes.getName().equals("_type");
+                }
+
+                @Override
+                public boolean shouldSkipClass(Class<?> aClass) {
+                    return false;
+                }
+            }).create();
+            String json = msg.readBytes(msg.readableBytes()).toString(Charset.defaultCharset());
+            Log.d(TAG, "Get json: " + json);
+            JsonParser parser = new JsonParser();
+            JsonObject obj = parser.parse(json).getAsJsonObject();
+            String type = obj.get(COMMAND_TYPE_FIELD).getAsString();
+            Log.d(TAG, "Parsed type: " + type);
+            Class clazz = mCommands.get(type);
+            out.add(gson.fromJson(json, clazz));
+        }
+    }
+
+    public class GsonEncoder extends MessageToMessageEncoder<Object> {
 
         @Override
         public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
@@ -132,30 +206,6 @@ public class NettyClient {
             jsonElement.getAsJsonObject().addProperty(TYPE_FIELD, msg.getClass().getSimpleName());
             String json = gson.toJson(jsonElement);
             out.add(Unpooled.wrappedBuffer(json.getBytes()));
-        }
-
-        @Override
-        protected void decode(ChannelHandlerContext ctx, DatagramPacket msg, List<Object> out) throws Exception {
-            Log.d(TAG, "Decoding...");
-            Gson gson = new GsonBuilder().setExclusionStrategies(new ExclusionStrategy() {
-                @Override
-                public boolean shouldSkipField(FieldAttributes fieldAttributes) {
-                    return fieldAttributes.getName().equals("_type");
-                }
-
-                @Override
-                public boolean shouldSkipClass(Class<?> aClass) {
-                    return false;
-                }
-            }).create();
-            String json = msg.content().toString(Charset.defaultCharset());
-            Log.d(TAG, "Get json: " + json);
-            JsonParser parser = new JsonParser();
-            JsonObject obj = parser.parse(json).getAsJsonObject();
-            String type = obj.get(COMMAND_TYPE_FIELD).getAsString();
-            Log.d(TAG, "Parsed type: " + type);
-            Class clazz = mCommands.get(type);
-            out.add(gson.fromJson(json, clazz));
         }
     }
 

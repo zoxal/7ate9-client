@@ -20,6 +20,10 @@ public class PlayerInfo implements Parcelable {
         dest.writeString(name);
     }
 
+    public String getName() {
+        return name;
+    }
+
     public static final Creator<PlayerInfo> CREATOR = new Creator<PlayerInfo>() {
         @Override
         public PlayerInfo createFromParcel(Parcel in) {

@@ -101,7 +101,7 @@ public class GameOverActivity extends AppCompatActivity {
         mScoreBoard.setAdapter(adapter);
     }
 
-    public void clickToMainMenu_button(View view) {
+    public void clickToMainMenuButton(View view) {
         Intent mainIntent = MainActivity.newIntent(getApplicationContext());
         startActivity(mainIntent);
         finish();

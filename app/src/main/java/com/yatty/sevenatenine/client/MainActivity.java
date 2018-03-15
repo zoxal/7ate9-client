@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     LogInRequest logInRequest = new LogInRequest();
                     logInRequest.setAuthToken(mNameEditText.getText().toString());
-                    mNettyClient.write(logInRequest);
+                    mNettyClient.write(logInRequest, false);
                     view.setClickable(false);
                 } catch (Exception e) {
                     e.printStackTrace();

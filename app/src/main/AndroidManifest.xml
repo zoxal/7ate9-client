@@ -32,6 +32,8 @@
             android:theme="@style/ActivityStyle"/>
         <activity android:name=".LobbyListActivity">
         </activity>
+        <activity android:name=".LobbyActivity">
+        </activity>
     </application>
 
 </manifest>
