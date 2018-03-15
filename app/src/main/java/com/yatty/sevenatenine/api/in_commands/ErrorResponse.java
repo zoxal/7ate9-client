@@ -1,6 +1,7 @@
 package com.yatty.sevenatenine.api.in_commands;
 
 import android.os.Handler;
+import android.os.Message;
 import android.os.Parcel;
 
 public class ErrorResponse implements InCommandInterface {
@@ -28,7 +29,9 @@ public class ErrorResponse implements InCommandInterface {
 
     @Override
     public void doLogic(Handler handler) {
-
+        Message message = new Message();
+        message.obj = this;
+        handler.sendMessage(message);
     }
 
     public String getErrorUUID() {

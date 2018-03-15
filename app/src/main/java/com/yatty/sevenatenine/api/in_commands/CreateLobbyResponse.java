@@ -16,7 +16,7 @@ public class CreateLobbyResponse implements Parcelable, InCommandInterface {
     public void doLogic(Handler handler) {
         Message message = new Message();
         message.obj = this;
-        message.setTarget(handler);
+        handler.sendMessage(message);
     }
 
     @Override

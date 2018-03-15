@@ -23,6 +23,7 @@ import com.yatty.sevenatenine.api.in_commands.LobbyListUpdatedNotification;
 import com.yatty.sevenatenine.api.out_commands.CreateLobbyRequest;
 import com.yatty.sevenatenine.api.out_commands.EnterLobbyRequest;
 import com.yatty.sevenatenine.api.out_commands.LobbySubscribeRequest;
+import com.yatty.sevenatenine.api.out_commands.LobbyUnsubscribeRequest;
 
 import java.util.ArrayList;
 
@@ -163,6 +164,7 @@ public class LobbyListActivity extends AppCompatActivity {
     private class LobbyListActivityHandler extends Handler {
         @Override
         public void handleMessage(Message msg) {
+            Log.d(TAG, "LobbyListActivityHandler called");
             if (msg.obj instanceof LobbyListUpdatedNotification) {
                 LobbyListUpdatedNotification lobbyListUpdatedNotification = (LobbyListUpdatedNotification) msg.obj;
                 updateLobbyList(lobbyListUpdatedNotification.getPublicLobbyInfoList());
@@ -173,8 +175,12 @@ public class LobbyListActivity extends AppCompatActivity {
                 startActivity(nextActivity);
                 finish();
             } else if (msg.obj instanceof CreateLobbyResponse) {
+                Log.d(TAG, "LobbyListActivityHandler catch CreateLobbyResponse");
                 CreateLobbyResponse createLobbyResponse = (CreateLobbyResponse) msg.obj;
-
+                mNettyClient.write(new LobbyUnsubscribeRequest(UserInfo.getAuthToken()), false);
+                mNettyClient.setHandler(null);
+                Intent intent = LobbyActivity.getStartIntent(getApplicationContext());
+                startActivity(intent);
             }
         }
     }

@@ -1,6 +1,7 @@
 package com.yatty.sevenatenine.api.in_commands;
 
 import android.os.Handler;
+import android.os.Message;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -28,7 +29,9 @@ public class LobbyListUpdatedNotification implements Parcelable, InCommandInterf
 
     @Override
     public void doLogic(Handler handler) {
-
+        Message message = new Message();
+        message.obj = this;
+        handler.sendMessage(message);
     }
 
     public ArrayList<PublicLobbyInfo> getPublicLobbyInfoList() {
