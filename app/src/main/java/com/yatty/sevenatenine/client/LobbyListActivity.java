@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -25,18 +26,26 @@ import java.util.ArrayList;
 
 public class LobbyListActivity extends AppCompatActivity {
     private static final String TAG = LobbyListActivity.class.getSimpleName();
-   // private static final String EXTRA_AUTH_TOKEN = "auth_token";
 
+    private FloatingActionButton mAddFloatingActionButton;
     private RecyclerView mLobbyListRecyclerView;
     private LobbyAdapter mLobbyAdapter;
     private NettyClient mNettyClient;
-    // private String mAuthToken;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lobby_list);
         retrieveInfoFromIntent();
+        mAddFloatingActionButton = findViewById(R.id.fab_add_lobby);
+        mAddFloatingActionButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent startIntent = CreateLobbyActivity.getStartIntent(getApplicationContext());
+                startActivityForResult(startIntent, CreateLobbyActivity.REQUEST_CODE);
+            }
+        });
         mLobbyListRecyclerView = findViewById(R.id.rv_lobby_list);
         mLobbyListRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         final LobbyListActivityHandler lobbyListActivityHandler =
@@ -50,15 +59,20 @@ public class LobbyListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_lobby_list);
     }
 
-    private void retrieveInfoFromIntent() {
-        Intent intent = getIntent();
-        //mAuthToken = intent.getStringExtra(EXTRA_AUTH_TOKEN);
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
     }
 
     public static Intent getStartIntent(Context context) {
         Intent intent = new Intent(context, LobbyListActivity.class);
         //intent.putExtra(EXTRA_AUTH_TOKEN, authToken);
         return intent;
+    }
+
+    private void retrieveInfoFromIntent() {
+        Intent intent = getIntent();
+        //mAuthToken = intent.getStringExtra(EXTRA_AUTH_TOKEN);
     }
 
     private class LobbyHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

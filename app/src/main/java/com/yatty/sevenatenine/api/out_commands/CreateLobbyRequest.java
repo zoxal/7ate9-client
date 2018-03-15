@@ -1,13 +1,16 @@
 package com.yatty.sevenatenine.api.out_commands;
 
-import com.yatty.sevenatenine.api.commands_with_data.PublicLobbyInfo;
-
 public class CreateLobbyRequest {
-    private PublicLobbyInfo publicLobbyInfo;
+    private String lobbyName;
+    private int maxPlayersNumber;
     private String authToken;
+    
+    public void setLobbyName(String lobbyName) {
+        this.lobbyName = lobbyName;
+    }
 
-    public void setPublicLobbyInfo(PublicLobbyInfo publicLobbyInfo) {
-        this.publicLobbyInfo = publicLobbyInfo;
+    public void setMaxPlayersNumber(int maxPlayersNumber) {
+        this.maxPlayersNumber = maxPlayersNumber;
     }
 
     public void setAuthToken(String authToken) {

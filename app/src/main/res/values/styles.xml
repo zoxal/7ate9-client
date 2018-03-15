@@ -10,4 +10,8 @@
 
     <style name="ActivityStyle" parent="Theme.AppCompat.Light.NoActionBar">
     </style>
+
+    <style name="TextStyleSmall" parent="android:TextAppearance.Small">
+        <item name="android:textColor">@color/black</item>
+    </style>
 </resources>

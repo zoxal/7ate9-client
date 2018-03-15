@@ -4,7 +4,9 @@
     <string name="action_disconnect">Disconnect</string>
     <string name="action_get_card">Get card</string>
     <string name="action_to_main_menu">main menu</string>
-    <string name="login_name_hint">Name</string>
+    <string name="hint_login_name">Name</string>
     <string name="title_winner">Winner is</string>
     <string name="title_score_board">ScoreBoard</string>
+    <string name="title_enter_lobby_name">Enter lobby name:</string>
+    <string name="title_max_players_number">Max number of players:</string>
 </resources>

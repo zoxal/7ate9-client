@@ -1,10 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.yatty.sevenatenine.client.CreateLobbyActivity">
 
-</android.support.constraint.ConstraintLayout>
+    <TextView
+        style="@style/TextStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/et_lobby_name"
+        android:layout_alignStart="@+id/et_lobby_name"
+        android:text="@string/title_enter_lobby_name"
+        />
+
+    <EditText
+        android:id="@+id/et_lobby_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginEnd="50dp"
+        android:layout_marginStart="50dp"/>
+
+    <TextView
+        style="@style/TextStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/et_lobby_name"
+        android:layout_below="@+id/et_lobby_name"
+        android:text="@string/title_max_players_number"/>
+
+    <Spinner
+        android:id="@+id/spinner_players_number"
+        style="@style/TextStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/et_lobby_name"
+        android:layout_below="@+id/et_lobby_name"/>
+
+</RelativeLayout>

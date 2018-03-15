@@ -6,14 +6,14 @@ import android.os.Parcelable;
 public class PublicLobbyInfo implements Parcelable {
     private String lobbyId;
     private String lobbyName;
-    private int maxNumberOfPlayers;
-    private int currentNumberOfPlayers;
+    private int maxPlayersNumber;
+    private int currentPlayersNumber;
 
     protected PublicLobbyInfo(Parcel in) {
         lobbyId = in.readString();
         lobbyName = in.readString();
-        maxNumberOfPlayers = in.readInt();
-        currentNumberOfPlayers = in.readInt();
+        maxPlayersNumber = in.readInt();
+        currentPlayersNumber = in.readInt();
     }
 
     @Override
@@ -25,8 +25,8 @@ public class PublicLobbyInfo implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(lobbyId);
         dest.writeString(lobbyName);
-        dest.writeInt(maxNumberOfPlayers);
-        dest.writeInt(currentNumberOfPlayers);
+        dest.writeInt(maxPlayersNumber);
+        dest.writeInt(currentPlayersNumber);
     }
 
     public String getLobbyId() {
@@ -41,20 +41,20 @@ public class PublicLobbyInfo implements Parcelable {
         this.lobbyName = lobbyName;
     }
 
-    public int getMaxNumberOfPlayers() {
-        return maxNumberOfPlayers;
+    public int getMaxPlayersNumber() {
+        return maxPlayersNumber;
     }
 
-    public void setMaxNumberOfPlayers(int maxNumberOfPlayers) {
-        this.maxNumberOfPlayers = maxNumberOfPlayers;
+    public void setMaxPlayersNumber(int maxPlayersNumber) {
+        this.maxPlayersNumber = maxPlayersNumber;
     }
 
-    public int getCurrentNumberOfPlayers() {
-        return currentNumberOfPlayers;
+    public int getCurrentPlayersNumber() {
+        return currentPlayersNumber;
     }
 
-    public void setCurrentNumberOfPlayers(int currentNumberOfPlayers) {
-        this.currentNumberOfPlayers = currentNumberOfPlayers;
+    public void setCurrentPlayersNumber(int currentPlayersNumber) {
+        this.currentPlayersNumber = currentPlayersNumber;
     }
 
     public static final Creator<PublicLobbyInfo> CREATOR = new Creator<PublicLobbyInfo>() {
