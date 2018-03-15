@@ -8,10 +8,7 @@ import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.FrameLayout;
-import android.widget.ProgressBar;
 import android.widget.TableRow;
 import android.widget.TextView;
 
@@ -26,8 +23,7 @@ import java.util.ArrayList;
 
 public class GameActivity extends AppCompatActivity {
     public static final String TAG = GameActivity.class.getSimpleName();
-    private static final String EXTRA_GAME_ID = "game_id_game_activity";
-    //    public static final String EXTRA_PLAYER_NAME = "player_name_game_activity";
+    private static final String EXTRA_GAME_STARTED_EVENT = "game_started_event";
     public static final String PLUS_MINUS_SYMBOL = "±";
     public static final String NEW_LINE_SYMBOL = "\n";
 
@@ -44,18 +40,11 @@ public class GameActivity extends AppCompatActivity {
     private Button mGetCardButton;
     private Button mCardsOnTableButtons[];
     private Vibrator mVibrator;
-    private ProgressBar mProgressBar;
 
     private Card mTopCard;
     private ArrayList<Card> mCardArrayList;
     private int mNumOfCardsOnDesk;
     private int mMoveNumber;
-
-    public static Intent newIntent(Context context, String gameId) {
-        Intent intent = new Intent(context, GameActivity.class);
-        intent.putExtra(EXTRA_GAME_ID, gameId);
-        return intent;
-    }
 
     private void initUi() {
         mTopCardValueTextView = findViewById(R.id.tv_top_card_value);
@@ -114,21 +103,26 @@ public class GameActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
-        mGameId = getIntent().getStringExtra(EXTRA_GAME_ID);
-//        mPlayerName = getIntent().getStringExtra(EXTRA_PLAYER_NAME);
+        GameStartedEvent gameStartedEvent = getIntent().getParcelableExtra(EXTRA_GAME_STARTED_EVENT);
         initUi();
-
-        mProgressBar = new ProgressBar(getApplicationContext());
-        FrameLayout frameLayout = findViewById(R.id.fl_main_layout);
-        frameLayout.addView(mProgressBar, FrameLayout.LayoutParams.MATCH_PARENT);
-        mProgressBar.setVisibility(View.VISIBLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        mTopCard = gameStartedEvent.getFirstCard();
+        Log.d(TAG, "GameStartedEvent: get mTopCard");
+        mCardArrayList = gameStartedEvent.getPlayerCards();
+        Log.d(TAG, "GameStartedEvent: get mCardArrayList");
+        mNumOfCardsOnDesk = 0;
+        mTopCardValueTextView.setText(String.valueOf(mTopCard.getValue()));
+        mTopCardModifierTextView.setText(PLUS_MINUS_SYMBOL + mTopCard.getModifier());
 
         mVibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         Handler handler = new GameActivityHandler();
         mNettyClient = NettyClient.getInstance();
         mNettyClient.setHandler(handler);
+    }
+
+    public static Intent getStartIntent(Context context, GameStartedEvent gameStartedEvent) {
+        Intent intent = new Intent(context, GameActivity.class);
+        intent.putExtra(EXTRA_GAME_STARTED_EVENT, gameStartedEvent);
+        return intent;
     }
 
     class CardButtonOnClickListener implements View.OnClickListener {
@@ -164,30 +158,11 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onPause() {
-        /*LogOutRequest disconnectRequest = new LogOutRequest(mGameId);
-        mNettyClient.write(disconnectRequest);
-        */
-        super.onPause();
-    }
-
     private class GameActivityHandler extends Handler {
         @Override
         public void handleMessage(android.os.Message msg) {
             Log.d(TAG, "GameActivity: handle");
-            if (msg.obj instanceof GameStartedEvent) {
-                GameStartedEvent gameStartedEvent = (GameStartedEvent) msg.obj;
-                mTopCard = gameStartedEvent.getFirstCard();
-                Log.d(TAG, "GameStartedEvent: get mTopCard");
-                mCardArrayList = gameStartedEvent.getPlayerCards();
-                Log.d(TAG, "GameStartedEvent: get mCardArrayList");
-                mNumOfCardsOnDesk = 0;
-                mTopCardValueTextView.setText(String.valueOf(mTopCard.getValue()));
-                mTopCardModifierTextView.setText(PLUS_MINUS_SYMBOL + mTopCard.getModifier());
-                mProgressBar.setVisibility(View.GONE);
-                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-            } else if (msg.obj instanceof MoveRejectedResponse) {
+            if (msg.obj instanceof MoveRejectedResponse) {
                 MoveRejectedResponse moveRejectedResponse = (MoveRejectedResponse) msg.obj;
                 Card card = moveRejectedResponse.getMove();
                 int i = 0;
