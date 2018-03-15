@@ -17,8 +17,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.yatty.sevenatenine.api.commands_with_data.PublicLobbyInfo;
+import com.yatty.sevenatenine.api.in_commands.CreateLobbyResponse;
 import com.yatty.sevenatenine.api.in_commands.EnterLobbyResponse;
 import com.yatty.sevenatenine.api.in_commands.LobbyListUpdatedNotification;
+import com.yatty.sevenatenine.api.out_commands.CreateLobbyRequest;
 import com.yatty.sevenatenine.api.out_commands.EnterLobbyRequest;
 import com.yatty.sevenatenine.api.out_commands.LobbySubscribeRequest;
 
@@ -26,6 +28,7 @@ import java.util.ArrayList;
 
 public class LobbyListActivity extends AppCompatActivity {
     private static final String TAG = LobbyListActivity.class.getSimpleName();
+    private static final String EXTRA_CREATE_LOBBY_REQUEST = "create_lobby_request";
 
     private FloatingActionButton mAddFloatingActionButton;
     private RecyclerView mLobbyListRecyclerView;
@@ -61,12 +64,23 @@ public class LobbyListActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
+        if (data == null) return;
+        if (requestCode == RESULT_OK) {
+            CreateLobbyRequest createLobbyRequest = (CreateLobbyRequest) data
+                    .getSerializableExtra(EXTRA_CREATE_LOBBY_REQUEST);
+            mNettyClient.write(createLobbyRequest, false);
+        }
     }
 
     public static Intent getStartIntent(Context context) {
         Intent intent = new Intent(context, LobbyListActivity.class);
         //intent.putExtra(EXTRA_AUTH_TOKEN, authToken);
+        return intent;
+    }
+
+    public static Intent getIntentWithData(CreateLobbyRequest createLobbyRequest) {
+        Intent intent = new Intent();
+        intent.putExtra(EXTRA_CREATE_LOBBY_REQUEST, createLobbyRequest);
         return intent;
     }
 
@@ -156,6 +170,8 @@ public class LobbyListActivity extends AppCompatActivity {
                         enterLobbyResponse.getPrivateLobbyInfo());
                 startActivity(nextActivity);
                 finish();
+            } else if (msg.obj instanceof CreateLobbyResponse) {
+
             }
         }
     }

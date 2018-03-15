@@ -1,10 +1,12 @@
 package com.yatty.sevenatenine.api.out_commands;
 
-public class CreateLobbyRequest {
+import java.io.Serializable;
+
+public class CreateLobbyRequest implements Serializable {
     private String lobbyName;
     private int maxPlayersNumber;
     private String authToken;
-    
+
     public void setLobbyName(String lobbyName) {
         this.lobbyName = lobbyName;
     }
