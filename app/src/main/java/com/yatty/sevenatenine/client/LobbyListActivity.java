@@ -8,7 +8,6 @@ import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -88,20 +87,25 @@ public class LobbyListActivity extends AppCompatActivity {
     }
 
     private class LobbyHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        private static final String DIVIDER = "/";
 
         private TextView mLobbyNameTextView;
+        private TextView mLobbyPlayersTextView;
         private PublicLobbyInfo mPublicLobbyInfo;
 
         public LobbyHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
             mLobbyNameTextView = itemView.findViewById(R.id.tv_lobby_name);
+            mLobbyPlayersTextView = itemView.findViewById(R.id.tv_lobby_players);
         }
 
         public void bindLobby(PublicLobbyInfo publicLobbyInfo) {
             Log.d(TAG, "bindLobby: " + publicLobbyInfo.getLobbyName());
             mPublicLobbyInfo = publicLobbyInfo;
             mLobbyNameTextView.setText(mPublicLobbyInfo.getLobbyName());
+            mLobbyPlayersTextView.setText(mPublicLobbyInfo.getCurrentPlayersNumber() +
+                    DIVIDER + mPublicLobbyInfo.getMaxPlayersNumber());
         }
 
         @Override

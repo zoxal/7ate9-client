@@ -20,7 +20,7 @@ public class LobbyActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lobby);
-        mPlayersNumberTextView = findViewById(R.id.tv_players_number);
+        mPlayersNumberTextView = findViewById(R.id.tv_lobby_players);
         retrieveInfoFromIntent(mPlayersNumberTextView);
         LobbyActivityHandler lobbyActivityHandler = new LobbyActivityHandler();
         NettyClient.getInstance().setHandler(lobbyActivityHandler);
