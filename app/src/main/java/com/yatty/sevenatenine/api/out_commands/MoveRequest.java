@@ -3,8 +3,6 @@ package com.yatty.sevenatenine.api.out_commands;
 import com.yatty.sevenatenine.api.commands_with_data.Card;
 
 public class MoveRequest {
-    public static final String COMMAND_TYPE = "MoveRequest";
-    //public final String _type = COMMAND_TYPE;
     private String gameId;
     private String authToken;
     private int moveNumber;

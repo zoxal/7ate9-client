@@ -1,11 +1,9 @@
 package com.yatty.sevenatenine.api.out_commands;
 
 public class LogInRequest {
-    public static final String COMMAND_TYPE = "LogInRequest";
-    //public final String _type = COMMAND_TYPE;
-    private String authToken;
+    private String name;
 
-    public void setAuthToken(String authToken) {
-        this.authToken = authToken;
+    public void setName(String name) {
+        this.name = name;
     }
 }

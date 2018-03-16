@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     if (mNameEditText.getText() != null) {
                         LogInRequest logInRequest = new LogInRequest();
-                        logInRequest.setAuthToken(mNameEditText.getText().toString());
+                        logInRequest.setName(mNameEditText.getText().toString());
                         mNettyClient.write(logInRequest, false);
                         view.setClickable(false);
                     } else {
