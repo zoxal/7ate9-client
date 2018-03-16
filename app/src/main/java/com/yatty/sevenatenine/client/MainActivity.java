@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 try {
-                    if (mNameEditText.getText() != null) {
+                    if (!mNameEditText.getText().toString().isEmpty()) {
                         LogInRequest logInRequest = new LogInRequest();
                         logInRequest.setName(mNameEditText.getText().toString());
                         mNettyClient.write(logInRequest, false);

@@ -14,6 +14,11 @@
         android:text="@string/title_wait_request"/>
 
     <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/title_players_in_lobby"/>
+
+    <TextView
         android:id="@+id/tv_players_number"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

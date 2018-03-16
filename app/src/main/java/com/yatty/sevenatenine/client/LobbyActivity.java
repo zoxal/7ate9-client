@@ -21,6 +21,7 @@ public class LobbyActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lobby);
         mPlayersNumberTextView = findViewById(R.id.tv_players_number);
+        retrieveInfoFromIntent(mPlayersNumberTextView);
         LobbyActivityHandler lobbyActivityHandler = new LobbyActivityHandler();
         NettyClient.getInstance().setHandler(lobbyActivityHandler);
     }
@@ -36,9 +37,11 @@ public class LobbyActivity extends AppCompatActivity {
         return intent;
     }
 
-    private void retrieveInfoFromIntent() {
-//        Intent intent = getIntent();
-//        mPrivateLobbyInfo = intent.getParcelableExtra(EXTRA_PRIVATE_LOBBY_INFO);
+    private void retrieveInfoFromIntent(TextView playersNumberTextView) {
+        Intent intent = getIntent();
+        PrivateLobbyInfo privateLobbyInfo = intent.getParcelableExtra(EXTRA_PRIVATE_LOBBY_INFO);
+        if (privateLobbyInfo == null) return;
+        playersNumberTextView.setText(String.valueOf(privateLobbyInfo.getPlayers().length));
     }
 
     private class LobbyActivityHandler extends Handler {
@@ -46,8 +49,8 @@ public class LobbyActivity extends AppCompatActivity {
         public void handleMessage(Message msg) {
             if (msg.obj instanceof GameStartedEvent) {
                 GameStartedEvent gameStartedEvent = (GameStartedEvent) msg.obj;
-                Intent intent = GameActivity.getStartIntent(getApplicationContext(), gameStartedEvent);
                 NettyClient.getInstance().setHandler(null);
+                Intent intent = GameActivity.getStartIntent(getApplicationContext(), gameStartedEvent);
                 startActivity(intent);
                 finish();
             } else if (msg.obj instanceof PrivateLobbyInfo) {
