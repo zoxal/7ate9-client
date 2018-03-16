@@ -66,7 +66,7 @@ public class GameActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View view) {
-                LogOutRequest logOutRequest = new LogOutRequest(mGameId);
+                LogOutRequest logOutRequest = new LogOutRequest(UserInfo.getAuthToken());
                 mNettyClient.write(logOutRequest, false);
                 mNettyClient.setHandler(null);
                 Intent nextActivity = MainActivity.newIntent(getApplicationContext());

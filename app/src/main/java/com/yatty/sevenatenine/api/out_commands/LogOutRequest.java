@@ -1,13 +1,13 @@
 package com.yatty.sevenatenine.api.out_commands;
 
 public class LogOutRequest {
-    private String gameId;
+    private String authToken;
 
-    public LogOutRequest(String gameId) {
-        this.gameId = gameId;
+    public LogOutRequest(String authToken) {
+        this.authToken = authToken;
     }
 
-    public void setGameId(String gameId) {
-        this.gameId = gameId;
+    public void setAuthToken(String authToken) {
+        this.authToken = authToken;
     }
 }
