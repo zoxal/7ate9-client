@@ -11,18 +11,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GameStartedEvent implements InCommandInterface {
-    public static final int UID = GameStartedEvent.class.getSimpleName().hashCode();
     public static final String TAG = GameStartedEvent.class.getSimpleName();
-    public static final String COMMAND_TYPE = "GameStartedEvent";
-    //public final String _type = COMMAND_TYPE;
 
     private Card firstCard;
     private List<Card> playerCards;
+    private String lobbyId;
 
     protected GameStartedEvent(Parcel in) {
         firstCard = in.readParcelable(Card.class.getClassLoader());
-        Log.d(TAG, "wtf");
         playerCards = in.createTypedArrayList(Card.CREATOR);
+        lobbyId = in.readString();
     }
 
     public static final Creator<GameStartedEvent> CREATOR = new Creator<GameStartedEvent>() {
@@ -42,9 +40,9 @@ public class GameStartedEvent implements InCommandInterface {
         Log.d(TAG, "GameStartedEvent.doLogic");
         Log.d(TAG, "First card value: " + firstCard.getValue());
         Log.d(TAG, "First card modifier: " + firstCard.getModifier());
+        Log.d(TAG, "LobbyId: " + lobbyId);
         Message message = new Message();
         message.obj = this;
-        message.sendingUid = UID;
         handler.sendMessage(message);
     }
 
@@ -57,6 +55,7 @@ public class GameStartedEvent implements InCommandInterface {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeParcelable(firstCard, flags);
         dest.writeTypedList(playerCards);
+        dest.writeString(lobbyId);
     }
 
     public Card getFirstCard() {
@@ -65,5 +64,9 @@ public class GameStartedEvent implements InCommandInterface {
 
     public ArrayList<Card> getPlayerCards() {
         return (ArrayList<Card>) playerCards;
+    }
+
+    public String getLobbyId() {
+        return lobbyId;
     }
 }

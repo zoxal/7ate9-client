@@ -6,6 +6,10 @@ import android.os.Parcelable;
 public class PrivateLobbyInfo implements Parcelable {
     private PlayerInfo players[];
 
+    public PrivateLobbyInfo() {
+        players = new PlayerInfo[0];
+    }
+
     protected PrivateLobbyInfo(Parcel in) {
         players = in.createTypedArray(PlayerInfo.CREATOR);
     }

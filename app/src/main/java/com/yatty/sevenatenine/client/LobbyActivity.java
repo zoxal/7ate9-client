@@ -21,27 +21,14 @@ public class LobbyActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lobby);
         mPlayersNumberTextView = findViewById(R.id.tv_lobby_players);
-        retrieveInfoFromIntent(mPlayersNumberTextView);
         LobbyActivityHandler lobbyActivityHandler = new LobbyActivityHandler();
         NettyClient.getInstance().setHandler(lobbyActivityHandler);
-    }
-
-    public static Intent getStartIntent(Context context) {
-        Intent intent = new Intent(context, LobbyActivity.class);
-        return intent;
     }
 
     public static Intent getStartIntent(Context context, PrivateLobbyInfo privateLobbyInfo) {
         Intent intent = new Intent(context, LobbyActivity.class);
         intent.putExtra(EXTRA_PRIVATE_LOBBY_INFO, privateLobbyInfo);
         return intent;
-    }
-
-    private void retrieveInfoFromIntent(TextView playersNumberTextView) {
-        Intent intent = getIntent();
-        PrivateLobbyInfo privateLobbyInfo = intent.getParcelableExtra(EXTRA_PRIVATE_LOBBY_INFO);
-        if (privateLobbyInfo == null) return;
-        playersNumberTextView.setText(String.valueOf(privateLobbyInfo.getPlayers().length));
     }
 
     private class LobbyActivityHandler extends Handler {

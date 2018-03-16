@@ -29,6 +29,10 @@ public class CreateLobbyResponse implements Parcelable, InCommandInterface {
         dest.writeString(lobbyId);
     }
 
+    public String getLobbyId() {
+        return lobbyId;
+    }
+
     public static final Creator<CreateLobbyResponse> CREATOR = new Creator<CreateLobbyResponse>() {
         @Override
         public CreateLobbyResponse createFromParcel(Parcel in) {

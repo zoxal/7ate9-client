@@ -47,15 +47,18 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.ByteToMessageDecoder;
+import io.netty.handler.codec.MessageToMessageDecoder;
 import io.netty.handler.codec.MessageToMessageEncoder;
+import io.netty.handler.codec.json.JsonObjectDecoder;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
 
 public class NettyClient {
     private static final String TAG = NettyClient.class.getSimpleName();
-    private static final String HOST = "192.168.0.101";
+    private static final String HOST = "192.168.0.109";
     private static final String TYPE_FIELD = "_type";
     private static final int PORT = 39405;
+    private static final String COMMAND_TYPE_FIELD = "_type";
     private static final int SLEEP_TIME_IF_HAS_NO_HANDLER_MS = 5;
 
     private static NettyClient sNettyClient;
@@ -152,7 +155,8 @@ public class NettyClient {
     private class PipeLineInitializer extends ChannelInitializer<SocketChannel> {
         @Override
         protected void initChannel(SocketChannel ch) throws Exception {
-            ch.pipeline().addFirst(new GsonDecoder());
+            ch.pipeline().addFirst(new JsonObjectDecoder());
+            ch.pipeline().addLast(new GsonDecoder());
             ch.pipeline().addLast(new LogicHandler());
             ch.pipeline().addLast(new GsonEncoder());
         }
@@ -174,7 +178,7 @@ public class NettyClient {
         }
     }
 
-    public class GsonDecoder extends ByteToMessageDecoder {
+    public class GsonDecoder extends MessageToMessageDecoder<ByteBuf> {
 
         @Override
         public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
@@ -199,7 +203,7 @@ public class NettyClient {
             Log.d(TAG, "Get json: " + json);
             JsonParser parser = new JsonParser();
             JsonObject obj = parser.parse(json).getAsJsonObject();
-            String type = obj.get(TYPE_FIELD).getAsString();
+            String type = obj.get(COMMAND_TYPE_FIELD).getAsString();
             Log.d(TAG, "Parsed type: " + type);
             Class clazz = mCommands.get(type);
             out.add(gson.fromJson(json, clazz));

@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.yatty.sevenatenine.api.commands_with_data.PrivateLobbyInfo;
 import com.yatty.sevenatenine.api.commands_with_data.PublicLobbyInfo;
 import com.yatty.sevenatenine.api.in_commands.CreateLobbyResponse;
 import com.yatty.sevenatenine.api.in_commands.EnterLobbyResponse;
@@ -187,7 +188,7 @@ public class LobbyListActivity extends AppCompatActivity {
                 CreateLobbyResponse createLobbyResponse = (CreateLobbyResponse) msg.obj;
                 mNettyClient.write(new LobbyUnsubscribeRequest(UserInfo.getAuthToken()), false);
                 mNettyClient.setHandler(null);
-                Intent intent = LobbyActivity.getStartIntent(getApplicationContext());
+                Intent intent = LobbyActivity.getStartIntent(getApplicationContext(), new PrivateLobbyInfo());
                 startActivity(intent);
             }
         }

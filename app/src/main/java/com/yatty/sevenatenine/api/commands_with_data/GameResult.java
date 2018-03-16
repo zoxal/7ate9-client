@@ -4,8 +4,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class GameResult implements Parcelable {
-    public static final String COMMAND_TYPE = "GameResult";
-    //public final String _type = COMMAND_TYPE;
     private String winner;
     private PlayerResult scores[];
 

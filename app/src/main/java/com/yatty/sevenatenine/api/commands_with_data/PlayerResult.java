@@ -4,8 +4,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class PlayerResult implements Parcelable {
-    public static final String COMMAND_TYPE = "PlayerResult";
-    //public final String _type = COMMAND_TYPE;
     private String playerName;
     private int cardsLeft;
 

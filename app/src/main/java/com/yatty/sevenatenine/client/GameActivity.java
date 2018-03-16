@@ -109,6 +109,7 @@ public class GameActivity extends AppCompatActivity {
         Log.d(TAG, "GameStartedEvent: get mTopCard");
         mCardArrayList = gameStartedEvent.getPlayerCards();
         Log.d(TAG, "GameStartedEvent: get mCardArrayList");
+        mGameId = gameStartedEvent.getLobbyId();
         mNumOfCardsOnDesk = 0;
         mTopCardValueTextView.setText(String.valueOf(mTopCard.getValue()));
         mTopCardModifierTextView.setText(PLUS_MINUS_SYMBOL + mTopCard.getModifier());
@@ -147,6 +148,7 @@ public class GameActivity extends AppCompatActivity {
                 MoveRequest moveRequest = new MoveRequest();
                 moveRequest.setGameId(mGameId);
                 moveRequest.setMove(card);
+                moveRequest.setAuthToken(UserInfo.getAuthToken());
                 moveRequest.setMoveNumber(mMoveNumber);
                 mNettyClient.write(moveRequest, true);
                 view.setVisibility(View.INVISIBLE);

@@ -10,6 +10,7 @@ import com.yatty.sevenatenine.api.commands_with_data.PrivateLobbyInfo;
 public class EnterLobbyResponse implements Parcelable, InCommandInterface {
     private PrivateLobbyInfo privateLobbyInfo;
 
+
     protected EnterLobbyResponse(Parcel in) {
         privateLobbyInfo = in.readParcelable(PrivateLobbyInfo.class.getClassLoader());
     }
