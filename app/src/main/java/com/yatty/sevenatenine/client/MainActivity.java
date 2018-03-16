@@ -44,10 +44,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 try {
-                    LogInRequest logInRequest = new LogInRequest();
-                    logInRequest.setAuthToken(mNameEditText.getText().toString());
-                    mNettyClient.write(logInRequest, false);
-                    view.setClickable(false);
+                    if (mNameEditText.getText() != null) {
+                        LogInRequest logInRequest = new LogInRequest();
+                        logInRequest.setAuthToken(mNameEditText.getText().toString());
+                        mNettyClient.write(logInRequest, false);
+                        view.setClickable(false);
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Enter name", Toast.LENGTH_SHORT).show();
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

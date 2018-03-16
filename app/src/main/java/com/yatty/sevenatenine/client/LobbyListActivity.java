@@ -105,7 +105,8 @@ public class LobbyListActivity extends AppCompatActivity {
 
         @Override
         public void onClick(View v) {
-            EnterLobbyRequest enterLobbyRequest = new EnterLobbyRequest(mPublicLobbyInfo, UserInfo.getAuthToken());
+            EnterLobbyRequest enterLobbyRequest = new EnterLobbyRequest(mPublicLobbyInfo.getLobbyId(),
+                    UserInfo.getAuthToken());
             mNettyClient.write(enterLobbyRequest, true);
         }
     }

@@ -1,22 +1,20 @@
 package com.yatty.sevenatenine.api.out_commands;
 
-import com.yatty.sevenatenine.api.commands_with_data.PublicLobbyInfo;
-
 public class EnterLobbyRequest {
-    private PublicLobbyInfo publicLobbyInfo;
+    private String lobbyId;
     private String authToken;
 
     public EnterLobbyRequest() {
 
     }
 
-    public EnterLobbyRequest(PublicLobbyInfo publicLobbyInfo, String authToken) {
-        this.publicLobbyInfo = publicLobbyInfo;
+    public EnterLobbyRequest(String lobbyId, String authToken) {
+        this.lobbyId = lobbyId;
         this.authToken = authToken;
     }
 
-    public void setPublicLobbyInfo(PublicLobbyInfo publicLobbyInfo) {
-        this.publicLobbyInfo = publicLobbyInfo;
+    public void setLobbyId(String lobbyId) {
+        this.lobbyId = lobbyId;
     }
 
     public void setAuthToken(String authToken) {

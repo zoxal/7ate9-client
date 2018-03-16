@@ -10,4 +10,6 @@
     <string name="title_enter_lobby_name">Enter lobby name:</string>
     <string name="title_max_players_number">Max number of players:</string>
     <string name="action_create_lobby">create</string>
+    <string name="title_wait_request">Wait, please.</string>
+    <string name="title_players_in_lobby">Players:</string>
 </resources>

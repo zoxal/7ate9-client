@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,9 +7,16 @@
     tools:context="com.yatty.sevenatenine.client.LobbyActivity">
 
     <TextView
+        style="@style/TextStyleLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Wait other players"
-        android:textSize="50sp"/>
-</FrameLayout>
+        android:layout_centerInParent="true"
+        android:text="@string/title_wait_request"/>
+
+    <TextView
+        android:id="@+id/tv_players_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        />
+</RelativeLayout>
