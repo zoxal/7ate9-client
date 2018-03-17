@@ -5,10 +5,7 @@ import android.os.Message;
 import android.os.Parcel;
 
 public class LogInResponse implements InCommandInterface {
-    public static final int UID = LogInResponse.class.getSimpleName().hashCode();
     public static final String TAG = LogInResponse.class.getSimpleName();
-    public static final String COMMAND_TYPE = "LogInResponse";
-    //public final String _type = COMMAND_TYPE;
     private String authToken;
 
     protected LogInResponse(Parcel in) {
@@ -19,7 +16,6 @@ public class LogInResponse implements InCommandInterface {
     public void doLogic(Handler handler) {
         Message message = new Message();
         message.obj = this;
-        message.sendingUid = UID;
         handler.sendMessage(message);
     }
 

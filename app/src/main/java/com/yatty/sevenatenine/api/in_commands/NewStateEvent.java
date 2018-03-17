@@ -9,7 +9,6 @@ import com.yatty.sevenatenine.api.commands_with_data.Card;
 import com.yatty.sevenatenine.api.commands_with_data.GameResult;
 
 public class NewStateEvent implements InCommandInterface {
-    public static final int UID = NewStateEvent.class.getSimpleName().hashCode();
     public static final String TAG = NewStateEvent.class.getSimpleName();
     private int moveNumber;
     private String moveWinner;
@@ -42,7 +41,6 @@ public class NewStateEvent implements InCommandInterface {
         Log.d(TAG, "NewStateEvent.doLogic");
         Message message = new Message();
         message.obj = this;
-        message.sendingUid = UID;
         handler.sendMessage(message);
     }
 

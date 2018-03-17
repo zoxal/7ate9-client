@@ -102,8 +102,8 @@ public class GameOverActivity extends AppCompatActivity {
     }
 
     public void clickToMainMenuButton(View view) {
-        Intent mainIntent = MainActivity.newIntent(getApplicationContext());
-        startActivity(mainIntent);
+        Intent intent = LobbyListActivity.getStartIntent(getApplicationContext());
+        startActivity(intent);
         finish();
     }
 

@@ -8,7 +8,6 @@ import android.util.Log;
 import com.yatty.sevenatenine.api.commands_with_data.Card;
 
 public class MoveRejectedResponse implements InCommandInterface {
-    public static final int UID = MoveRejectedResponse.class.getSimpleName().hashCode();
     public static final String TAG = MoveRejectedResponse.class.getSimpleName();
     private Card move;
 
@@ -36,7 +35,6 @@ public class MoveRejectedResponse implements InCommandInterface {
         Log.d(TAG, "modifier: " + move.getModifier());
         Message message = new Message();
         message.obj = this;
-        message.sendingUid = UID;
         handler.sendMessage(message);
     }
 

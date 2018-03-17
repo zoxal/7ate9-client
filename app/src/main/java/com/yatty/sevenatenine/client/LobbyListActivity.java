@@ -71,7 +71,7 @@ public class LobbyListActivity extends AppCompatActivity {
             Log.d(TAG, "sending creating");
             CreateLobbyRequest createLobbyRequest = (CreateLobbyRequest) data
                     .getSerializableExtra(EXTRA_CREATE_LOBBY_REQUEST);
-            mNettyClient.write(createLobbyRequest, false);
+            mNettyClient.write(createLobbyRequest, true);
         }
     }
 
@@ -177,6 +177,7 @@ public class LobbyListActivity extends AppCompatActivity {
                 updateLobbyList(lobbyListUpdatedNotification.getLobbyList());
             } else if (msg.obj instanceof EnterLobbyResponse) {
                 Log.d(TAG, "LobbyListActivityHandler: LobbyListUpdatedNotification");
+                mNettyClient.write(new LobbyUnsubscribeRequest(UserInfo.getAuthToken()), true);
                 EnterLobbyResponse enterLobbyResponse = (EnterLobbyResponse) msg.obj;
                 mNettyClient.setHandler(null);
                 Intent nextActivity = LobbyActivity.getStartIntent(getApplicationContext(),
@@ -185,8 +186,8 @@ public class LobbyListActivity extends AppCompatActivity {
                 finish();
             } else if (msg.obj instanceof CreateLobbyResponse) {
                 Log.d(TAG, "LobbyListActivityHandler: CreateLobbyResponse");
+                mNettyClient.write(new LobbyUnsubscribeRequest(UserInfo.getAuthToken()), true);
                 CreateLobbyResponse createLobbyResponse = (CreateLobbyResponse) msg.obj;
-                mNettyClient.write(new LobbyUnsubscribeRequest(UserInfo.getAuthToken()), false);
                 mNettyClient.setHandler(null);
                 Intent intent = LobbyActivity.getStartIntent(getApplicationContext(), new PrivateLobbyInfo());
                 startActivity(intent);
