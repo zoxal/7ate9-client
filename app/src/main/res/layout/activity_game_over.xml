@@ -41,17 +41,16 @@
         android:id="@+id/lv_score_board"
         style="@style/Widget.AppCompat.ListView"
         android:layout_width="match_parent"
-        android:layout_weight="1"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
     </ListView>
 
     <Button
-        android:id="@+id/button_to_main_menu"
+        android:id="@+id/button_to_lobby_list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_weight="0"
-        android:onClick="clickToMainMenuButton"
-        android:text="@string/action_to_main_menu"/>
+        android:text="@string/action_to_lobby_list"/>
 
 </LinearLayout>

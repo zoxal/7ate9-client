@@ -18,13 +18,13 @@ import com.yatty.sevenatenine.api.commands_with_data.PlayerResult;
 
 import java.util.Arrays;
 
-public class GameOverActivity extends AppCompatActivity {
+public class GameOverActivity extends AppCompatActivity implements View.OnClickListener {
     public static final String TAG = GameOverActivity.class.getSimpleName();
     private static final String EXTRA_CARDS_LEFT = "cards_left_key";
     private static final String EXTRA_WINNER_NAME = "winner_name_key";
     private static final String EXTRA_PLAYER_NAME = "player_name_key";
     private TextView mWinnerNameTextView;
-    private Button mToMainMenuButton;
+    private Button mToLobbyListButton;
     private TextView mGameOverText;
     private String mPlayerName;
     private String mWinnerName;
@@ -38,6 +38,13 @@ public class GameOverActivity extends AppCompatActivity {
         intent.putExtra(EXTRA_WINNER_NAME, winnerName);
         intent.putExtra(EXTRA_CARDS_LEFT, scores);
         return intent;
+    }
+
+    @Override
+    public void onClick(View v) {
+        Intent intent = LobbyListActivity.getStartIntent(getApplicationContext());
+        startActivity(intent);
+        finish();
     }
 
     private class ScoreBoardAdapter extends ArrayAdapter<PlayerResult> {
@@ -68,23 +75,15 @@ public class GameOverActivity extends AppCompatActivity {
         setContentView(R.layout.activity_game_over);
         mGameOverText = findViewById(R.id.tv_game_over);
         mWinnerNameTextView = findViewById(R.id.tv_winner_name);
-        mToMainMenuButton = findViewById(R.id.button_to_main_menu);
+        mToLobbyListButton = findViewById(R.id.button_to_lobby_list);
         mScoreBoard = findViewById(R.id.lv_score_board);
+        mToLobbyListButton.setOnClickListener(this);
         Intent intent = getIntent();
         mPlayerName = intent.getStringExtra(EXTRA_PLAYER_NAME);
         mWinnerName = intent.getStringExtra(EXTRA_WINNER_NAME);
         Parcelable parcelableArray[] = intent.getParcelableArrayExtra(EXTRA_CARDS_LEFT);
         if (parcelableArray != null) {
             mScores = Arrays.copyOf(parcelableArray, parcelableArray.length, PlayerResult[].class);
-        }
-        if (mScores == null) {
-            /*PlayerResult pr1 = new PlayerResult("Ivan",12);
-            PlayerResult pr2 = new PlayerResult("Petr",11);
-            PlayerResult pr3 = new PlayerResult("Fedor",13);
-            mScores = new PlayerResult[3];
-            mScores[0] = pr1;
-            mScores[1] = pr2;
-            mScores[2] = pr3;*/
         }
         sortByCardCount(mScores);
         if (mWinnerName == null) mWinnerName = mScores[0].getPlayerName();
@@ -99,12 +98,6 @@ public class GameOverActivity extends AppCompatActivity {
         }
         ScoreBoardAdapter adapter = new ScoreBoardAdapter(this);
         mScoreBoard.setAdapter(adapter);
-    }
-
-    public void clickToMainMenuButton(View view) {
-        Intent intent = LobbyListActivity.getStartIntent(getApplicationContext());
-        startActivity(intent);
-        finish();
     }
 
     public void sortByCardCount(PlayerResult[] res) {

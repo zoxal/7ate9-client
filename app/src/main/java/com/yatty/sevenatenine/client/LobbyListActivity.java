@@ -77,6 +77,7 @@ public class LobbyListActivity extends AppCompatActivity {
 
     public static Intent getStartIntent(Context context) {
         Intent intent = new Intent(context, LobbyListActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         //intent.putExtra(EXTRA_AUTH_TOKEN, authToken);
         return intent;
     }
