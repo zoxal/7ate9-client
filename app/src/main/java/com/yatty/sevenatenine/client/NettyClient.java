@@ -46,7 +46,6 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.codec.ByteToMessageDecoder;
 import io.netty.handler.codec.MessageToMessageDecoder;
 import io.netty.handler.codec.MessageToMessageEncoder;
 import io.netty.handler.codec.json.JsonObjectDecoder;
@@ -55,7 +54,7 @@ import io.netty.util.concurrent.GenericFutureListener;
 
 public class NettyClient {
     private static final String TAG = NettyClient.class.getSimpleName();
-    private static final String HOST = "192.168.43.141";
+    private static final String HOST = "192.168.100.5";
     private static final String TYPE_FIELD = "_type";
     private static final int PORT = 39405;
     private static final String COMMAND_TYPE_FIELD = "_type";
@@ -136,6 +135,7 @@ public class NettyClient {
 
     public void write(Object obj, boolean keepAlive) {
         this.keepAlive.set(keepAlive);
+        if (mChannel == null) return;
         if (!mChannel.isOpen()) {
             connect();
         }

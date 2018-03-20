@@ -2,12 +2,16 @@ package com.yatty.sevenatenine.client;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -16,6 +20,7 @@ import com.crashlytics.android.Crashlytics;
 import com.yatty.sevenatenine.api.in_commands.ErrorResponse;
 import com.yatty.sevenatenine.api.in_commands.LogInResponse;
 import com.yatty.sevenatenine.api.out_commands.LogInRequest;
+
 import io.fabric.sdk.android.Fabric;
 
 public class MainActivity extends AppCompatActivity {
@@ -48,18 +53,33 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 try {
                     if (!mNameEditText.getText().toString().isEmpty()) {
-                        LogInRequest logInRequest = new LogInRequest();
-                        logInRequest.setName(mNameEditText.getText().toString());
-                        mNettyClient.write(logInRequest, false);
-                        view.setClickable(false);
+                        if (!isOnline()) {
+                            Snackbar.make(view, "No internet connection.", Snackbar.LENGTH_SHORT).show();
+                            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+                        } else {
+                            LogInRequest logInRequest = new LogInRequest();
+                            logInRequest.setName(mNameEditText.getText().toString());
+                            mNettyClient.write(logInRequest, false);
+                            view.setClickable(false);
+                            Snackbar.make(view, "Connecting...", Snackbar.LENGTH_SHORT).show();
+                            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+                        }
                     } else {
-                        Toast.makeText(getApplicationContext(), "Enter name", Toast.LENGTH_SHORT).show();
+                        Snackbar.make(view, "Enter name.", Snackbar.LENGTH_SHORT).show();
+                        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         });
+    }
+
+    public boolean isOnline() {
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = connectivityManager.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
     static class MainActivityHandler extends Handler {
