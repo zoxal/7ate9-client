@@ -9,7 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
 import com.yatty.sevenatenine.api.commands_with_data.PrivateLobbyInfo;
-import com.yatty.sevenatenine.api.in_commands.GameStartedEvent;
+import com.yatty.sevenatenine.api.in_commands.GameStartedNotification;
 
 public class LobbyActivity extends AppCompatActivity {
     private static final String EXTRA_PRIVATE_LOBBY_INFO = "private_lobby_info";
@@ -34,10 +34,10 @@ public class LobbyActivity extends AppCompatActivity {
     private class LobbyActivityHandler extends Handler {
         @Override
         public void handleMessage(Message msg) {
-            if (msg.obj instanceof GameStartedEvent) {
-                GameStartedEvent gameStartedEvent = (GameStartedEvent) msg.obj;
+            if (msg.obj instanceof GameStartedNotification) {
+                GameStartedNotification gameStartedNotification = (GameStartedNotification) msg.obj;
                 NettyClient.getInstance().setHandler(null);
-                Intent intent = GameActivity.getStartIntent(getApplicationContext(), gameStartedEvent);
+                Intent intent = GameActivity.getStartIntent(getApplicationContext(), gameStartedNotification);
                 startActivity(intent);
                 finish();
             } else if (msg.obj instanceof PrivateLobbyInfo) {

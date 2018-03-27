@@ -23,8 +23,8 @@ import com.yatty.sevenatenine.api.in_commands.EnterLobbyResponse;
 import com.yatty.sevenatenine.api.in_commands.LobbyListUpdatedNotification;
 import com.yatty.sevenatenine.api.out_commands.CreateLobbyRequest;
 import com.yatty.sevenatenine.api.out_commands.EnterLobbyRequest;
-import com.yatty.sevenatenine.api.out_commands.LobbySubscribeRequest;
-import com.yatty.sevenatenine.api.out_commands.LobbyUnsubscribeRequest;
+import com.yatty.sevenatenine.api.out_commands.LobbyListSubscribeRequest;
+import com.yatty.sevenatenine.api.out_commands.LobbyListUnsubscribeRequest;
 
 import java.util.ArrayList;
 
@@ -56,8 +56,8 @@ public class LobbyListActivity extends AppCompatActivity {
                 startActivityForResult(startIntent, REQUEST_CODE);
             }
         });
-        LobbySubscribeRequest lobbySubscribeRequest = new LobbySubscribeRequest(UserInfo.getAuthToken());
-        mNettyClient.write(lobbySubscribeRequest, true);
+        LobbyListSubscribeRequest lobbyListSubscribeRequest = new LobbyListSubscribeRequest(UserInfo.getAuthToken());
+        mNettyClient.write(lobbyListSubscribeRequest, true);
     }
 
     @Override
@@ -178,7 +178,7 @@ public class LobbyListActivity extends AppCompatActivity {
                 updateLobbyList(lobbyListUpdatedNotification.getLobbyList());
             } else if (msg.obj instanceof EnterLobbyResponse) {
                 Log.d(TAG, "LobbyListActivityHandler: LobbyListUpdatedNotification");
-                mNettyClient.write(new LobbyUnsubscribeRequest(UserInfo.getAuthToken()), true);
+                mNettyClient.write(new LobbyListUnsubscribeRequest(UserInfo.getAuthToken()), true);
                 EnterLobbyResponse enterLobbyResponse = (EnterLobbyResponse) msg.obj;
                 mNettyClient.setHandler(null);
                 Intent nextActivity = LobbyActivity.getStartIntent(getApplicationContext(),
@@ -187,7 +187,7 @@ public class LobbyListActivity extends AppCompatActivity {
                 finish();
             } else if (msg.obj instanceof CreateLobbyResponse) {
                 Log.d(TAG, "LobbyListActivityHandler: CreateLobbyResponse");
-                mNettyClient.write(new LobbyUnsubscribeRequest(UserInfo.getAuthToken()), true);
+                mNettyClient.write(new LobbyListUnsubscribeRequest(UserInfo.getAuthToken()), true);
                 CreateLobbyResponse createLobbyResponse = (CreateLobbyResponse) msg.obj;
                 mNettyClient.setHandler(null);
                 Intent intent = LobbyActivity.getStartIntent(getApplicationContext(), new PrivateLobbyInfo());

@@ -8,37 +8,39 @@ import android.util.Log;
 import com.yatty.sevenatenine.api.commands_with_data.Card;
 import com.yatty.sevenatenine.api.commands_with_data.GameResult;
 
-public class NewStateEvent implements InCommandInterface {
-    public static final String TAG = NewStateEvent.class.getSimpleName();
+public class NewStateNotification implements InCommandInterface {
+    public static final String TAG = NewStateNotification.class.getSimpleName();
     private int moveNumber;
     private String moveWinner;
     private boolean lastMove;
     private Card nextCard;
     private GameResult gameResult;
+    private Boolean stalemate;
 
-    protected NewStateEvent(Parcel in) {
+    protected NewStateNotification(Parcel in) {
         moveNumber = in.readInt();
         moveWinner = in.readString();
         lastMove = in.readByte() != 0;
         nextCard = in.readParcelable(Card.class.getClassLoader());
         gameResult = in.readParcelable(GameResult.class.getClassLoader());
+        stalemate = in.readByte() != 0;
     }
 
-    public static final Creator<NewStateEvent> CREATOR = new Creator<NewStateEvent>() {
+    public static final Creator<NewStateNotification> CREATOR = new Creator<NewStateNotification>() {
         @Override
-        public NewStateEvent createFromParcel(Parcel in) {
-            return new NewStateEvent(in);
+        public NewStateNotification createFromParcel(Parcel in) {
+            return new NewStateNotification(in);
         }
 
         @Override
-        public NewStateEvent[] newArray(int size) {
-            return new NewStateEvent[size];
+        public NewStateNotification[] newArray(int size) {
+            return new NewStateNotification[size];
         }
     };
 
     @Override
     public void doLogic(Handler handler) {
-        Log.d(TAG, "NewStateEvent.doLogic");
+        Log.d(TAG, "NewStateNotification.doLogic");
         Message message = new Message();
         message.obj = this;
         handler.sendMessage(message);
@@ -56,6 +58,7 @@ public class NewStateEvent implements InCommandInterface {
         dest.writeByte((byte) (lastMove ? 1 : 0));
         dest.writeParcelable(nextCard, flags);
         dest.writeParcelable(gameResult, flags);
+        dest.writeByte((byte) (stalemate ? 1 : 0));
     }
 
     public int getMoveNumber() {

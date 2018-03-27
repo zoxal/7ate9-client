@@ -13,16 +13,16 @@ import com.google.gson.JsonParser;
 import com.yatty.sevenatenine.api.in_commands.CreateLobbyResponse;
 import com.yatty.sevenatenine.api.in_commands.EnterLobbyResponse;
 import com.yatty.sevenatenine.api.in_commands.ErrorResponse;
-import com.yatty.sevenatenine.api.in_commands.GameStartedEvent;
+import com.yatty.sevenatenine.api.in_commands.GameStartedNotification;
 import com.yatty.sevenatenine.api.in_commands.InCommandInterface;
 import com.yatty.sevenatenine.api.in_commands.LobbyListUpdatedNotification;
 import com.yatty.sevenatenine.api.in_commands.LogInResponse;
 import com.yatty.sevenatenine.api.in_commands.MoveRejectedResponse;
-import com.yatty.sevenatenine.api.in_commands.NewStateEvent;
+import com.yatty.sevenatenine.api.in_commands.NewStateNotification;
 import com.yatty.sevenatenine.api.out_commands.CreateLobbyRequest;
 import com.yatty.sevenatenine.api.out_commands.EnterLobbyRequest;
 import com.yatty.sevenatenine.api.out_commands.KeepAliveRequest;
-import com.yatty.sevenatenine.api.out_commands.LobbySubscribeRequest;
+import com.yatty.sevenatenine.api.out_commands.LobbyListSubscribeRequest;
 import com.yatty.sevenatenine.api.out_commands.LogInRequest;
 import com.yatty.sevenatenine.api.out_commands.LogOutRequest;
 import com.yatty.sevenatenine.api.out_commands.MoveRequest;
@@ -54,7 +54,7 @@ import io.netty.util.concurrent.GenericFutureListener;
 
 public class NettyClient {
     private static final String TAG = NettyClient.class.getSimpleName();
-    private static final String HOST = "192.168.100.5";
+    private static final String HOST = "192.168.0.101";
     private static final String TYPE_FIELD = "_type";
     private static final int PORT = 39405;
     private static final String COMMAND_TYPE_FIELD = "_type";
@@ -75,15 +75,15 @@ public class NettyClient {
         mCommands.put(ErrorResponse.class.getSimpleName(), ErrorResponse.class);
         mCommands.put(LobbyListUpdatedNotification.class.getSimpleName(), LobbyListUpdatedNotification.class);
         mCommands.put(LogInResponse.class.getSimpleName(), LogInResponse.class);
-        mCommands.put(GameStartedEvent.class.getSimpleName(), GameStartedEvent.class);
+        mCommands.put(GameStartedNotification.class.getSimpleName(), GameStartedNotification.class);
         mCommands.put(MoveRejectedResponse.class.getSimpleName(), MoveRejectedResponse.class);
-        mCommands.put(NewStateEvent.class.getSimpleName(), NewStateEvent.class);
+        mCommands.put(NewStateNotification.class.getSimpleName(), NewStateNotification.class);
 
         // out commands
         mCommands.put(CreateLobbyRequest.class.getSimpleName(), CreateLobbyRequest.class);
         mCommands.put(EnterLobbyRequest.class.getSimpleName(), EnterLobbyRequest.class);
         mCommands.put(KeepAliveRequest.class.getSimpleName(), KeepAliveRequest.class);
-        mCommands.put(LobbySubscribeRequest.class.getSimpleName(), LobbySubscribeRequest.class);
+        mCommands.put(LobbyListSubscribeRequest.class.getSimpleName(), LobbyListSubscribeRequest.class);
         mCommands.put(LogInRequest.class.getSimpleName(), LogInRequest.class);
         mCommands.put(LogOutRequest.class.getSimpleName(), LogOutRequest.class);
         mCommands.put(MoveRequest.class.getSimpleName(), MoveRequest.class);

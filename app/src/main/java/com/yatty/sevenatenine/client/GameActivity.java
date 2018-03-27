@@ -13,9 +13,9 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.yatty.sevenatenine.api.commands_with_data.Card;
-import com.yatty.sevenatenine.api.in_commands.GameStartedEvent;
+import com.yatty.sevenatenine.api.in_commands.GameStartedNotification;
 import com.yatty.sevenatenine.api.in_commands.MoveRejectedResponse;
-import com.yatty.sevenatenine.api.in_commands.NewStateEvent;
+import com.yatty.sevenatenine.api.in_commands.NewStateNotification;
 import com.yatty.sevenatenine.api.out_commands.LogOutRequest;
 import com.yatty.sevenatenine.api.out_commands.MoveRequest;
 
@@ -103,13 +103,13 @@ public class GameActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
-        GameStartedEvent gameStartedEvent = getIntent().getParcelableExtra(EXTRA_GAME_STARTED_EVENT);
+        GameStartedNotification gameStartedNotification = getIntent().getParcelableExtra(EXTRA_GAME_STARTED_EVENT);
         initUi();
-        mTopCard = gameStartedEvent.getFirstCard();
-        Log.d(TAG, "GameStartedEvent: get mTopCard");
-        mCardArrayList = gameStartedEvent.getPlayerCards();
-        Log.d(TAG, "GameStartedEvent: get mCardArrayList");
-        mGameId = gameStartedEvent.getLobbyId();
+        mTopCard = gameStartedNotification.getFirstCard();
+        Log.d(TAG, "GameStartedNotification: get mTopCard");
+        mCardArrayList = gameStartedNotification.getPlayerCards();
+        Log.d(TAG, "GameStartedNotification: get mCardArrayList");
+        mGameId = gameStartedNotification.getLobbyId();
         mNumOfCardsOnDesk = 0;
         mTopCardValueTextView.setText(String.valueOf(mTopCard.getValue()));
         mTopCardModifierTextView.setText(PLUS_MINUS_SYMBOL + mTopCard.getModifier());
@@ -120,9 +120,9 @@ public class GameActivity extends AppCompatActivity {
         mNettyClient.setHandler(handler);
     }
 
-    public static Intent getStartIntent(Context context, GameStartedEvent gameStartedEvent) {
+    public static Intent getStartIntent(Context context, GameStartedNotification gameStartedNotification) {
         Intent intent = new Intent(context, GameActivity.class);
-        intent.putExtra(EXTRA_GAME_STARTED_EVENT, gameStartedEvent);
+        intent.putExtra(EXTRA_GAME_STARTED_EVENT, gameStartedNotification);
         return intent;
     }
 
@@ -177,21 +177,21 @@ public class GameActivity extends AppCompatActivity {
                 mCardsOnTableButtons[i].setVisibility(View.VISIBLE);
                 mNumOfCardsOnDesk++;
                 mVibrator.vibrate(VIBRATE_TIME_MS);
-            } else if (msg.obj instanceof NewStateEvent) {
-                NewStateEvent newStateEvent = (NewStateEvent) msg.obj;
-                if (newStateEvent.isLastMove()) {
+            } else if (msg.obj instanceof NewStateNotification) {
+                NewStateNotification newStateNotification = (NewStateNotification) msg.obj;
+                if (newStateNotification.isLastMove()) {
                     mNettyClient.setHandler(null);
                     Intent nextActivity = GameOverActivity.newIntent(getApplicationContext(), UserInfo.getUserName(),
-                            newStateEvent.getGameResult().getWinner(), newStateEvent.getGameResult().getScores());
+                            newStateNotification.getGameResult().getWinner(), newStateNotification.getGameResult().getScores());
                     startActivity(nextActivity);
                     finish();
                 } else {
-                    String moveWinner = newStateEvent.getMoveWinner();
+                    String moveWinner = newStateNotification.getMoveWinner();
                     if (UserInfo.getUserName().equals(moveWinner)) {
                         mCounterTextView.setText(String.valueOf(Integer.parseInt(mCounterTextView.getText().toString()) + 1));
                     }
-                    mTopCard = newStateEvent.getNextCard();
-                    mMoveNumber = newStateEvent.getMoveNumber();
+                    mTopCard = newStateNotification.getNextCard();
+                    mMoveNumber = newStateNotification.getMoveNumber();
                     mTopCardValueTextView.setText(String.valueOf(mTopCard.getValue()));
                     mTopCardModifierTextView.setText(PLUS_MINUS_SYMBOL + mTopCard.getModifier());
                 }

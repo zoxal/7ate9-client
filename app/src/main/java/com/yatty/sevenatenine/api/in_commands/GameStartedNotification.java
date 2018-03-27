@@ -10,34 +10,34 @@ import com.yatty.sevenatenine.api.commands_with_data.Card;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GameStartedEvent implements InCommandInterface {
-    public static final String TAG = GameStartedEvent.class.getSimpleName();
+public class GameStartedNotification implements InCommandInterface {
+    public static final String TAG = GameStartedNotification.class.getSimpleName();
 
     private Card firstCard;
     private List<Card> playerCards;
     private String lobbyId;
 
-    protected GameStartedEvent(Parcel in) {
+    protected GameStartedNotification(Parcel in) {
         firstCard = in.readParcelable(Card.class.getClassLoader());
         playerCards = in.createTypedArrayList(Card.CREATOR);
         lobbyId = in.readString();
     }
 
-    public static final Creator<GameStartedEvent> CREATOR = new Creator<GameStartedEvent>() {
+    public static final Creator<GameStartedNotification> CREATOR = new Creator<GameStartedNotification>() {
         @Override
-        public GameStartedEvent createFromParcel(Parcel in) {
-            return new GameStartedEvent(in);
+        public GameStartedNotification createFromParcel(Parcel in) {
+            return new GameStartedNotification(in);
         }
 
         @Override
-        public GameStartedEvent[] newArray(int size) {
-            return new GameStartedEvent[size];
+        public GameStartedNotification[] newArray(int size) {
+            return new GameStartedNotification[size];
         }
     };
 
     @Override
     public void doLogic(Handler handler) {
-        Log.d(TAG, "GameStartedEvent.doLogic");
+        Log.d(TAG, "GameStartedNotification.doLogic");
         Log.d(TAG, "First card value: " + firstCard.getValue());
         Log.d(TAG, "First card modifier: " + firstCard.getModifier());
         Log.d(TAG, "LobbyId: " + lobbyId);

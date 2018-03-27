@@ -1,12 +1,12 @@
 package com.yatty.sevenatenine.api.out_commands;
 
-public class LobbySubscribeRequest {
+public class LobbyListSubscribeRequest {
     private String authToken;
 
-    public LobbySubscribeRequest() {
+    public LobbyListSubscribeRequest() {
     }
 
-    public LobbySubscribeRequest(String authToken) {
+    public LobbyListSubscribeRequest(String authToken) {
         this.authToken = authToken;
     }
 

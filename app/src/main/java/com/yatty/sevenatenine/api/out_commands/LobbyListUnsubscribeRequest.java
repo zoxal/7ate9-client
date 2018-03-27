@@ -1,9 +1,9 @@
 package com.yatty.sevenatenine.api.out_commands;
 
-public class LobbyUnsubscribeRequest {
+public class LobbyListUnsubscribeRequest {
     private String authToken;
 
-    public LobbyUnsubscribeRequest(String authToken) {
+    public LobbyListUnsubscribeRequest(String authToken) {
         this.authToken = authToken;
     }
 }
