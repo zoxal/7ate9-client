@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<font-family xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- TODO change this attribute -->
+    <font
+        android:font="@font/segoe_script"/>
+</font-family>
