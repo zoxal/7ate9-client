@@ -181,8 +181,9 @@ public class LobbyListActivity extends AppCompatActivity {
                 mNettyClient.write(new LobbyListUnsubscribeRequest(UserInfo.getAuthToken()), true);
                 EnterLobbyResponse enterLobbyResponse = (EnterLobbyResponse) msg.obj;
                 mNettyClient.setHandler(null);
+                // TODO change api(add lobbyId)
                 Intent nextActivity = LobbyActivity.getStartIntent(getApplicationContext(),
-                        enterLobbyResponse.getPrivateLobbyInfo());
+                        enterLobbyResponse.getPrivateLobbyInfo(), null);
                 startActivity(nextActivity);
                 finish();
             } else if (msg.obj instanceof CreateLobbyResponse) {
@@ -190,7 +191,8 @@ public class LobbyListActivity extends AppCompatActivity {
                 mNettyClient.write(new LobbyListUnsubscribeRequest(UserInfo.getAuthToken()), true);
                 CreateLobbyResponse createLobbyResponse = (CreateLobbyResponse) msg.obj;
                 mNettyClient.setHandler(null);
-                Intent intent = LobbyActivity.getStartIntent(getApplicationContext(), new PrivateLobbyInfo());
+                Intent intent = LobbyActivity.getStartIntent(getApplicationContext(), new PrivateLobbyInfo(),
+                        createLobbyResponse.getLobbyId());
                 startActivity(intent);
             }
         }

@@ -18,6 +18,16 @@
         android:layout_height="wrap_content"
         android:text="@string/title_players_in_lobby"/>
 
+    <Button
+        android:id="@+id/button_leave_lobby"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="16dp"
+        android:text="@string/action_leave_lobby"
+        />
+
     <TextView
         android:id="@+id/tv_lobby_players"
         android:layout_width="wrap_content"
