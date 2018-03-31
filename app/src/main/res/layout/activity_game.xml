@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fl_main_layout"
@@ -10,7 +10,8 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:layout_above="@id/_ll_player_cards"
+        android:layout_centerHorizontal="true"
         android:orientation="vertical">
 
         <TextView
@@ -35,7 +36,7 @@
         android:id="@+id/button_disconnect"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="top|right"
+        android:layout_alignParentEnd="true"
         android:layout_margin="10dp"
         android:text="@string/action_disconnect"/>
 
@@ -49,9 +50,10 @@
         android:textSize="30sp"/>
 
     <LinearLayout
+        android:id="@+id/_ll_player_cards"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center"
+        android:layout_alignParentBottom="true"
         android:layout_marginBottom="30dp"
         android:orientation="vertical">
 
@@ -64,39 +66,39 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <Button
+                <ImageButton
                     android:id="@+id/button_card1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    style="@style/ImageButtonCard"
                     android:layout_weight="1"
+                    android:src="@drawable/img"
                     tools:text="1\n±2"/>
 
-                <Button
+                <ImageButton
                     android:id="@+id/button_card2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    style="@style/ImageButtonCard"
                     android:layout_weight="1"
+                    android:src="@drawable/img"
                     tools:text="1\n±2"/>
 
-                <Button
+                <ImageButton
                     android:id="@+id/button_card3"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    style="@style/ImageButtonCard"
                     android:layout_weight="1"
+                    android:src="@drawable/img"
                     tools:text="1\n±2"/>
 
-                <Button
+                <ImageButton
                     android:id="@+id/button_card4"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    style="@style/ImageButtonCard"
                     android:layout_weight="1"
+                    android:src="@drawable/img"
                     tools:text="1\n±2"/>
 
-                <Button
+                <ImageButton
                     android:id="@+id/button_card5"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    style="@style/ImageButtonCard"
                     android:layout_weight="1"
+                    android:src="@drawable/img"
                     tools:text="1\n±2"/>
             </TableRow>
 
@@ -105,38 +107,33 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <Button
+                <ImageButton
                     android:id="@+id/button_card6"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    style="@style/ImageButtonCard"
                     android:layout_weight="1"
                     tools:text="1\n±2"/>
 
-                <Button
+                <ImageButton
                     android:id="@+id/button_card7"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    style="@style/ImageButtonCard"
                     android:layout_weight="1"
                     tools:text="1\n±2"/>
 
-                <Button
+                <ImageButton
                     android:id="@+id/button_card8"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    style="@style/ImageButtonCard"
                     android:layout_weight="1"
                     tools:text="1\n±2"/>
 
-                <Button
+                <ImageButton
                     android:id="@+id/button_card9"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    style="@style/ImageButtonCard"
                     android:layout_weight="1"
                     tools:text="1\n±2"/>
 
-                <Button
+                <ImageButton
                     android:id="@+id/button_card10"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    style="@style/ImageButtonCard"
                     android:layout_weight="1"
                     tools:text="1\n±2"/>
             </TableRow>
@@ -151,4 +148,4 @@
             android:text="@string/action_get_card"/>
     </LinearLayout>
 
-</FrameLayout>
+</RelativeLayout>

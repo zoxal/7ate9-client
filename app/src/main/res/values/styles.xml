@@ -18,4 +18,10 @@
     <style name="TextStyleLarge" parent="android:TextAppearance.Large">
         <item name="android:textColor">@color/black</item>
     </style>
+
+    <style name="ImageButtonCard" parent="Base.Widget.AppCompat.ImageButton">
+        <item name="android:layout_width">100dp</item>
+        <item name="android:layout_height">100dp</item>
+        <item name="android:layout_margin">5dp</item>
+    </style>
 </resources>

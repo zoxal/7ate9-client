@@ -115,7 +115,7 @@ public class LobbyListActivity extends AppCompatActivity {
             EnterLobbyRequest enterLobbyRequest = new EnterLobbyRequest(mPublicLobbyInfo.getLobbyId(),
                     UserInfo.getAuthToken());
             mNettyClient.write(enterLobbyRequest, true);
-        }
+    }
     }
 
     private class LobbyAdapter extends RecyclerView.Adapter<LobbyHolder> {

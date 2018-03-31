@@ -22,6 +22,7 @@ import com.yatty.sevenatenine.api.in_commands.NewStateNotification;
 import com.yatty.sevenatenine.api.out_commands.CreateLobbyRequest;
 import com.yatty.sevenatenine.api.out_commands.EnterLobbyRequest;
 import com.yatty.sevenatenine.api.out_commands.KeepAliveRequest;
+import com.yatty.sevenatenine.api.out_commands.LeaveLobbyRequest;
 import com.yatty.sevenatenine.api.out_commands.LobbyListSubscribeRequest;
 import com.yatty.sevenatenine.api.out_commands.LogInRequest;
 import com.yatty.sevenatenine.api.out_commands.LogOutRequest;
@@ -87,6 +88,7 @@ public class NettyClient {
         mCommands.put(LogInRequest.class.getSimpleName(), LogInRequest.class);
         mCommands.put(LogOutRequest.class.getSimpleName(), LogOutRequest.class);
         mCommands.put(MoveRequest.class.getSimpleName(), MoveRequest.class);
+        mCommands.put(LeaveLobbyRequest.class.getSimpleName(), LeaveLobbyRequest.class);
 
     }
 
