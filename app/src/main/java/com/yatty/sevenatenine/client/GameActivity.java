@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TableRow;
 import android.widget.TextView;
 
@@ -37,8 +38,8 @@ public class GameActivity extends AppCompatActivity {
     private TextView mCounterTextView;
     private TextView mTopCardModifierTextView;
     private Button mDisconnectButton;
-    private Button mGetCardButton;
-    private Button mCardsOnTableButtons[];
+    private ImageButton mGetCardImageButton;
+    private ImageButton mCardsOnTableImageButtons[];
     private Vibrator mVibrator;
 
     private Card mTopCard;
@@ -53,13 +54,13 @@ public class GameActivity extends AppCompatActivity {
         mDisconnectButton = findViewById(R.id.button_disconnect);
         TableRow firstCardRow = findViewById(R.id.tr_first_card_row);
         TableRow secondCardRow = findViewById(R.id.tr_second_card_row);
-        mCardsOnTableButtons = new Button[MAX_NUM_CARDS_ON_TABLE];
+        mCardsOnTableImageButtons = new ImageButton[MAX_NUM_CARDS_ON_TABLE];
         for (int i = 0; i < firstCardRow.getVirtualChildCount(); i++) {
-            mCardsOnTableButtons[i] = (Button) firstCardRow.getVirtualChildAt(i);
-            mCardsOnTableButtons[i].setVisibility(View.INVISIBLE);
-            mCardsOnTableButtons[i + firstCardRow.getVirtualChildCount()] =
-                    (Button) secondCardRow.getVirtualChildAt(i);
-            mCardsOnTableButtons[i + firstCardRow.getVirtualChildCount()].setVisibility(View.INVISIBLE);
+            mCardsOnTableImageButtons[i] = (ImageButton) firstCardRow.getVirtualChildAt(i);
+            mCardsOnTableImageButtons[i].setVisibility(View.INVISIBLE);
+            mCardsOnTableImageButtons[i + firstCardRow.getVirtualChildCount()] =
+                    (ImageButton) secondCardRow.getVirtualChildAt(i);
+            mCardsOnTableImageButtons[i + firstCardRow.getVirtualChildCount()].setVisibility(View.INVISIBLE);
         }
 
         mDisconnectButton.setOnClickListener(new View.OnClickListener() {
@@ -74,8 +75,8 @@ public class GameActivity extends AppCompatActivity {
                 finish();
             }
         });
-        mGetCardButton = findViewById(R.id.button_get_card);
-        mGetCardButton.setOnClickListener(new View.OnClickListener() {
+        mGetCardImageButton = findViewById(R.id.button_get_card);
+        mGetCardImageButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
@@ -84,14 +85,13 @@ public class GameActivity extends AppCompatActivity {
                         Card card = mCardArrayList.get(0);
                         mCardArrayList.remove(0);
                         int i = 0;
-                        while (mCardsOnTableButtons[i].hasOnClickListeners()) {
+                        while (mCardsOnTableImageButtons[i].hasOnClickListeners()) {
                             i++;
                         }
-                        mCardsOnTableButtons[i].setText(card.getValue() + NEW_LINE_SYMBOL +
-                                PLUS_MINUS_SYMBOL + card.getModifier());
-                        mCardsOnTableButtons[i].setOnClickListener(new CardButtonOnClickListener(card));
-                        mCardsOnTableButtons[i].setVisibility(View.VISIBLE);
+                        mCardsOnTableImageButtons[i].setOnClickListener(new CardButtonOnClickListener(card));
+                        mCardsOnTableImageButtons[i].setVisibility(View.VISIBLE);
                         mNumOfCardsOnDesk++;
+
                     }
                 }
             }
@@ -101,6 +101,7 @@ public class GameActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        hideStatusBar();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
         GameStartedNotification gameStartedNotification = getIntent().getParcelableExtra(EXTRA_GAME_STARTED_EVENT);
@@ -124,6 +125,11 @@ public class GameActivity extends AppCompatActivity {
         Intent intent = new Intent(context, GameActivity.class);
         intent.putExtra(EXTRA_GAME_STARTED_EVENT, gameStartedNotification);
         return intent;
+    }
+
+    private void hideStatusBar() {
+        View decorView = getWindow().getDecorView();
+        decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
     }
 
     class CardButtonOnClickListener implements View.OnClickListener {
@@ -168,13 +174,11 @@ public class GameActivity extends AppCompatActivity {
                 MoveRejectedResponse moveRejectedResponse = (MoveRejectedResponse) msg.obj;
                 Card card = moveRejectedResponse.getMove();
                 int i = 0;
-                while (mCardsOnTableButtons[i].hasOnClickListeners()) {
+                while (mCardsOnTableImageButtons[i].hasOnClickListeners()) {
                     i++;
                 }
-                mCardsOnTableButtons[i].setText(card.getValue() + NEW_LINE_SYMBOL +
-                        PLUS_MINUS_SYMBOL + card.getModifier());
-                mCardsOnTableButtons[i].setOnClickListener(new CardButtonOnClickListener(card));
-                mCardsOnTableButtons[i].setVisibility(View.VISIBLE);
+                mCardsOnTableImageButtons[i].setOnClickListener(new CardButtonOnClickListener(card));
+                mCardsOnTableImageButtons[i].setVisibility(View.VISIBLE);
                 mNumOfCardsOnDesk++;
                 mVibrator.vibrate(VIBRATE_TIME_MS);
             } else if (msg.obj instanceof NewStateNotification) {

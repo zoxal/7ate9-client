@@ -53,17 +53,12 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 try {
                     if (!mNameEditText.getText().toString().isEmpty()) {
-                        if (!isOnline()) {
-                            Snackbar.make(view, "No internet connection.", Snackbar.LENGTH_SHORT).show();
-                            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-                        } else {
-                            LogInRequest logInRequest = new LogInRequest();
-                            logInRequest.setName(mNameEditText.getText().toString());
-                            mNettyClient.write(logInRequest, false);
-                            view.setClickable(false);
-                            Snackbar.make(view, "Connecting...", Snackbar.LENGTH_SHORT).show();
-                            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-                        }
+                        LogInRequest logInRequest = new LogInRequest();
+                        logInRequest.setName(mNameEditText.getText().toString());
+                        mNettyClient.write(logInRequest, false);
+                        view.setClickable(false);
+                        Snackbar.make(view, "Connecting...", Snackbar.LENGTH_SHORT).show();
+                        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
                     } else {
                         Snackbar.make(view, "Enter name.", Snackbar.LENGTH_SHORT).show();
                         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);

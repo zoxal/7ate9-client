@@ -19,9 +19,12 @@
         <item name="android:textColor">@color/black</item>
     </style>
 
-    <style name="ImageButtonCard" parent="Base.Widget.AppCompat.ImageButton">
-        <item name="android:layout_width">100dp</item>
-        <item name="android:layout_height">100dp</item>
+    <style name="ImageButtonStyleCard" parent="Base.Widget.AppCompat.ImageButton">
+        <item name="android:layout_width">62dp</item>
+        <item name="android:layout_height">90dp</item>
         <item name="android:layout_margin">5dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:scaleType">fitXY</item>
+        <item name="android:background">@drawable/shape_game_card</item>
     </style>
 </resources>

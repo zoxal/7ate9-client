@@ -13,4 +13,5 @@
     <string name="title_wait_request">Wait, please.</string>
     <string name="title_players_in_lobby">Players:</string>
     <string name="action_leave_lobby">Leave lobby</string>
+    <string name="title_cards_left">Card left:</string>
 </resources>
