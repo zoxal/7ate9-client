@@ -2,6 +2,7 @@ package com.yatty.sevenatenine.client;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
@@ -31,6 +32,8 @@ public class GameActivity extends AppCompatActivity {
     private static final int VIBRATE_TIME_MS = 100;
     public static final int MAX_NUM_CARDS_ON_TABLE = 10;
     public static final int MAX_CARD = 10;
+    private static final String INITIAL_COUNTER_VALUE = "0";
+    public static final int CARD_DISTRIBUTION_ANIMATION_DURATION_MILLIS = 300;
 
     private NettyClient mNettyClient;
     private String mGameId;
@@ -51,9 +54,10 @@ public class GameActivity extends AppCompatActivity {
         mTopCardValueTextView = findViewById(R.id.tv_top_card_value);
         mTopCardModifierTextView = findViewById(R.id.tv_top_card_modifier);
         mCounterTextView = findViewById(R.id.tv_counter);
+        mCounterTextView.setText(INITIAL_COUNTER_VALUE);
         mDisconnectButton = findViewById(R.id.button_disconnect);
-        TableRow firstCardRow = findViewById(R.id.tr_first_card_row);
-        TableRow secondCardRow = findViewById(R.id.tr_second_card_row);
+        final TableRow firstCardRow = findViewById(R.id.tr_first_card_row);
+        final TableRow secondCardRow = findViewById(R.id.tr_second_card_row);
         mCardsOnTableImageButtons = new ImageButton[MAX_NUM_CARDS_ON_TABLE];
         for (int i = 0; i < firstCardRow.getVirtualChildCount(); i++) {
             mCardsOnTableImageButtons[i] = (ImageButton) firstCardRow.getVirtualChildAt(i);
@@ -88,8 +92,27 @@ public class GameActivity extends AppCompatActivity {
                         while (mCardsOnTableImageButtons[i].hasOnClickListeners()) {
                             i++;
                         }
+                        /*int getCardButtonCoordinates[] = new int[2];
+                        mGetCardImageButton.getLocationOnScreen(getCardButtonCoordinates);
+                        int cardCoordinates[] = new int[2];
+                        mCardsOnTableImageButtons[i].getLocationOnScreen(cardCoordinates);
+                        TranslateAnimation animation = new TranslateAnimation(
+                                TranslateAnimation.ABSOLUTE,
+                                getCardButtonCoordinates[0] - cardCoordinates[0],
+                                TranslateAnimation.RELATIVE_TO_SELF,
+                                0,
+                                TranslateAnimation.ABSOLUTE,
+                                getCardButtonCoordinates[1] - cardCoordinates[1],
+                                TranslateAnimation.RELATIVE_TO_SELF,
+                                0
+                        );
+                        animation.setDuration(CARD_DISTRIBUTION_ANIMATION_DURATION_MILLIS);
+                        */
+                        Drawable drawable = getResources().getDrawable(R.drawable.b1_1);
+                        mCardsOnTableImageButtons[i].setImageDrawable(drawable);
                         mCardsOnTableImageButtons[i].setOnClickListener(new CardButtonOnClickListener(card));
                         mCardsOnTableImageButtons[i].setVisibility(View.VISIBLE);
+                        // mCardsOnTableImageButtons[i].startAnimation(animation);
                         mNumOfCardsOnDesk++;
 
                     }
@@ -114,7 +137,6 @@ public class GameActivity extends AppCompatActivity {
         mNumOfCardsOnDesk = 0;
         mTopCardValueTextView.setText(String.valueOf(mTopCard.getValue()));
         mTopCardModifierTextView.setText(PLUS_MINUS_SYMBOL + mTopCard.getModifier());
-
         mVibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         Handler handler = new GameActivityHandler();
         mNettyClient = NettyClient.getInstance();

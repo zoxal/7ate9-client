@@ -2,7 +2,7 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/fl_main_layout"
+    android:id="@+id/rl_main_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/table"
@@ -78,31 +78,26 @@
                 <ImageButton
                     android:id="@+id/button_card1"
                     style="@style/ImageButtonStyleCard"
-                    android:src="@drawable/shirt"
                     tools:text="1\n±2"/>
 
                 <ImageButton
                     android:id="@+id/button_card2"
                     style="@style/ImageButtonStyleCard"
-                    android:src="@drawable/shirt"
                     tools:text="1\n±2"/>
 
                 <ImageButton
                     android:id="@+id/button_card3"
                     style="@style/ImageButtonStyleCard"
-                    android:src="@drawable/shirt"
                     tools:text="1\n±2"/>
 
                 <ImageButton
                     android:id="@+id/button_card4"
                     style="@style/ImageButtonStyleCard"
-                    android:src="@drawable/img"
                     tools:text="1\n±2"/>
 
                 <ImageButton
                     android:id="@+id/button_card5"
                     style="@style/ImageButtonStyleCard"
-                    android:src="@drawable/img"
                     tools:text="1\n±2"/>
             </TableRow>
 

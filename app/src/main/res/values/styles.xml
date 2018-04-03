@@ -26,5 +26,6 @@
         <item name="android:layout_weight">1</item>
         <item name="android:scaleType">fitXY</item>
         <item name="android:background">@drawable/shape_game_card</item>
+        <item name="android:src">@drawable/b1_1</item>
     </style>
 </resources>
