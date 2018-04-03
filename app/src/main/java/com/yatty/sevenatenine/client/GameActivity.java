@@ -108,7 +108,7 @@ public class GameActivity extends AppCompatActivity {
                         );
                         animation.setDuration(CARD_DISTRIBUTION_ANIMATION_DURATION_MILLIS);
                         */
-                        Drawable drawable = getResources().getDrawable(R.drawable.b1_1);
+                        Drawable drawable = getDrawableCard(card);
                         mCardsOnTableImageButtons[i].setImageDrawable(drawable);
                         mCardsOnTableImageButtons[i].setOnClickListener(new CardButtonOnClickListener(card));
                         mCardsOnTableImageButtons[i].setVisibility(View.VISIBLE);
@@ -147,6 +147,80 @@ public class GameActivity extends AppCompatActivity {
         Intent intent = new Intent(context, GameActivity.class);
         intent.putExtra(EXTRA_GAME_STARTED_EVENT, gameStartedNotification);
         return intent;
+    }
+
+    private Drawable getDrawableCard(Card card) {
+        if (card.getModifier() == 1) {
+            switch (card.getValue()) {
+                case 1:
+                    return getResources().getDrawable(R.drawable.g1);
+                case 2:
+                    return getResources().getDrawable(R.drawable.g2);
+                case 3:
+                    return getResources().getDrawable(R.drawable.g3);
+                case 4:
+                    return getResources().getDrawable(R.drawable.g4);
+                case 5:
+                    return getResources().getDrawable(R.drawable.g5);
+                case 6:
+                    return getResources().getDrawable(R.drawable.g6);
+                case 7:
+                    return getResources().getDrawable(R.drawable.g7);
+                case 8:
+                    return getResources().getDrawable(R.drawable.g8);
+                case 9:
+                    return getResources().getDrawable(R.drawable.g9);
+                case 10:
+                    return getResources().getDrawable(R.drawable.g10);
+            }
+        } else if (card.getModifier() == 2) {
+            switch (card.getValue()) {
+                case 1:
+                    return getResources().getDrawable(R.drawable.b1);
+                case 2:
+                    return getResources().getDrawable(R.drawable.b2);
+                case 3:
+                    return getResources().getDrawable(R.drawable.b3);
+                case 4:
+                    return getResources().getDrawable(R.drawable.b4);
+                case 5:
+                    return getResources().getDrawable(R.drawable.b5);
+                case 6:
+                    return getResources().getDrawable(R.drawable.b6);
+                case 7:
+                    return getResources().getDrawable(R.drawable.b7);
+                case 8:
+                    return getResources().getDrawable(R.drawable.b8);
+                case 9:
+                    return getResources().getDrawable(R.drawable.b9);
+                case 10:
+                    return getResources().getDrawable(R.drawable.b10);
+            }
+        } else if (card.getModifier() == 3) {
+            switch (card.getValue()) {
+                case 1:
+                    return getResources().getDrawable(R.drawable.r1);
+                case 2:
+                    return getResources().getDrawable(R.drawable.r2);
+                case 3:
+                    return getResources().getDrawable(R.drawable.r3);
+                case 4:
+                    return getResources().getDrawable(R.drawable.r4);
+                case 5:
+                    return getResources().getDrawable(R.drawable.r5);
+                case 6:
+                    return getResources().getDrawable(R.drawable.r6);
+                case 7:
+                    return getResources().getDrawable(R.drawable.r7);
+                case 8:
+                    return getResources().getDrawable(R.drawable.r8);
+                case 9:
+                    return getResources().getDrawable(R.drawable.r9);
+                case 10:
+                    return getResources().getDrawable(R.drawable.r10);
+            }
+        }
+        return null;
     }
 
     private void hideStatusBar() {
