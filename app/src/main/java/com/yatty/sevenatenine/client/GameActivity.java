@@ -73,7 +73,7 @@ public class GameActivity extends AppCompatActivity {
                 LogOutRequest logOutRequest = new LogOutRequest(UserInfo.getAuthToken());
                 mNettyClient.write(logOutRequest, false);
                 mNettyClient.setHandler(null);
-                Intent nextActivity = MainActivity.newIntent(getApplicationContext());
+                Intent nextActivity = MainActivity.getStartIntent(getApplicationContext());
                 startActivity(nextActivity);
                 finish();
             }

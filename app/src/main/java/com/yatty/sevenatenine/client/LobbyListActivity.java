@@ -34,6 +34,7 @@ public class LobbyListActivity extends AppCompatActivity {
     private static final String EXTRA_CREATE_LOBBY_REQUEST = "create_lobby_request";
 
     private FloatingActionButton mAddFloatingActionButton;
+    private FloatingActionButton mSettingsFloatingActionButton;
     private RecyclerView mLobbyListRecyclerView;
     private LobbyAdapter mLobbyAdapter;
     private NettyClient mNettyClient;
@@ -43,6 +44,7 @@ public class LobbyListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lobby_list);
         mLobbyListRecyclerView = findViewById(R.id.rv_lobby_list);
+        mSettingsFloatingActionButton = findViewById(R.id.fab_settings);
         mLobbyListRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         final LobbyListActivityHandler lobbyListActivityHandler =
                 new LobbyListActivityHandler();
@@ -54,6 +56,14 @@ public class LobbyListActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent startIntent = CreateLobbyActivity.getStartIntent(getApplicationContext());
                 startActivityForResult(startIntent, REQUEST_CODE);
+            }
+        });
+        mSettingsFloatingActionButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent intent = SettingsActivity.getStartIntent(getApplicationContext());
+                startActivity(intent);
             }
         });
         LobbyListSubscribeRequest lobbyListSubscribeRequest = new LobbyListSubscribeRequest(UserInfo.getAuthToken());
@@ -115,7 +125,7 @@ public class LobbyListActivity extends AppCompatActivity {
             EnterLobbyRequest enterLobbyRequest = new EnterLobbyRequest(mPublicLobbyInfo.getLobbyId(),
                     UserInfo.getAuthToken());
             mNettyClient.write(enterLobbyRequest, true);
-    }
+        }
     }
 
     private class LobbyAdapter extends RecyclerView.Adapter<LobbyHolder> {

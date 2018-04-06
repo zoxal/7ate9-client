@@ -43,10 +43,15 @@
             android:name=".CreateLobbyActivity"
             android:screenOrientation="portrait"
             android:theme="@style/ActivityStyle"/>
+        <activity
+            android:name=".SettingsActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/ActivityStyle"/>
 
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="4105998427a115f63abdde2ae901d1a80bfe904c"/>
+
     </application>
 
 </manifest>

@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
@@ -29,11 +30,6 @@ public class MainActivity extends AppCompatActivity {
     private Button mConnectButton;
     private EditText mNameEditText;
     private NettyClient mNettyClient;
-
-    public static Intent newIntent(Context context) {
-        Intent intent = new Intent(context, MainActivity.class);
-        return intent;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +64,11 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    public static Intent getStartIntent(Context context) {
+        Intent intent = new Intent(context, MainActivity.class);
+        return intent;
     }
 
     public boolean isOnline() {

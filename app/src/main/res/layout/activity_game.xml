@@ -21,10 +21,11 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_margin="10dp"
-        android:text="@string/action_disconnect"/>
+        android:text="@string/action_leave_game"/>
 
     <TextView
         android:id="@+id/_tv_title_cards_left"
+        style="@style/TextStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
@@ -35,6 +36,7 @@
 
     <TextView
         android:id="@+id/tv_counter"
+        style="@style/TextStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
