@@ -38,12 +38,11 @@ public class GameActivity extends AppCompatActivity {
 
     private NettyClient mNettyClient;
     private String mGameId;
-    private TextView mTopCardValueTextView;
     private TextView mCounterTextView;
-    private TextView mTopCardModifierTextView;
     private Button mDisconnectButton;
     private ImageButton mGetCardImageButton;
     private ImageButton mCardsOnTableImageButtons[];
+    private ImageButton mTopCardImageButton;
     private Vibrator mVibrator;
 
     private Card mTopCard;
@@ -52,8 +51,7 @@ public class GameActivity extends AppCompatActivity {
     private int mMoveNumber;
 
     private void initUi() {
-        mTopCardValueTextView = findViewById(R.id.tv_top_card_value);
-        mTopCardModifierTextView = findViewById(R.id.tv_top_card_modifier);
+        mTopCardImageButton = findViewById(R.id.ib_top_card);
         mCounterTextView = findViewById(R.id.tv_counter);
         mCounterTextView.setText(INITIAL_COUNTER_VALUE);
         mDisconnectButton = findViewById(R.id.button_disconnect);
@@ -137,8 +135,7 @@ public class GameActivity extends AppCompatActivity {
         Log.d(TAG, "GameStartedNotification: get mCardArrayList");
         mGameId = gameStartedNotification.getLobbyId();
         mNumOfCardsOnDesk = 0;
-        mTopCardValueTextView.setText(String.valueOf(mTopCard.getValue()));
-        mTopCardModifierTextView.setText(PLUS_MINUS_SYMBOL + mTopCard.getModifier());
+        mTopCardImageButton.setImageDrawable(getDrawableCard(mTopCard));
         mVibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         Handler handler = new GameActivityHandler();
         mNettyClient = NettyClient.getInstance();
@@ -294,8 +291,7 @@ public class GameActivity extends AppCompatActivity {
                     }
                     mTopCard = newStateNotification.getNextCard();
                     mMoveNumber = newStateNotification.getMoveNumber();
-                    mTopCardValueTextView.setText(String.valueOf(mTopCard.getValue()));
-                    mTopCardModifierTextView.setText(PLUS_MINUS_SYMBOL + mTopCard.getModifier());
+                    mTopCardImageButton.setImageDrawable(getDrawableCard(mTopCard));
                 }
             }
         }

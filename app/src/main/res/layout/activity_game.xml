@@ -8,30 +8,12 @@
     android:background="@drawable/table"
     tools:context="com.yatty.sevenatenine.client.GameActivity">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <ImageButton
+        android:id="@+id/ib_top_card"
+        style="@style/ImageButtonStyleCard"
         android:layout_above="@id/_ll_player_cards"
         android:layout_centerHorizontal="true"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/tv_top_card_modifier"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:textSize="20sp"
-            tools:text="+1"/>
-
-        <TextView
-            android:id="@+id/tv_top_card_value"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingEnd="10dp"
-            android:paddingStart="10dp"
-            android:textSize="70sp"
-            tools:text="7"/>
-    </LinearLayout>
+        android:layout_margin="50dp"/>
 
     <Button
         android:id="@+id/button_disconnect"
@@ -77,8 +59,7 @@
 
                 <ImageButton
                     android:id="@+id/button_card1"
-                    style="@style/ImageButtonStyleCard"
-                    tools:text="1\n±2"/>
+                    style="@style/ImageButtonStyleCard"/>
 
                 <ImageButton
                     android:id="@+id/button_card2"
@@ -87,18 +68,15 @@
 
                 <ImageButton
                     android:id="@+id/button_card3"
-                    style="@style/ImageButtonStyleCard"
-                    tools:text="1\n±2"/>
+                    style="@style/ImageButtonStyleCard"/>
 
                 <ImageButton
                     android:id="@+id/button_card4"
-                    style="@style/ImageButtonStyleCard"
-                    tools:text="1\n±2"/>
+                    style="@style/ImageButtonStyleCard"/>
 
                 <ImageButton
                     android:id="@+id/button_card5"
-                    style="@style/ImageButtonStyleCard"
-                    tools:text="1\n±2"/>
+                    style="@style/ImageButtonStyleCard"/>
             </TableRow>
 
             <TableRow
@@ -109,32 +87,27 @@
                 <ImageButton
                     android:id="@+id/button_card6"
                     style="@style/ImageButtonStyleCard"
-                    android:layout_weight="1"
-                    tools:text="1\n±2"/>
+                    android:layout_weight="1"/>
 
                 <ImageButton
                     android:id="@+id/button_card7"
                     style="@style/ImageButtonStyleCard"
-                    android:layout_weight="1"
-                    tools:text="1\n±2"/>
+                    android:layout_weight="1"/>
 
                 <ImageButton
                     android:id="@+id/button_card8"
                     style="@style/ImageButtonStyleCard"
-                    android:layout_weight="1"
-                    tools:text="1\n±2"/>
+                    android:layout_weight="1"/>
 
                 <ImageButton
                     android:id="@+id/button_card9"
                     style="@style/ImageButtonStyleCard"
-                    android:layout_weight="1"
-                    tools:text="1\n±2"/>
+                    android:layout_weight="1"/>
 
                 <ImageButton
                     android:id="@+id/button_card10"
                     style="@style/ImageButtonStyleCard"
-                    android:layout_weight="1"
-                    tools:text="1\n±2"/>
+                    android:layout_weight="1"/>
             </TableRow>
 
         </TableLayout>
