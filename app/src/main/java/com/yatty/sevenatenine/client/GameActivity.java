@@ -9,6 +9,7 @@ import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TableRow;
@@ -92,7 +93,7 @@ public class GameActivity extends AppCompatActivity {
                         while (mCardsOnTableImageButtons[i].hasOnClickListeners()) {
                             i++;
                         }
-                        /*int getCardButtonCoordinates[] = new int[2];
+                        int getCardButtonCoordinates[] = new int[2];
                         mGetCardImageButton.getLocationOnScreen(getCardButtonCoordinates);
                         int cardCoordinates[] = new int[2];
                         mCardsOnTableImageButtons[i].getLocationOnScreen(cardCoordinates);
@@ -107,12 +108,13 @@ public class GameActivity extends AppCompatActivity {
                                 0
                         );
                         animation.setDuration(CARD_DISTRIBUTION_ANIMATION_DURATION_MILLIS);
-                        */
+
                         Drawable drawable = getDrawableCard(card);
                         mCardsOnTableImageButtons[i].setImageDrawable(drawable);
                         mCardsOnTableImageButtons[i].setOnClickListener(new CardButtonOnClickListener(card));
                         mCardsOnTableImageButtons[i].setVisibility(View.VISIBLE);
-                        // mCardsOnTableImageButtons[i].startAnimation(animation);
+                        mCardsOnTableImageButtons[i].bringToFront();
+                        mCardsOnTableImageButtons[i].startAnimation(animation);
                         mNumOfCardsOnDesk++;
 
                     }

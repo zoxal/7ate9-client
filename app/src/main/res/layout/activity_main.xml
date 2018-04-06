@@ -6,6 +6,15 @@
     android:layout_height="match_parent"
     tools:context="com.yatty.sevenatenine.client.MainActivity">
 
+    <ImageView
+        android:id="@+id/iv_settings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|end"
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_settings"
+        />
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -26,9 +35,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:fontFamily="@font/segoe_script"
+            android:background="@drawable/selector_button"
             android:text="@string/action_connect"/>
 
     </LinearLayout>
+
 
 </FrameLayout>
