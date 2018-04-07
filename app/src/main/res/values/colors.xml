@@ -8,4 +8,5 @@
     <color name="transparency">#80000000</color>
     <color name="colorButtonGradientStart">#992626</color>
     <color name="colorButtonGradientEnd">#f43737</color>
+    <color name="colorMain">#00C900</color>
 </resources>

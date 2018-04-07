@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
@@ -43,6 +42,15 @@ public class MainActivity extends AppCompatActivity {
                 mConnectButton);
         mNettyClient = NettyClient.getInstance();
         mNettyClient.setHandler(mainActivityHandler);
+
+        mConnectButton.setOnLongClickListener(new View.OnLongClickListener(){
+
+            @Override
+            public boolean onLongClick(View v) {
+                
+                return false;
+            }
+        });
 
         mConnectButton.setOnClickListener(new View.OnClickListener() {
             @Override
