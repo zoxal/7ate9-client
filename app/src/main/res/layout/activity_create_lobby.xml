@@ -7,6 +7,11 @@
     tools:context="com.yatty.sevenatenine.client.CreateLobbyActivity">
 
     <TextView
+        android:id="@+id/_tv_space_wrapper"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"/>
+
+    <TextView
         style="@style/TextStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -19,8 +24,8 @@
         android:id="@+id/et_lobby_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/_tv_space_wrapper"
         android:layout_centerHorizontal="true"
-        android:layout_centerInParent="true"
         android:layout_marginEnd="30dp"
         android:layout_marginStart="30dp"/>
 
