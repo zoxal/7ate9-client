@@ -27,7 +27,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:background="@drawable/shape_button"
-            android:text="@string/action_connect"/>
+            android:text="@string/action_connect"
+            android:textAllCaps="false"/>
 
     </LinearLayout>
 
