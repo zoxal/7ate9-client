@@ -104,4 +104,5 @@
     <string name="msg_no_lobbies">There is no lobby</string>
     <string name="valued_local_ip">192.168.0.1</string>
     <string name="action_apply">apply</string>
+    <string name="action_cancel">Cancel</string>
 </resources>

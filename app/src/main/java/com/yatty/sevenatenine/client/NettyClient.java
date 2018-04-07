@@ -61,7 +61,7 @@ public class NettyClient {
     private static final int SLEEP_TIME_IF_HAS_NO_HANDLER_MS = 5;
 
     private static NettyClient sNettyClient;
-    private String mServerIp = "192.168.43.117";
+    private String mServerIp = "192.168.100.4";
     private HashMap<String, Class> mCommands;
     private EventLoopGroup eventLoopGroup = new NioEventLoopGroup();
     private Channel mChannel;
@@ -106,14 +106,6 @@ public class NettyClient {
 
     private void run() throws Exception {
         connect();
-    }
-
-    public String getServerIp() {
-        return mServerIp;
-    }
-
-    public void setServerIp(String serverIp) {
-        mServerIp = serverIp;
     }
 
     private void connect() {
@@ -170,6 +162,14 @@ public class NettyClient {
             ch.pipeline().addLast(new LogicHandler());
             ch.pipeline().addLast(new GsonEncoder());
         }
+    }
+
+    public String getServerIp() {
+        return mServerIp;
+    }
+
+    public void setServerIp(String serverIp) {
+        mServerIp = serverIp;
     }
 
     private class LogicHandler extends SimpleChannelInboundHandler<Object> {

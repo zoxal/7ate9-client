@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -32,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // TODO find reason of long start
         super.onCreate(savedInstanceState);
         Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_main);
@@ -47,8 +49,8 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public boolean onLongClick(View v) {
-                Intent ipSettingsActivityIntent = IpSettingsActivity.getStartIntent(getApplicationContext());
-                startActivity(ipSettingsActivityIntent);
+                DialogFragment dialogFragment = new IpSettingsDialog();
+                dialogFragment.show(getSupportFragmentManager(), "Enter IP");
                 return false;
             }
         });

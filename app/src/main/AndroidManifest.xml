@@ -47,10 +47,6 @@
             android:name=".SettingsActivity"
             android:screenOrientation="portrait"
             android:theme="@style/ActivityStyle"/>
-        <activity
-            android:name=".IpSettingsActivity"
-            android:theme="@style/Theme.AppCompat.Dialog">
-        </activity>
 
         <meta-data
             android:name="io.fabric.ApiKey"
