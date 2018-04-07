@@ -35,6 +35,9 @@ public class LobbyActivity extends AppCompatActivity {
             public void onClick(View v) {
                 LeaveLobbyRequest leaveLobbyRequest = new LeaveLobbyRequest(mLobbyId);
                 NettyClient.getInstance().write(leaveLobbyRequest, false);
+                Intent lobbyListActivityIntent = LobbyListActivity.getStartIntent(getApplicationContext());
+                startActivity(lobbyListActivityIntent);
+                finish();
             }
         });
         LobbyActivityHandler lobbyActivityHandler = new LobbyActivityHandler();
