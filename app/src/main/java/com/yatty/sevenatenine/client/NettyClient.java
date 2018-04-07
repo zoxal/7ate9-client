@@ -55,13 +55,13 @@ import io.netty.util.concurrent.GenericFutureListener;
 
 public class NettyClient {
     private static final String TAG = NettyClient.class.getSimpleName();
-    private static final String HOST = "192.168.43.117";
     private static final String TYPE_FIELD = "_type";
     private static final int PORT = 39405;
     private static final String COMMAND_TYPE_FIELD = "_type";
     private static final int SLEEP_TIME_IF_HAS_NO_HANDLER_MS = 5;
 
     private static NettyClient sNettyClient;
+    private String mServerIp = "192.168.43.117";
     private HashMap<String, Class> mCommands;
     private EventLoopGroup eventLoopGroup = new NioEventLoopGroup();
     private Channel mChannel;
@@ -108,12 +108,20 @@ public class NettyClient {
         connect();
     }
 
+    public String getServerIp() {
+        return mServerIp;
+    }
+
+    public void setServerIp(String serverIp) {
+        mServerIp = serverIp;
+    }
+
     private void connect() {
         try {
             Bootstrap bootstrap = new Bootstrap();
             bootstrap.group(eventLoopGroup)
                     .channel(NioSocketChannel.class)
-                    .remoteAddress(new InetSocketAddress(HOST, PORT))
+                    .remoteAddress(new InetSocketAddress(mServerIp, PORT))
                     .handler(new PipeLineInitializer());
             mChannel = bootstrap.connect().sync().channel();
             mChannel.closeFuture().addListener(new GenericFutureListener<Future<? super Void>>() {

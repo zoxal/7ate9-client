@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center|top"
         android:layout_marginTop="20dp"
-        android:text="@string/title_no_lobbies"
+        android:text="@string/msg_no_lobbies"
         android:visibility="invisible"
         tools:visibility="visible"/>
 

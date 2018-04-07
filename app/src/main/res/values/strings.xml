@@ -101,5 +101,7 @@
     <string name="pref_ringtone_silent">Silent</string>
 
     <string name="pref_title_vibrate">Vibrate</string>
-    <string name="title_no_lobbies">There is no lobby</string>
+    <string name="msg_no_lobbies">There is no lobby</string>
+    <string name="valued_local_ip">192.168.0.1</string>
+    <string name="action_apply">apply</string>
 </resources>

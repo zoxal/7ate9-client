@@ -43,11 +43,12 @@ public class MainActivity extends AppCompatActivity {
         mNettyClient = NettyClient.getInstance();
         mNettyClient.setHandler(mainActivityHandler);
 
-        mConnectButton.setOnLongClickListener(new View.OnLongClickListener(){
+        mConnectButton.setOnLongClickListener(new View.OnLongClickListener() {
 
             @Override
             public boolean onLongClick(View v) {
-                
+                Intent ipSettingsActivityIntent = IpSettingsActivity.getStartIntent(getApplicationContext());
+                startActivity(ipSettingsActivityIntent);
                 return false;
             }
         });
