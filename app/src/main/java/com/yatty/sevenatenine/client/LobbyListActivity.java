@@ -36,6 +36,7 @@ public class LobbyListActivity extends AppCompatActivity {
     private FloatingActionButton mAddFloatingActionButton;
     private FloatingActionButton mSettingsFloatingActionButton;
     private RecyclerView mLobbyListRecyclerView;
+    private TextView mEmptyLobbyListTextView;
     private LobbyAdapter mLobbyAdapter;
     private NettyClient mNettyClient;
 
@@ -45,6 +46,7 @@ public class LobbyListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_lobby_list);
         mLobbyListRecyclerView = findViewById(R.id.rv_lobby_list);
         mSettingsFloatingActionButton = findViewById(R.id.fab_settings);
+        mEmptyLobbyListTextView = findViewById(R.id.tv_empty_lobby_list);
         mLobbyListRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         final LobbyListActivityHandler lobbyListActivityHandler =
                 new LobbyListActivityHandler();
@@ -96,6 +98,24 @@ public class LobbyListActivity extends AppCompatActivity {
         Intent intent = new Intent();
         intent.putExtra(EXTRA_CREATE_LOBBY_REQUEST, createLobbyRequest);
         return intent;
+    }
+
+    private void updateLobbyList(ArrayList<PublicLobbyInfo> lobbyInfoArrayList) {
+        if (mLobbyAdapter == null) {
+            if (lobbyInfoArrayList.isEmpty()) {
+                mEmptyLobbyListTextView.setVisibility(View.VISIBLE);
+            }
+            mLobbyAdapter = new LobbyAdapter(lobbyInfoArrayList);
+            mLobbyListRecyclerView.setAdapter(mLobbyAdapter);
+        } else {
+            if (lobbyInfoArrayList.isEmpty()) {
+                mEmptyLobbyListTextView.setVisibility(View.VISIBLE);
+            } else {
+                mEmptyLobbyListTextView.setVisibility(View.INVISIBLE);
+            }
+            mLobbyAdapter.setLobbyInfoArrayList(lobbyInfoArrayList);
+            mLobbyAdapter.notifyDataSetChanged();
+        }
     }
 
     private class LobbyHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -162,16 +182,6 @@ public class LobbyListActivity extends AppCompatActivity {
         public int getItemCount() {
             if (mLobbyInfoArrayList == null) return 0;
             return mLobbyInfoArrayList.size();
-        }
-    }
-
-    private void updateLobbyList(ArrayList<PublicLobbyInfo> lobbyInfoArrayList) {
-        if (mLobbyAdapter == null) {
-            mLobbyAdapter = new LobbyAdapter(lobbyInfoArrayList);
-            mLobbyListRecyclerView.setAdapter(mLobbyAdapter);
-        } else {
-            mLobbyAdapter.setLobbyInfoArrayList(lobbyInfoArrayList);
-            mLobbyAdapter.notifyDataSetChanged();
         }
     }
 
