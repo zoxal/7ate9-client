@@ -14,11 +14,13 @@ import android.view.View;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageButton;
 import android.widget.TableRow;
+import android.widget.Toast;
 
 import com.yatty.sevenatenine.api.commands_with_data.Card;
 import com.yatty.sevenatenine.api.in_commands.GameStartedNotification;
 import com.yatty.sevenatenine.api.in_commands.MoveRejectedResponse;
 import com.yatty.sevenatenine.api.in_commands.NewStateNotification;
+import com.yatty.sevenatenine.api.out_commands.LeaveGameRequest;
 import com.yatty.sevenatenine.api.out_commands.LogOutRequest;
 import com.yatty.sevenatenine.api.out_commands.MoveRequest;
 
@@ -310,13 +312,21 @@ public class GameActivity extends AppCompatActivity {
         new AlertDialog.Builder(this)
             .setTitle("Leave game")
             .setMessage("Do you really want to leave game?")
-            .setIcon(android.R.drawable.ic_dialog_alert)
-            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                //android.R.string.yes
+            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 
                 public void onClick(DialogInterface dialog, int whichButton) {
-                    // TODO: send leave game request
-//                    Toast.makeText(GameActivity.this, "Yaay", Toast.LENGTH_SHORT).show();
+                    LeaveGameRequest leaveGameRequest = new LeaveGameRequest();
+                    leaveGameRequest.setAuthToken(SessionInfo.getAuthToken());
+                    leaveGameRequest.setGameId(SessionInfo.getGameId());
+
+                    NettyClient.getInstance().write(leaveGameRequest, true);
+
+
+                    Context context = GameActivity.this.getApplicationContext();
+                    Intent nextActivity = LobbyListActivity.getStartIntent(context);
+                    context.startActivity(nextActivity);
                 }})
-            .setNegativeButton(android.R.string.no, null).show();
+            .setNegativeButton("No", null).show();
     }
 }
