@@ -14,6 +14,8 @@ import android.view.View;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageButton;
 import android.widget.TableRow;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.yatty.sevenatenine.api.commands_with_data.Card;
 import com.yatty.sevenatenine.api.commands_with_data.PlayerInfo;
@@ -24,7 +26,6 @@ import com.yatty.sevenatenine.api.out_commands.LeaveGameRequest;
 import com.yatty.sevenatenine.api.out_commands.LogOutRequest;
 import com.yatty.sevenatenine.api.out_commands.MoveRequest;
 
-import java.text.BreakIterator;
 import java.util.ArrayList;
 
 public class GameActivity extends AppCompatActivity {
@@ -370,21 +371,22 @@ public class GameActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         new AlertDialog.Builder(this)
-            .setTitle("Leave game")
-            .setMessage("Do you really want to leave game?")
+                .setTitle("Leave game")
+                .setMessage("Do you really want to leave game?")
                 //android.R.string.yes
-            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int whichButton) {
-                    LeaveGameRequest leaveGameRequest = new LeaveGameRequest();
-                    leaveGameRequest.setAuthToken(SessionInfo.getAuthToken());
-                    leaveGameRequest.setGameId(SessionInfo.getGameId());
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        LeaveGameRequest leaveGameRequest = new LeaveGameRequest();
+                        leaveGameRequest.setAuthToken(SessionInfo.getAuthToken());
+                        leaveGameRequest.setGameId(SessionInfo.getGameId());
 
-                    NettyClient.getInstance().write(leaveGameRequest, true);
+                        NettyClient.getInstance().write(leaveGameRequest, true);
 
-                    Context context = GameActivity.this.getApplicationContext();
-                    Intent nextActivity = LobbyListActivity.getStartIntent(context);
-                    context.startActivity(nextActivity);
-                }})
-            .setNegativeButton("No", null).show();
+                        Context context = GameActivity.this.getApplicationContext();
+                        Intent nextActivity = LobbyListActivity.getStartIntent(context);
+                        context.startActivity(nextActivity);
+                    }
+                })
+                .setNegativeButton("No", null).show();
     }
 }
