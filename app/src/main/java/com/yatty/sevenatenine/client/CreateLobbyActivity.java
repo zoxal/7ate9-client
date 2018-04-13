@@ -32,7 +32,7 @@ public class CreateLobbyActivity extends AppCompatActivity {
                 CreateLobbyRequest createLobbyRequest = new CreateLobbyRequest();
                 createLobbyRequest.setLobbyName(mLobbyNameEditText.getText().toString());
                 createLobbyRequest.setMaxPlayersNumber(Integer.parseInt(mPlayersNumberSpinner.getSelectedItem().toString()));
-                createLobbyRequest.setAuthToken(UserInfo.getAuthToken());
+                createLobbyRequest.setAuthToken(SessionInfo.getAuthToken());
                 Intent intentWithData = LobbyListActivity.getIntentWithData(createLobbyRequest);
                 setResult(RESULT_OK, intentWithData);
                 finish();

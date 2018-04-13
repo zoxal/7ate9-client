@@ -120,8 +120,8 @@ public class MainActivity extends AppCompatActivity {
             Log.d(TAG, "MainActivity.Handler: Get obj: " + msg.obj);
             if (msg.obj instanceof LogInResponse) {
                 LogInResponse logInResponse = (LogInResponse) msg.obj;
-                UserInfo.setAuthToken(logInResponse.getAuthToken());
-                UserInfo.setUserName(nameEditText.getText().toString());
+                SessionInfo.setAuthToken(logInResponse.getAuthToken());
+                SessionInfo.setUserName(nameEditText.getText().toString());
                 Log.d(TAG, "Connected");
                 NettyClient.getInstance().setHandler(null);
                 Intent nextActivity = LobbyListActivity.getStartIntent(context);

@@ -142,8 +142,8 @@ public class NettyClient {
                     if (keepAlive.get()) {
                         Log.d(TAG, "Connection closed, reopening...");
                         NettyClient.this.connect();
-                        if (UserInfo.getAuthToken() != null) {
-                            mChannel.writeAndFlush(new KeepAliveRequest(UserInfo.getAuthToken()));
+                        if (SessionInfo.getAuthToken() != null) {
+                            mChannel.writeAndFlush(new KeepAliveRequest(SessionInfo.getAuthToken()));
                         }
                     } else {
                         Log.d(TAG, "Connection closed, do not reopen");

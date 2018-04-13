@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -12,9 +12,62 @@
     <ImageButton
         android:id="@+id/ib_top_card"
         style="@style/ImageButtonStyleCard"
-        android:layout_above="@id/_ll_player_cards"
-        android:layout_centerHorizontal="true"
-        android:layout_margin="50dp"/>
+        android:layout_margin="50dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/tableLayout2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.703"/>
+
+    <ImageButton
+        android:id="@+id/ib_first_player_deck"
+        style="@style/ImageButtonStyleCard"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
+        android:src="@drawable/shirt"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/ib_top_card"
+        app:layout_constraintEnd_toStartOf="@+id/ib_top_card"
+        app:layout_constraintHorizontal_bias="0.202"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/ib_top_card"
+        app:layout_constraintVertical_bias="0.613"
+        tools:visibility="visible"/>
+
+    <ImageButton
+        android:id="@+id/ib_second_player_deck"
+        style="@style/ImageButtonStyleCard"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:src="@drawable/shirt"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/ib_top_card"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.898"
+        app:layout_constraintStart_toEndOf="@+id/ib_top_card"
+        app:layout_constraintTop_toTopOf="@+id/ib_top_card"
+        app:layout_constraintVertical_bias="0.613"
+        tools:visibility="visible"/>
+
+    <ImageButton
+        android:id="@+id/ib_third_player_deck"
+        style="@style/ImageButtonStyleCard"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
+        android:rotation="90"
+        android:src="@drawable/shirt"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/ib_top_card"
+        app:layout_constraintEnd_toEndOf="@+id/ib_top_card"
+        app:layout_constraintStart_toStartOf="@+id/ib_top_card"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.19"
+        tools:visibility="visible"/>
 
     <ImageButton
         android:id="@+id/button_disconnect"
@@ -22,111 +75,80 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_margin="10dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
         android:background="@drawable/shape_image_button_exit"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_exit_white"/>
 
-    <TextView
-        android:id="@+id/_tv_title_cards_left"
-        style="@style/TextStyleSmall"
+    <TableLayout
+        android:id="@+id/tableLayout2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:text="@string/title_cards_left"/>
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/button_get_card"
+        app:layout_constraintStart_toStartOf="parent">
 
-    <TextView
-        android:id="@+id/tv_counter"
-        style="@style/TextStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_toEndOf="@+id/_tv_title_cards_left"
-        tools:text="0"/>
+        <TableRow
+            android:id="@+id/tr_first_card_row"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
 
-    <LinearLayout
-        android:id="@+id/_ll_player_cards"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+            <ImageButton
+                style="@style/ImageButtonStyleCard"/>
+
+            <ImageButton
+                style="@style/ImageButtonStyleCard"/>
+
+            <ImageButton
+                style="@style/ImageButtonStyleCard"/>
+
+            <ImageButton
+                style="@style/ImageButtonStyleCard"/>
+
+
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tr_second_card_row"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+
+            <ImageButton
+                style="@style/ImageButtonStyleCard"
+                />
+
+            <ImageButton
+                style="@style/ImageButtonStyleCard"/>
+
+            <ImageButton
+                style="@style/ImageButtonStyleCard"/>
+
+            <ImageButton
+                style="@style/ImageButtonStyleCard"
+                />
+
+        </TableRow>
+
+    </TableLayout>
+
+
+    <ImageButton
+        android:id="@+id/button_get_card"
+        android:layout_width="62dp"
+        android:layout_height="90dp"
         android:layout_alignParentBottom="true"
-        android:orientation="vertical">
+        android:layout_alignParentEnd="true"
+        android:layout_gravity="end"
+        android:layout_marginBottom="64dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/shape_game_card"
+        android:scaleType="fitXY"
+        android:src="@drawable/shirt"
+        android:text="@string/action_get_card"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
-        <TableLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TableRow
-                android:id="@+id/tr_first_card_row"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <ImageButton
-                    android:id="@+id/button_card1"
-                    style="@style/ImageButtonStyleCard"/>
-
-                <ImageButton
-                    android:id="@+id/button_card2"
-                    style="@style/ImageButtonStyleCard"
-                    tools:text="1\n±2"/>
-
-                <ImageButton
-                    android:id="@+id/button_card3"
-                    style="@style/ImageButtonStyleCard"/>
-
-                <ImageButton
-                    android:id="@+id/button_card4"
-                    style="@style/ImageButtonStyleCard"/>
-
-                <ImageButton
-                    android:id="@+id/button_card5"
-                    style="@style/ImageButtonStyleCard"/>
-            </TableRow>
-
-            <TableRow
-                android:id="@+id/tr_second_card_row"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <ImageButton
-                    android:id="@+id/button_card6"
-                    style="@style/ImageButtonStyleCard"
-                    android:layout_weight="1"/>
-
-                <ImageButton
-                    android:id="@+id/button_card7"
-                    style="@style/ImageButtonStyleCard"
-                    android:layout_weight="1"/>
-
-                <ImageButton
-                    android:id="@+id/button_card8"
-                    style="@style/ImageButtonStyleCard"
-                    android:layout_weight="1"/>
-
-                <ImageButton
-                    android:id="@+id/button_card9"
-                    style="@style/ImageButtonStyleCard"
-                    android:layout_weight="1"/>
-
-                <ImageButton
-                    android:id="@+id/button_card10"
-                    style="@style/ImageButtonStyleCard"
-                    android:layout_weight="1"/>
-            </TableRow>
-
-        </TableLayout>
-
-        <ImageButton
-            android:id="@+id/button_get_card"
-            android:layout_width="62dp"
-            android:layout_height="90dp"
-            android:layout_gravity="end"
-            android:layout_marginBottom="5dp"
-            android:layout_marginEnd="5dp"
-            android:background="@drawable/shape_game_card"
-            android:scaleType="fitXY"
-            android:src="@drawable/shirt"
-            android:text="@string/action_get_card"/>
-    </LinearLayout>
-
-</RelativeLayout>
+</android.support.constraint.ConstraintLayout>
