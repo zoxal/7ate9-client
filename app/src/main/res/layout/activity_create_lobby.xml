@@ -47,10 +47,12 @@
 
     <Button
         android:id="@+id/button_create_lobby"
+        style="@style/ButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/et_lobby_name"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"
+        android:background="@drawable/shape_button"
         android:text="@string/action_create_lobby"/>
 </RelativeLayout>

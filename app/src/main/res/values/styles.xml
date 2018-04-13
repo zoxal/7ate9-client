@@ -8,9 +8,6 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="ActivityStyle" parent="Theme.AppCompat.Light.NoActionBar">
-    </style>
-
     <style name="TextStyleSmall" parent="android:TextAppearance.Small">
         <item name="android:textColor">@color/black</item>
     </style>
@@ -20,6 +17,7 @@
     </style>
 
     <style name="ButtonStyle" parent="Widget.AppCompat.Button.Colored">
+        <item name="android:textAllCaps">false</item>
     </style>
 
     <style name="ImageButtonStyleCard" parent="Base.Widget.AppCompat.ImageButton">

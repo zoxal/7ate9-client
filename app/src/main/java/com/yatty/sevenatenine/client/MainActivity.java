@@ -60,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 try {
                     if (!mNameEditText.getText().toString().isEmpty()) {
+                        mNettyClient.connect();
                         LogInRequest logInRequest = new LogInRequest();
                         logInRequest.setName(mNameEditText.getText().toString());
                         mNettyClient.write(logInRequest, false);
@@ -119,8 +120,8 @@ public class MainActivity extends AppCompatActivity {
             Log.d(TAG, "MainActivity.Handler: Get obj: " + msg.obj);
             if (msg.obj instanceof LogInResponse) {
                 LogInResponse logInResponse = (LogInResponse) msg.obj;
-                UserInfo.setAuthToken(logInResponse.getAuthToken());
-                UserInfo.setUserName(nameEditText.getText().toString());
+                SessionInfo.setAuthToken(logInResponse.getAuthToken());
+                SessionInfo.setUserName(nameEditText.getText().toString());
                 Log.d(TAG, "Connected");
                 NettyClient.getInstance().setHandler(null);
                 Intent nextActivity = LobbyListActivity.getStartIntent(context);

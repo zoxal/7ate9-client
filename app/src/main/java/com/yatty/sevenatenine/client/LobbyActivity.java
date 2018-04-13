@@ -7,7 +7,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.yatty.sevenatenine.api.commands_with_data.PrivateLobbyInfo;
@@ -19,7 +19,7 @@ public class LobbyActivity extends AppCompatActivity {
     private static final String EXTRA_LOBBY_ID = "lobby_id";
 
     private TextView mPlayersNumberTextView;
-    private Button mLeaveLobbyButton;
+    private ImageButton mLeaveLobbyImageButton;
     private String mLobbyId;
 
     @Override
@@ -28,9 +28,9 @@ public class LobbyActivity extends AppCompatActivity {
         Intent intent = getIntent();
         mLobbyId = getIntent().getExtras().getString(EXTRA_LOBBY_ID);
         setContentView(R.layout.activity_lobby);
-        mLeaveLobbyButton = findViewById(R.id.button_leave_lobby);
+        mLeaveLobbyImageButton = findViewById(R.id.ib_leave_lobby);
         mPlayersNumberTextView = findViewById(R.id.tv_lobby_players);
-        mLeaveLobbyButton.setOnClickListener(new View.OnClickListener() {
+        mLeaveLobbyImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 LeaveLobbyRequest leaveLobbyRequest = new LeaveLobbyRequest(mLobbyId);

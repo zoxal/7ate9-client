@@ -24,6 +24,7 @@ import com.yatty.sevenatenine.api.out_commands.EnterLobbyRequest;
 import com.yatty.sevenatenine.api.out_commands.KeepAliveRequest;
 import com.yatty.sevenatenine.api.out_commands.LeaveLobbyRequest;
 import com.yatty.sevenatenine.api.out_commands.LobbyListSubscribeRequest;
+import com.yatty.sevenatenine.api.out_commands.LobbyListUnsubscribeRequest;
 import com.yatty.sevenatenine.api.out_commands.LogInRequest;
 import com.yatty.sevenatenine.api.out_commands.LogOutRequest;
 import com.yatty.sevenatenine.api.out_commands.MoveRequest;
@@ -61,7 +62,7 @@ public class NettyClient {
     private static final int SLEEP_TIME_IF_HAS_NO_HANDLER_MS = 5;
 
     private static NettyClient sNettyClient;
-    private String mServerIp = "192.168.0.101";
+    private String mServerIp = "192.168.0.1";
     private HashMap<String, Class> mCommands;
     private EventLoopGroup eventLoopGroup = new NioEventLoopGroup();
     private Channel mChannel;
@@ -84,11 +85,12 @@ public class NettyClient {
         mCommands.put(CreateLobbyRequest.class.getSimpleName(), CreateLobbyRequest.class);
         mCommands.put(EnterLobbyRequest.class.getSimpleName(), EnterLobbyRequest.class);
         mCommands.put(KeepAliveRequest.class.getSimpleName(), KeepAliveRequest.class);
+        mCommands.put(LeaveLobbyRequest.class.getSimpleName(), LeaveLobbyRequest.class);
         mCommands.put(LobbyListSubscribeRequest.class.getSimpleName(), LobbyListSubscribeRequest.class);
+        mCommands.put(LobbyListUnsubscribeRequest.class.getSimpleName(), LobbyListUnsubscribeRequest.class);
         mCommands.put(LogInRequest.class.getSimpleName(), LogInRequest.class);
         mCommands.put(LogOutRequest.class.getSimpleName(), LogOutRequest.class);
         mCommands.put(MoveRequest.class.getSimpleName(), MoveRequest.class);
-        mCommands.put(LeaveLobbyRequest.class.getSimpleName(), LeaveLobbyRequest.class);
 
     }
 
@@ -96,7 +98,6 @@ public class NettyClient {
         if (sNettyClient == null) {
             try {
                 sNettyClient = new NettyClient();
-                sNettyClient.run();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -104,26 +105,45 @@ public class NettyClient {
         return sNettyClient;
     }
 
-    private void run() throws Exception {
-        connect();
+    public void reconnect(final String serverIp) {
+        eventLoopGroup.shutdownGracefully().addListener(new GenericFutureListener() {
+            @Override
+            public void operationComplete(Future future) throws Exception {
+                Log.d(TAG, "Client has been shut down");
+                setServerIp(serverIp);
+                connect();
+            }
+        });
     }
 
-    private void connect() {
+    public void connect() {
         try {
             Bootstrap bootstrap = new Bootstrap();
             bootstrap.group(eventLoopGroup)
                     .channel(NioSocketChannel.class)
                     .remoteAddress(new InetSocketAddress(mServerIp, PORT))
                     .handler(new PipeLineInitializer());
-            mChannel = bootstrap.connect().sync().channel();
+            mChannel = bootstrap.connect().addListener(new ChannelFutureListener() {
+                @Override
+                public void operationComplete(ChannelFuture future) throws Exception {
+                    if (future.isSuccess()) {
+                        Log.d(TAG, "Connected to server");
+                    } else {
+                        System.out.println("Failed to connect to server");
+                        future.cause().printStackTrace();
+                        Log.d(TAG, "Failed to connect to server", future.cause());
+                        throw new RuntimeException("Failed to connect to server", future.cause());
+                    }
+                }
+            }).sync().channel();
             mChannel.closeFuture().addListener(new GenericFutureListener<Future<? super Void>>() {
                 @Override
                 public void operationComplete(Future<? super Void> e) throws Exception {
                     if (keepAlive.get()) {
                         Log.d(TAG, "Connection closed, reopening...");
                         NettyClient.this.connect();
-                        if (UserInfo.getAuthToken() != null) {
-                            mChannel.writeAndFlush(new KeepAliveRequest(UserInfo.getAuthToken()));
+                        if (SessionInfo.getAuthToken() != null) {
+                            mChannel.writeAndFlush(new KeepAliveRequest(SessionInfo.getAuthToken()));
                         }
                     } else {
                         Log.d(TAG, "Connection closed, do not reopen");

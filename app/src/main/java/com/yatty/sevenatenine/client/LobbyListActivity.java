@@ -68,7 +68,7 @@ public class LobbyListActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        LobbyListSubscribeRequest lobbyListSubscribeRequest = new LobbyListSubscribeRequest(UserInfo.getAuthToken());
+        LobbyListSubscribeRequest lobbyListSubscribeRequest = new LobbyListSubscribeRequest(SessionInfo.getAuthToken());
         mNettyClient.write(lobbyListSubscribeRequest, true);
     }
 
@@ -143,7 +143,8 @@ public class LobbyListActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             EnterLobbyRequest enterLobbyRequest = new EnterLobbyRequest(mPublicLobbyInfo.getLobbyId(),
-                    UserInfo.getAuthToken());
+                    SessionInfo.getAuthToken());
+            SessionInfo.setPublicLobbyInfo(mPublicLobbyInfo);
             mNettyClient.write(enterLobbyRequest, true);
         }
     }
@@ -198,7 +199,7 @@ public class LobbyListActivity extends AppCompatActivity {
                 updateLobbyList(lobbyListUpdatedNotification.getLobbyList());
             } else if (msg.obj instanceof EnterLobbyResponse) {
                 Log.d(TAG, "LobbyListActivityHandler: LobbyListUpdatedNotification");
-                mNettyClient.write(new LobbyListUnsubscribeRequest(UserInfo.getAuthToken()), true);
+                mNettyClient.write(new LobbyListUnsubscribeRequest(SessionInfo.getAuthToken()), true);
                 EnterLobbyResponse enterLobbyResponse = (EnterLobbyResponse) msg.obj;
                 mNettyClient.setHandler(null);
                 // TODO change api(add lobbyId)
@@ -208,7 +209,7 @@ public class LobbyListActivity extends AppCompatActivity {
                 finish();
             } else if (msg.obj instanceof CreateLobbyResponse) {
                 Log.d(TAG, "LobbyListActivityHandler: CreateLobbyResponse");
-                mNettyClient.write(new LobbyListUnsubscribeRequest(UserInfo.getAuthToken()), true);
+                mNettyClient.write(new LobbyListUnsubscribeRequest(SessionInfo.getAuthToken()), true);
                 CreateLobbyResponse createLobbyResponse = (CreateLobbyResponse) msg.obj;
                 mNettyClient.setHandler(null);
                 Intent intent = LobbyActivity.getStartIntent(getApplicationContext(), new PrivateLobbyInfo(),
