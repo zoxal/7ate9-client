@@ -9,6 +9,10 @@ public class PublicLobbyInfo implements Parcelable {
     private int maxPlayersNumber;
     private int currentPlayersNumber;
 
+    public PublicLobbyInfo() {
+
+    }
+
     protected PublicLobbyInfo(Parcel in) {
         lobbyId = in.readString();
         lobbyName = in.readString();
@@ -55,6 +59,10 @@ public class PublicLobbyInfo implements Parcelable {
 
     public void setCurrentPlayersNumber(int currentPlayersNumber) {
         this.currentPlayersNumber = currentPlayersNumber;
+    }
+
+    public void setLobbyId(String lobbyId) {
+        this.lobbyId = lobbyId;
     }
 
     public static final Creator<PublicLobbyInfo> CREATOR = new Creator<PublicLobbyInfo>() {

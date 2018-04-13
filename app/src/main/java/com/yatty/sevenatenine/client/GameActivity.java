@@ -14,9 +14,9 @@ import android.view.View;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageButton;
 import android.widget.TableRow;
-import android.widget.Toast;
 
 import com.yatty.sevenatenine.api.commands_with_data.Card;
+import com.yatty.sevenatenine.api.commands_with_data.PlayerInfo;
 import com.yatty.sevenatenine.api.in_commands.GameStartedNotification;
 import com.yatty.sevenatenine.api.in_commands.MoveRejectedResponse;
 import com.yatty.sevenatenine.api.in_commands.NewStateNotification;
@@ -48,6 +48,13 @@ public class GameActivity extends AppCompatActivity {
     private ImageButton mFirstPlayerDeck;
     private ImageButton mSecondPlayerDeck;
     private ImageButton mThirdPlayerDeck;
+    private TextView mFirstPlayerCardsNumTextView;
+    private TextView mSecondPlayerCardsNumTextView;
+    private TextView mThirdPlayerCardsNumTextView;
+    private TextView mUserCardsNumTextView;
+    private TextView mFirstPlayerNameTextView;
+    private TextView mSecondPlayerNameTextView;
+    private TextView mThirdPlayerNameTextView;
     private Vibrator mVibrator;
 
     private Card mTopCard;
@@ -55,20 +62,46 @@ public class GameActivity extends AppCompatActivity {
     private int mNumOfCardsOnDesk;
     private int mMoveNumber;
 
-    private void initUi() {
+    private void initUi(GameStartedNotification gameStartedNotification) {
         mTopCardImageButton = findViewById(R.id.ib_top_card);
+
         mFirstPlayerDeck = findViewById(R.id.ib_first_player_deck);
         mSecondPlayerDeck = findViewById(R.id.ib_second_player_deck);
         mThirdPlayerDeck = findViewById(R.id.ib_third_player_deck);
-        mDisconnectImageButton = findViewById(R.id.button_disconnect);
-        switch (SessionInfo.getPublicLobbyInfo().getMaxPlayersNumber()) {
-            case 4:
-                mThirdPlayerDeck.setVisibility(View.VISIBLE);
-            case 3:
-                mSecondPlayerDeck.setVisibility(View.VISIBLE);
-            case 2:
-                mFirstPlayerDeck.setVisibility(View.VISIBLE);
+
+        mFirstPlayerCardsNumTextView = findViewById(R.id.tv_first_player_cards_num);
+        mSecondPlayerCardsNumTextView = findViewById(R.id.tv_second_player_cards_num);
+        mThirdPlayerCardsNumTextView = findViewById(R.id.tv_third_player_cards_num);
+
+        mFirstPlayerNameTextView = findViewById(R.id.tv_first_player_name);
+        mSecondPlayerNameTextView = findViewById(R.id.tv_second_palyer_name);
+        mThirdPlayerNameTextView = findViewById(R.id.tv_third_player_name);
+
+        PlayerInfo allPlayersInfo[] = SessionInfo.getPrivateLobbyInfo().getPlayers();
+        PlayerInfo otherPlayersInfo[] = new PlayerInfo[allPlayersInfo.length - 1];
+
+        for (int i = 0, j = 0; i < allPlayersInfo.length; i++) {
+            if (!allPlayersInfo[i].getName().equals(SessionInfo.getUserName())) {
+                otherPlayersInfo[j] = allPlayersInfo[i];
+                j++;
+            }
         }
+        int cardsNum = gameStartedNotification.getPlayerCards().size();
+        switch (otherPlayersInfo.length) {
+            case 3:
+                mThirdPlayerDeck.setVisibility(View.VISIBLE);
+                mThirdPlayerNameTextView.setText(otherPlayersInfo[2].getName());
+                mThirdPlayerCardsNumTextView.setText(String.valueOf(cardsNum));
+            case 2:
+                mSecondPlayerDeck.setVisibility(View.VISIBLE);
+                mSecondPlayerNameTextView.setText(otherPlayersInfo[1].getName());
+                mSecondPlayerCardsNumTextView.setText(String.valueOf(cardsNum));
+            case 1:
+                mFirstPlayerDeck.setVisibility(View.VISIBLE);
+                mFirstPlayerNameTextView.setText(otherPlayersInfo[0].getName());
+                mFirstPlayerCardsNumTextView.setText(String.valueOf(cardsNum));
+        }
+        mUserCardsNumTextView.setText(String.valueOf(cardsNum));
         final TableRow firstCardRow = findViewById(R.id.tr_first_card_row);
         final TableRow secondCardRow = findViewById(R.id.tr_second_card_row);
         mCardsOnTableImageButtons = new ImageButton[MAX_NUM_CARDS_ON_TABLE];
@@ -142,7 +175,7 @@ public class GameActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
         GameStartedNotification gameStartedNotification = getIntent().getParcelableExtra(EXTRA_GAME_STARTED_EVENT);
-        initUi();
+        initUi(gameStartedNotification);
         mTopCard = gameStartedNotification.getFirstCard();
         Log.d(TAG, "GameStartedNotification: get mTopCard");
         mCardArrayList = gameStartedNotification.getPlayerCards();
@@ -311,6 +344,21 @@ public class GameActivity extends AppCompatActivity {
                     finish();
                 } else {
                     String moveWinner = newStateNotification.getMoveWinner();
+                    if (moveWinner != null) {
+                        if (moveWinner.equals(mFirstPlayerNameTextView.getText().toString())) {
+                            mFirstPlayerCardsNumTextView.setText(String.valueOf(Integer.parseInt(
+                                    mFirstPlayerCardsNumTextView.getText().toString()) + 1));
+                        } else if (moveWinner.equals(mSecondPlayerNameTextView.getText().toString())) {
+                            mSecondPlayerCardsNumTextView.setText(String.valueOf(Integer.parseInt(
+                                    mSecondPlayerCardsNumTextView.getText().toString()) + 1));
+                        } else if (moveWinner.equals(mThirdPlayerNameTextView.getText().toString())) {
+                            mThirdPlayerCardsNumTextView.setText(String.valueOf(Integer.parseInt(
+                                    mThirdPlayerCardsNumTextView.getText().toString()) + 1));
+                        } else if (moveWinner.equals(SessionInfo.getUserName())) {
+                            mUserCardsNumTextView.setText(String.valueOf(Integer.parseInt(
+                                    mUserCardsNumTextView.getText().toString()) + 1));
+                        }
+                    }
                     mTopCard = newStateNotification.getNextCard();
                     mMoveNumber = newStateNotification.getMoveNumber();
                     mTopCardImageButton.setImageDrawable(getDrawableCard(mTopCard));
