@@ -3,6 +3,9 @@ package com.yatty.sevenatenine.api.out_commands;
 public class LogOutRequest {
     private String authToken;
 
+    public LogOutRequest() {
+    }
+
     public LogOutRequest(String authToken) {
         this.authToken = authToken;
     }

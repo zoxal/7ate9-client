@@ -1,6 +1,8 @@
 package com.yatty.sevenatenine.client;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,7 +14,9 @@ import android.widget.TextView;
 
 import com.yatty.sevenatenine.api.commands_with_data.PrivateLobbyInfo;
 import com.yatty.sevenatenine.api.in_commands.GameStartedNotification;
+import com.yatty.sevenatenine.api.out_commands.LeaveGameRequest;
 import com.yatty.sevenatenine.api.out_commands.LeaveLobbyRequest;
+import com.yatty.sevenatenine.api.out_commands.LogOutRequest;
 
 public class LobbyActivity extends AppCompatActivity {
     private static final String EXTRA_PRIVATE_LOBBY_INFO = "private_lobby_info";
@@ -65,5 +69,26 @@ public class LobbyActivity extends AppCompatActivity {
                 mPlayersNumberTextView.setText(String.valueOf(privateLobbyInfo.getPlayers().length));
             }
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        new AlertDialog.Builder(this)
+                .setTitle("Leave lobby")
+                .setMessage("Do you really want to leave lobby?")
+                //android.R.string.yes
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        LeaveGameRequest leaveGameRequest = new LeaveGameRequest();
+                        leaveGameRequest.setAuthToken(SessionInfo.getAuthToken());
+                        leaveGameRequest.setGameId(SessionInfo.getGameId());
+
+                        NettyClient.getInstance().write(leaveGameRequest, true);
+
+                        Context context = LobbyActivity.this.getApplicationContext();
+                        Intent nextActivity = LobbyListActivity.getStartIntent(context);
+                        context.startActivity(nextActivity);
+                    }})
+                .setNegativeButton("No", null).show();
     }
 }

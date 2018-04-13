@@ -1,6 +1,8 @@
 package com.yatty.sevenatenine.client;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,8 +25,10 @@ import com.yatty.sevenatenine.api.in_commands.EnterLobbyResponse;
 import com.yatty.sevenatenine.api.in_commands.LobbyListUpdatedNotification;
 import com.yatty.sevenatenine.api.out_commands.CreateLobbyRequest;
 import com.yatty.sevenatenine.api.out_commands.EnterLobbyRequest;
+import com.yatty.sevenatenine.api.out_commands.LeaveGameRequest;
 import com.yatty.sevenatenine.api.out_commands.LobbyListSubscribeRequest;
 import com.yatty.sevenatenine.api.out_commands.LobbyListUnsubscribeRequest;
+import com.yatty.sevenatenine.api.out_commands.LogOutRequest;
 
 import java.util.ArrayList;
 
@@ -209,6 +213,7 @@ public class LobbyListActivity extends AppCompatActivity {
                 finish();
             } else if (msg.obj instanceof CreateLobbyResponse) {
                 Log.d(TAG, "LobbyListActivityHandler: CreateLobbyResponse");
+                SessionInfo.setGameId(((CreateLobbyResponse) msg.obj).getLobbyId());
                 mNettyClient.write(new LobbyListUnsubscribeRequest(SessionInfo.getAuthToken()), true);
                 CreateLobbyResponse createLobbyResponse = (CreateLobbyResponse) msg.obj;
                 mNettyClient.setHandler(null);
@@ -217,5 +222,24 @@ public class LobbyListActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        new AlertDialog.Builder(this)
+                .setTitle("Leave server")
+                .setMessage("Do you really want to leave server?")
+                //android.R.string.yes
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        LogOutRequest logOutRequest = new LogOutRequest(SessionInfo.getAuthToken());
+
+                        NettyClient.getInstance().write(logOutRequest, true);
+
+                        Context context = LobbyListActivity.this.getApplicationContext();
+                        Intent nextActivity = MainActivity.getStartIntent(context);
+                        context.startActivity(nextActivity);
+                    }})
+                .setNegativeButton("No", null).show();
     }
 }

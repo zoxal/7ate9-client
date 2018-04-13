@@ -314,14 +314,12 @@ public class GameActivity extends AppCompatActivity {
             .setMessage("Do you really want to leave game?")
                 //android.R.string.yes
             .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-
                 public void onClick(DialogInterface dialog, int whichButton) {
                     LeaveGameRequest leaveGameRequest = new LeaveGameRequest();
                     leaveGameRequest.setAuthToken(SessionInfo.getAuthToken());
                     leaveGameRequest.setGameId(SessionInfo.getGameId());
 
                     NettyClient.getInstance().write(leaveGameRequest, true);
-
 
                     Context context = GameActivity.this.getApplicationContext();
                     Intent nextActivity = LobbyListActivity.getStartIntent(context);
