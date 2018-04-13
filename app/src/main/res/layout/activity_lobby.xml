@@ -23,7 +23,7 @@
         android:text="@string/title_players_in_lobby"/>
 
     <ImageButton
-        android:id="@+id/button_leave_lobby"
+        android:id="@+id/ib_leave_lobby"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
