@@ -24,6 +24,7 @@ import com.yatty.sevenatenine.api.out_commands.LeaveGameRequest;
 import com.yatty.sevenatenine.api.out_commands.LogOutRequest;
 import com.yatty.sevenatenine.api.out_commands.MoveRequest;
 
+import java.text.BreakIterator;
 import java.util.ArrayList;
 
 public class GameActivity extends AppCompatActivity {
@@ -249,6 +250,15 @@ public class GameActivity extends AppCompatActivity {
 
         @Override
         public void onClick(View view) {
+            if (BruteForceGuard.isImprisoned()) {
+                Toast.makeText(
+                        GameActivity.this.getApplicationContext(),
+                        "Stop cheating!",
+                        Toast.LENGTH_SHORT
+                ).show();
+                mVibrator.vibrate(VIBRATE_TIME_MS);
+                return;
+            }
             int rightValue1 = mTopCard.getValue() + mTopCard.getModifier();
             if (rightValue1 > MAX_CARD) {
                 rightValue1 -= MAX_CARD;
@@ -269,6 +279,7 @@ public class GameActivity extends AppCompatActivity {
                 view.setOnClickListener(null);
                 mNumOfCardsOnDesk--;
             } else {
+                BruteForceGuard.recordMistake();
                 mVibrator.vibrate(VIBRATE_TIME_MS);
             }
         }
@@ -288,6 +299,7 @@ public class GameActivity extends AppCompatActivity {
                 mCardsOnTableImageButtons[i].setOnClickListener(new CardButtonOnClickListener(card));
                 mCardsOnTableImageButtons[i].setVisibility(View.VISIBLE);
                 mNumOfCardsOnDesk++;
+
                 mVibrator.vibrate(VIBRATE_TIME_MS);
             } else if (msg.obj instanceof NewStateNotification) {
                 NewStateNotification newStateNotification = (NewStateNotification) msg.obj;

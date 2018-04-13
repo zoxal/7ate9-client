@@ -16,6 +16,7 @@ import com.yatty.sevenatenine.api.in_commands.ErrorResponse;
 import com.yatty.sevenatenine.api.in_commands.GameStartedNotification;
 import com.yatty.sevenatenine.api.in_commands.InCommandInterface;
 import com.yatty.sevenatenine.api.in_commands.LobbyListUpdatedNotification;
+import com.yatty.sevenatenine.api.in_commands.LobbyStateChangedNotification;
 import com.yatty.sevenatenine.api.in_commands.LogInResponse;
 import com.yatty.sevenatenine.api.in_commands.MoveRejectedResponse;
 import com.yatty.sevenatenine.api.in_commands.NewStateNotification;
@@ -74,6 +75,7 @@ public class NettyClient {
         // in commands
         mCommands.put(CreateLobbyResponse.class.getSimpleName(), CreateLobbyResponse.class);
         mCommands.put(EnterLobbyResponse.class.getSimpleName(), EnterLobbyResponse.class);
+        mCommands.put(LobbyStateChangedNotification.class.getSimpleName(), LobbyStateChangedNotification.class);
         mCommands.put(ErrorResponse.class.getSimpleName(), ErrorResponse.class);
         mCommands.put(LobbyListUpdatedNotification.class.getSimpleName(), LobbyListUpdatedNotification.class);
         mCommands.put(LogInResponse.class.getSimpleName(), LogInResponse.class);
