@@ -1,6 +1,8 @@
 package com.yatty.sevenatenine.client;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -14,6 +16,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.yatty.sevenatenine.api.commands_with_data.Card;
 import com.yatty.sevenatenine.api.in_commands.GameStartedNotification;
@@ -295,5 +298,20 @@ public class GameActivity extends AppCompatActivity {
                 }
             }
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        new AlertDialog.Builder(this)
+            .setTitle("Leave game")
+            .setMessage("Do you really want to leave game?")
+            .setIcon(android.R.drawable.ic_dialog_alert)
+            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    // TODO: send leave game request
+//                    Toast.makeText(GameActivity.this, "Yaay", Toast.LENGTH_SHORT).show();
+                }})
+            .setNegativeButton(android.R.string.no, null).show();
     }
 }
