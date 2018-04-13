@@ -22,6 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_margin="10dp"
+        android:background="@drawable/shape_image_button_exit"
         app:srcCompat="@drawable/ic_exit_white"/>
 
     <TextView
