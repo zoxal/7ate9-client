@@ -1,9 +1,7 @@
 package com.yatty.sevenatenine.client;
 
-import android.location.Location;
 import android.os.Handler;
 import android.util.Log;
-import android.widget.TableRow;
 
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
@@ -26,6 +24,7 @@ import com.yatty.sevenatenine.api.out_commands.EnterLobbyRequest;
 import com.yatty.sevenatenine.api.out_commands.KeepAliveRequest;
 import com.yatty.sevenatenine.api.out_commands.LeaveLobbyRequest;
 import com.yatty.sevenatenine.api.out_commands.LobbyListSubscribeRequest;
+import com.yatty.sevenatenine.api.out_commands.LobbyListUnsubscribeRequest;
 import com.yatty.sevenatenine.api.out_commands.LogInRequest;
 import com.yatty.sevenatenine.api.out_commands.LogOutRequest;
 import com.yatty.sevenatenine.api.out_commands.MoveRequest;
@@ -63,7 +62,7 @@ public class NettyClient {
     private static final int SLEEP_TIME_IF_HAS_NO_HANDLER_MS = 5;
 
     private static NettyClient sNettyClient;
-    private String mServerIp = "192.168.0.103";
+    private String mServerIp = "192.168.0.1";
     private HashMap<String, Class> mCommands;
     private EventLoopGroup eventLoopGroup = new NioEventLoopGroup();
     private Channel mChannel;
@@ -86,11 +85,12 @@ public class NettyClient {
         mCommands.put(CreateLobbyRequest.class.getSimpleName(), CreateLobbyRequest.class);
         mCommands.put(EnterLobbyRequest.class.getSimpleName(), EnterLobbyRequest.class);
         mCommands.put(KeepAliveRequest.class.getSimpleName(), KeepAliveRequest.class);
+        mCommands.put(LeaveLobbyRequest.class.getSimpleName(), LeaveLobbyRequest.class);
         mCommands.put(LobbyListSubscribeRequest.class.getSimpleName(), LobbyListSubscribeRequest.class);
+        mCommands.put(LobbyListUnsubscribeRequest.class.getSimpleName(), LobbyListUnsubscribeRequest.class);
         mCommands.put(LogInRequest.class.getSimpleName(), LogInRequest.class);
         mCommands.put(LogOutRequest.class.getSimpleName(), LogOutRequest.class);
         mCommands.put(MoveRequest.class.getSimpleName(), MoveRequest.class);
-        mCommands.put(LeaveLobbyRequest.class.getSimpleName(), LeaveLobbyRequest.class);
 
     }
 

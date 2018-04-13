@@ -59,8 +59,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 try {
-                    mNettyClient.connect();
                     if (!mNameEditText.getText().toString().isEmpty()) {
+                        mNettyClient.connect();
                         LogInRequest logInRequest = new LogInRequest();
                         logInRequest.setName(mNameEditText.getText().toString());
                         mNettyClient.write(logInRequest, false);

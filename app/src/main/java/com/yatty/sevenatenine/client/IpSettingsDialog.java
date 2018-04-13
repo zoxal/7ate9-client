@@ -30,7 +30,7 @@ public class IpSettingsDialog extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         Log.d("TAG", "IP: " + ipEditText.getText().toString() + ".");
-                        NettyClient.getInstance().reconnect(ipEditText.getText().toString());
+                        NettyClient.getInstance().setServerIp(ipEditText.getText().toString());
                     }
                 })
                 .setNegativeButton(R.string.action_cancel, new DialogInterface.OnClickListener() {
