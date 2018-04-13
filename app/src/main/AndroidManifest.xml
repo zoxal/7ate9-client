@@ -52,6 +52,11 @@
             android:name="io.fabric.ApiKey"
             android:value="4105998427a115f63abdde2ae901d1a80bfe904c"/>
 
+        <service
+            android:name=".BackgroundMusicService"
+            android:enabled="true"
+            android:exported="true">
+        </service>
     </application>
 
 </manifest>
