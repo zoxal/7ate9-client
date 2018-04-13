@@ -43,10 +43,12 @@
         android:layout_height="wrap_content"
         android:layout_alignEnd="@+id/et_lobby_name"
         android:layout_below="@+id/et_lobby_name"
+        android:dropDownWidth="16dp"
         android:entries="@array/players_number_list"/>
 
     <Button
         android:id="@+id/button_create_lobby"
+        style="@style/ButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/et_lobby_name"

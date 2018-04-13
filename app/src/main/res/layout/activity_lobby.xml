@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -21,23 +22,23 @@
         android:layout_marginTop="16dp"
         android:text="@string/title_players_in_lobby"/>
 
-    <Button
+    <ImageButton
         android:id="@+id/button_leave_lobby"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
         android:layout_margin="16dp"
-        android:text="@string/action_leave_lobby"
+        app:srcCompat="@drawable/ic_exit_white"
         />
 
     <TextView
         android:id="@+id/tv_lobby_players"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/_tv_title_num_players_in_lobby"
         android:layout_margin="3dp"
         android:layout_toEndOf="@id/_tv_title_num_players_in_lobby"
-        android:layout_alignBaseline="@id/_tv_title_num_players_in_lobby"
         tools:text="4"
         />
 </RelativeLayout>
