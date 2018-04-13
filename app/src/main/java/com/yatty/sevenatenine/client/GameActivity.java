@@ -10,7 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.TranslateAnimation;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -39,7 +38,7 @@ public class GameActivity extends AppCompatActivity {
     private NettyClient mNettyClient;
     private String mGameId;
     private TextView mCounterTextView;
-    private Button mDisconnectButton;
+    private ImageButton mDisconnectImageButton;
     private ImageButton mGetCardImageButton;
     private ImageButton mCardsOnTableImageButtons[];
     private ImageButton mTopCardImageButton;
@@ -54,7 +53,7 @@ public class GameActivity extends AppCompatActivity {
         mTopCardImageButton = findViewById(R.id.ib_top_card);
         mCounterTextView = findViewById(R.id.tv_counter);
         mCounterTextView.setText(INITIAL_COUNTER_VALUE);
-        mDisconnectButton = findViewById(R.id.button_disconnect);
+        mDisconnectImageButton = findViewById(R.id.button_disconnect);
         final TableRow firstCardRow = findViewById(R.id.tr_first_card_row);
         final TableRow secondCardRow = findViewById(R.id.tr_second_card_row);
         mCardsOnTableImageButtons = new ImageButton[MAX_NUM_CARDS_ON_TABLE];
@@ -66,7 +65,7 @@ public class GameActivity extends AppCompatActivity {
             mCardsOnTableImageButtons[i + firstCardRow.getVirtualChildCount()].setVisibility(View.INVISIBLE);
         }
 
-        mDisconnectButton.setOnClickListener(new View.OnClickListener() {
+        mDisconnectImageButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {

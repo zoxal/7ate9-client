@@ -1,7 +1,9 @@
 package com.yatty.sevenatenine.client;
 
+import android.location.Location;
 import android.os.Handler;
 import android.util.Log;
+import android.widget.TableRow;
 
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
@@ -61,7 +63,7 @@ public class NettyClient {
     private static final int SLEEP_TIME_IF_HAS_NO_HANDLER_MS = 5;
 
     private static NettyClient sNettyClient;
-    private String mServerIp = "192.168.0.101";
+    private String mServerIp = "192.168.0.103";
     private HashMap<String, Class> mCommands;
     private EventLoopGroup eventLoopGroup = new NioEventLoopGroup();
     private Channel mChannel;
@@ -96,7 +98,6 @@ public class NettyClient {
         if (sNettyClient == null) {
             try {
                 sNettyClient = new NettyClient();
-                sNettyClient.run();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -104,18 +105,37 @@ public class NettyClient {
         return sNettyClient;
     }
 
-    private void run() throws Exception {
-        connect();
+    public void reconnect(final String serverIp) {
+        eventLoopGroup.shutdownGracefully().addListener(new GenericFutureListener() {
+            @Override
+            public void operationComplete(Future future) throws Exception {
+                Log.d(TAG, "Client has been shut down");
+                setServerIp(serverIp);
+                connect();
+            }
+        });
     }
 
-    private void connect() {
+    public void connect() {
         try {
             Bootstrap bootstrap = new Bootstrap();
             bootstrap.group(eventLoopGroup)
                     .channel(NioSocketChannel.class)
                     .remoteAddress(new InetSocketAddress(mServerIp, PORT))
                     .handler(new PipeLineInitializer());
-            mChannel = bootstrap.connect().sync().channel();
+            mChannel = bootstrap.connect().addListener(new ChannelFutureListener() {
+                @Override
+                public void operationComplete(ChannelFuture future) throws Exception {
+                    if (future.isSuccess()) {
+                        Log.d(TAG, "Connected to server");
+                    } else {
+                        System.out.println("Failed to connect to server");
+                        future.cause().printStackTrace();
+                        Log.d(TAG, "Failed to connect to server", future.cause());
+                        throw new RuntimeException("Failed to connect to server", future.cause());
+                    }
+                }
+            }).sync().channel();
             mChannel.closeFuture().addListener(new GenericFutureListener<Future<? super Void>>() {
                 @Override
                 public void operationComplete(Future<? super Void> e) throws Exception {
