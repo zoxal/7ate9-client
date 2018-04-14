@@ -7,7 +7,7 @@ import java.util.List;
 
 public class BruteForceGuard {
     public static final String TAG = BruteForceGuard.class.getSimpleName();
-    private static final long PUNISHMENT_DURATION = 3000;
+    private static final long PUNISHMENT_DURATION = 2000;
     private static final long MISTAKE_COMBO = 5;
     private static final long MISTAKE_COMBO_TIME = 2000;
     // time between two mistakes that can be forgiven
@@ -27,15 +27,13 @@ public class BruteForceGuard {
     }
 
     public static boolean isImprisoned() {
-
         long currentTime = System.currentTimeMillis();
-        Log.d(TAG, "Time: " + currentTime + "; lastMistake: " + lastMistakeTime + "; mistakes: " + mistakes);
         if ((currentTime - lastMistakeTime) < PUNISHMENT_DURATION) {
             return true;
         } else {
             removeRottenMistakes();
             if (mistakes.size() >= MISTAKE_COMBO) {
-                lastMistakeTime = currentTime;
+                lastMistakeTime = mistakes.get(mistakes.size() - 1);
                 return true;
             } else {
                 return false;

@@ -35,6 +35,7 @@ public class GameActivity extends AppCompatActivity {
 
     private static final int VIBRATE_TIME_MS = 100;
     private static final int LONG_VIBRATE_TIME_MS = 400;
+    private static boolean notifyMistake = false;
     public static final int MAX_NUM_CARDS_ON_TABLE = 8;
     public static final int MAX_CARD = 10;
     private static final String INITIAL_COUNTER_VALUE = "0";
@@ -254,19 +255,22 @@ public class GameActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             if (BruteForceGuard.isImprisoned()) {
-                final Toast toast = Toast.makeText(
-                        GameActivity.this.getApplicationContext(),
-                        "Stop cheating!",
-                        Toast.LENGTH_SHORT
-                );
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        toast.cancel();
-                    }
-                }, 1000);
-                toast.show();
-                mVibrator.vibrate(LONG_VIBRATE_TIME_MS);
+                if (notifyMistake) {
+                    final Toast toast = Toast.makeText(
+                            GameActivity.this.getApplicationContext(),
+                            "Stop cheating!",
+                            Toast.LENGTH_SHORT
+                    );
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            toast.cancel();
+                        }
+                    }, 1000);
+                    toast.show();
+                    mVibrator.vibrate(LONG_VIBRATE_TIME_MS);
+                }
+                notifyMistake = false;
                 return;
             }
             int rightValue1 = mTopCard.getValue() + mTopCard.getModifier();
@@ -292,6 +296,7 @@ public class GameActivity extends AppCompatActivity {
             } else {
                 BruteForceGuard.recordMistake();
                 mVibrator.vibrate(VIBRATE_TIME_MS);
+                notifyMistake = true;
             }
         }
     }
