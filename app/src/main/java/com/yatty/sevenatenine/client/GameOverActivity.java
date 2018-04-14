@@ -87,7 +87,7 @@ public class GameOverActivity extends AppCompatActivity implements View.OnClickL
         }
         sortByCardCount(mScores);
         if (mWinnerName == null) mWinnerName = mScores[0].getPlayerName();
-        if (mPlayerName.equals(mWinnerName)) mGameOverText.setText("You Win!");
+        if (mPlayerName.equals(mWinnerName)) mGameOverText.setText("Winner winner chicken dinner!");
         else mGameOverText.setText("Better luck next time!");
         mWinnerNameTextView.setText(mWinnerName);
         Log.d(TAG, "Winner: " + mWinnerName);
