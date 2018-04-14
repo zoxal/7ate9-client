@@ -9,7 +9,7 @@ import android.widget.Switch;
 
 public class SettingsActivity extends PreferenceActivity {
     public static final String MUSIC_VOLUME_KEY = "music_volume";
-    public static final String EFFECTS_VOLUME_KEY = "music_volume";
+    public static final String EFFECTS_VOLUME_KEY = "effects_volume";
     ApplicationSettings appSettings = new ApplicationSettings();
     private SeekBar mMusicSeekBar;
     private SeekBar mEffectsSeekBar;
