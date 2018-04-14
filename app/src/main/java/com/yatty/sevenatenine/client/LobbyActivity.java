@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -19,6 +20,7 @@ import com.yatty.sevenatenine.api.out_commands.LeaveGameRequest;
 import com.yatty.sevenatenine.api.out_commands.LeaveLobbyRequest;
 
 public class LobbyActivity extends AppCompatActivity {
+    private static final String TAG = LobbyActivity.class.getSimpleName();
     private static final String EXTRA_PRIVATE_LOBBY_INFO = "private_lobby_info";
     private static final String EXTRA_LOBBY_ID = "lobby_id";
 
@@ -65,6 +67,7 @@ public class LobbyActivity extends AppCompatActivity {
                 startActivity(intent);
                 finish();
             } else if (msg.obj instanceof LobbyStateChangedNotification) {
+                Log.d(TAG, "Got LobbyStateChangedNotification");
                 LobbyStateChangedNotification lobbyStateChangedNotification = (LobbyStateChangedNotification) msg.obj;
                 SessionInfo.setPrivateLobbyInfo(lobbyStateChangedNotification.getPrivateLobbyInfo());
                 mPlayersNumberTextView.setText(String.valueOf(lobbyStateChangedNotification
