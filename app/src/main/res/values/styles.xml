@@ -12,6 +12,10 @@
         <item name="android:textColor">@color/black</item>
     </style>
 
+    <style name="TextStyleMedium" parent="android:TextAppearance.Medium">
+        <item name="android:textColor">@color/black</item>
+    </style>
+
     <style name="TextStyleLarge" parent="android:TextAppearance.Large">
         <item name="android:textColor">@color/black</item>
     </style>

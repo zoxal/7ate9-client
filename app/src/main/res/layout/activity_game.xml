@@ -68,19 +68,6 @@
         app:layout_constraintVertical_bias="0.39"
         tools:visibility="visible"/>
 
-    <ImageButton
-        android:id="@+id/button_disconnect"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_margin="10dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/shape_image_button_exit"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_exit_white"/>
-
     <TableLayout
         android:id="@+id/tableLayout2"
         android:layout_width="wrap_content"
@@ -159,7 +146,6 @@
         android:text="TextView"
         android:textAppearance="@style/TextStyleSmall"
         app:layout_constraintEnd_toEndOf="@+id/ib_first_player_deck"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/ib_first_player_deck"
         app:layout_constraintTop_toBottomOf="@+id/ib_first_player_deck"/>
 
@@ -175,23 +161,24 @@
         app:layout_constraintTop_toBottomOf="@+id/ib_second_player_deck"/>
 
     <TextView
-        android:id="@+id/textView5"
+        android:id="@+id/tv_third_player_name"
         android:layout_width="wrap_content"
         android:layout_height="16dp"
         android:layout_marginEnd="8dp"
         android:text="TextView"
+        android:textAppearance="@style/TextStyleSmall"
         app:layout_constraintEnd_toEndOf="@+id/ib_third_player_deck"
         app:layout_constraintStart_toStartOf="@+id/ib_third_player_deck"
         app:layout_constraintTop_toBottomOf="@+id/ib_third_player_deck"/>
 
     <TextView
-        android:id="@+id/textView6"
+        android:id="@+id/tv_third_player_cards_num"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="TextView"
+        android:textAppearance="@style/TextStyleMedium"
         app:layout_constraintBottom_toTopOf="@+id/ib_third_player_deck"
         app:layout_constraintEnd_toEndOf="@+id/ib_third_player_deck"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/ib_third_player_deck"/>
 
     <TextView
@@ -200,19 +187,31 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:text="TextView"
-        android:textAppearance="@style/TextStyleLarge"
+        android:textAppearance="@style/TextStyleMedium"
         app:layout_constraintBottom_toTopOf="@+id/ib_first_player_deck"
         app:layout_constraintEnd_toEndOf="@+id/ib_first_player_deck"
         app:layout_constraintStart_toStartOf="@+id/ib_first_player_deck"/>
 
     <TextView
-        android:id="@+id/textView8"
+        android:id="@+id/tv_second_player_cards_num"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:text="TextView"
+        android:textAppearance="@style/TextStyleMedium"
         app:layout_constraintBottom_toTopOf="@+id/ib_second_player_deck"
         app:layout_constraintEnd_toEndOf="@+id/ib_second_player_deck"
         app:layout_constraintStart_toStartOf="@+id/ib_second_player_deck"/>
+
+    <TextView
+        android:id="@+id/tv_user_cards_num"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="TextView"
+        android:textAppearance="@style/TextStyleMedium"
+        app:layout_constraintBottom_toTopOf="@+id/button_get_card"
+        app:layout_constraintEnd_toEndOf="@+id/button_get_card"
+        app:layout_constraintStart_toStartOf="@+id/button_get_card"/>
 
 </android.support.constraint.ConstraintLayout>

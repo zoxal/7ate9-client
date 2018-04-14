@@ -66,6 +66,7 @@ public class LobbyActivity extends AppCompatActivity {
                 finish();
             } else if (msg.obj instanceof PrivateLobbyInfo) {
                 PrivateLobbyInfo privateLobbyInfo = (PrivateLobbyInfo) msg.obj;
+                SessionInfo.setPrivateLobbyInfo(privateLobbyInfo);
                 mPlayersNumberTextView.setText(String.valueOf(privateLobbyInfo.getPlayers().length));
                 // TODO add player names
             }

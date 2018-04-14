@@ -1,11 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory
-        android:title="Title1"
+        android:title="Volume Settings"
         >
-        <CheckBoxPreference
-            android:key="chb2"
-            android:summary="summary"
-            android:title="title"/>
+        <SwitchPreference
+            android:id="@+id/enMusicSwitch"
+            android:defaultValue="true"
+            android:key="enMusicVolume"
+            android:summary="Enable background music"
+            android:title="Music" />
+        <SwitchPreference
+            android:id="@+id/enEffectsSwitch"
+            android:defaultValue="true"
+            android:key="enEffectsVolume"
+            android:summary="Enable effects"
+            android:title="Effects" />
+        <Preference android:layout="@layout/sliderlayout" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="Background Settings"
+        >
+        <ListPreference
+            android:key="BackgroundPicture"
+            android:title="Choose background"
+            android:dependency=""
+            android:entries="@array/backgrounds_list"
+            android:entryValues="@array/backgrounds_list"/>
     </PreferenceCategory>
 </PreferenceScreen>
