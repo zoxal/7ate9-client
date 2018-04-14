@@ -10,6 +10,20 @@
     tools:context="com.yatty.sevenatenine.client.GameActivity">
 
     <ImageButton
+        android:id="@+id/ib_card_under_top_card"
+        style="@style/ImageButtonStyleCard"
+        android:layout_margin="50dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/tableLayout2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.703"/>
+
+    <ImageButton
         android:id="@+id/ib_top_card"
         style="@style/ImageButtonStyleCard"
         android:layout_margin="50dp"
@@ -175,43 +189,43 @@
         android:id="@+id/tv_third_player_cards_num"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
-        android:textAppearance="@style/TextStyleMedium"
+        android:textAppearance="@style/TextStyleLargeBold"
         app:layout_constraintBottom_toTopOf="@+id/ib_third_player_deck"
         app:layout_constraintEnd_toEndOf="@+id/ib_third_player_deck"
-        app:layout_constraintStart_toStartOf="@+id/ib_third_player_deck"/>
+        app:layout_constraintStart_toStartOf="@+id/ib_third_player_deck"
+        tools:text="5"/>
 
     <TextView
         android:id="@+id/tv_first_player_cards_num"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:text="TextView"
-        android:textAppearance="@style/TextStyleMedium"
+        android:textAppearance="@style/TextStyleLargeBold"
         app:layout_constraintBottom_toTopOf="@+id/ib_first_player_deck"
         app:layout_constraintEnd_toEndOf="@+id/ib_first_player_deck"
-        app:layout_constraintStart_toStartOf="@+id/ib_first_player_deck"/>
+        app:layout_constraintStart_toStartOf="@+id/ib_first_player_deck"
+        tools:text="5"/>
 
     <TextView
         android:id="@+id/tv_second_player_cards_num"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:text="TextView"
-        android:textAppearance="@style/TextStyleMedium"
+        android:textAppearance="@style/TextStyleLargeBold"
         app:layout_constraintBottom_toTopOf="@+id/ib_second_player_deck"
         app:layout_constraintEnd_toEndOf="@+id/ib_second_player_deck"
-        app:layout_constraintStart_toStartOf="@+id/ib_second_player_deck"/>
+        app:layout_constraintStart_toStartOf="@+id/ib_second_player_deck"
+        tools:text="5"/>
 
     <TextView
         android:id="@+id/tv_user_cards_num"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:text="TextView"
-        android:textAppearance="@style/TextStyleMedium"
+        android:textAppearance="@style/TextStyleLargeBold"
         app:layout_constraintBottom_toTopOf="@+id/button_get_card"
         app:layout_constraintEnd_toEndOf="@+id/button_get_card"
-        app:layout_constraintStart_toStartOf="@+id/button_get_card"/>
+        app:layout_constraintStart_toStartOf="@+id/button_get_card"
+        tools:text="5"/>
 
 </android.support.constraint.ConstraintLayout>

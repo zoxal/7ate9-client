@@ -11,6 +11,9 @@ import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.RotateAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageButton;
 import android.widget.TableRow;
@@ -23,7 +26,6 @@ import com.yatty.sevenatenine.api.in_commands.GameStartedNotification;
 import com.yatty.sevenatenine.api.in_commands.MoveRejectedResponse;
 import com.yatty.sevenatenine.api.in_commands.NewStateNotification;
 import com.yatty.sevenatenine.api.out_commands.LeaveGameRequest;
-import com.yatty.sevenatenine.api.out_commands.LogOutRequest;
 import com.yatty.sevenatenine.api.out_commands.MoveRequest;
 
 import java.util.ArrayList;
@@ -42,10 +44,10 @@ public class GameActivity extends AppCompatActivity {
 
     private NettyClient mNettyClient;
     private String mGameId;
-    private ImageButton mDisconnectImageButton;
     private ImageButton mGetCardImageButton;
     private ImageButton mCardsOnTableImageButtons[];
     private ImageButton mTopCardImageButton;
+    private ImageButton mCardUnderTopCardImageButton;
     private ImageButton mFirstPlayerDeck;
     private ImageButton mSecondPlayerDeck;
     private ImageButton mThirdPlayerDeck;
@@ -65,6 +67,9 @@ public class GameActivity extends AppCompatActivity {
 
     private void initUi(GameStartedNotification gameStartedNotification) {
         mTopCardImageButton = findViewById(R.id.ib_top_card);
+        mUserCardsNumTextView = findViewById(R.id.tv_user_cards_num);
+        mCardUnderTopCardImageButton = findViewById(R.id.ib_card_under_top_card);
+        mTopCardImageButton.bringToFront();
 
         mFirstPlayerDeck = findViewById(R.id.ib_first_player_deck);
         mSecondPlayerDeck = findViewById(R.id.ib_second_player_deck);
@@ -114,18 +119,6 @@ public class GameActivity extends AppCompatActivity {
             mCardsOnTableImageButtons[i + firstCardRow.getVirtualChildCount()].setVisibility(View.INVISIBLE);
         }
 
-        mDisconnectImageButton.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
-                LogOutRequest logOutRequest = new LogOutRequest(SessionInfo.getAuthToken());
-                mNettyClient.write(logOutRequest, false);
-                mNettyClient.setHandler(null);
-                Intent nextActivity = MainActivity.getStartIntent(getApplicationContext());
-                startActivity(nextActivity);
-                finish();
-            }
-        });
         mGetCardImageButton = findViewById(R.id.button_get_card);
         mGetCardImageButton.setOnClickListener(new View.OnClickListener() {
 
@@ -159,10 +152,11 @@ public class GameActivity extends AppCompatActivity {
                         mCardsOnTableImageButtons[i].setImageDrawable(drawable);
                         mCardsOnTableImageButtons[i].setOnClickListener(new CardButtonOnClickListener(card));
                         mCardsOnTableImageButtons[i].setVisibility(View.VISIBLE);
-                        mCardsOnTableImageButtons[i].bringToFront();
-                        mCardsOnTableImageButtons[i].startAnimation(animation);
+                        //mCardsOnTableImageButtons[i].bringToFront();
+                        //mCardsOnTableImageButtons[i].startAnimation(animation);
                         mNumOfCardsOnDesk++;
-
+                        mUserCardsNumTextView.setText(String.valueOf(Integer.parseInt(
+                                mUserCardsNumTextView.getText().toString()) - 1));
                     }
                 }
             }
@@ -345,20 +339,68 @@ public class GameActivity extends AppCompatActivity {
                     finish();
                 } else {
                     String moveWinner = newStateNotification.getMoveWinner();
-                    if (moveWinner != null) {
+                    if (moveWinner != null && !moveWinner.equals(SessionInfo.getUserName())) {
+                        int topCardButtonCoordinates[] = new int[2];
+                        mTopCardImageButton.getLocationOnScreen(topCardButtonCoordinates);
+                        int playerDeckCoordinates[] = new int[2];
+                        TranslateAnimation animation;
                         if (moveWinner.equals(mFirstPlayerNameTextView.getText().toString())) {
                             mFirstPlayerCardsNumTextView.setText(String.valueOf(Integer.parseInt(
-                                    mFirstPlayerCardsNumTextView.getText().toString()) + 1));
+                                    mFirstPlayerCardsNumTextView.getText().toString()) - 1));
+                            mFirstPlayerDeck.getLocationOnScreen(playerDeckCoordinates);
+                            animation = new TranslateAnimation(
+                                    TranslateAnimation.ABSOLUTE,
+                                    playerDeckCoordinates[0] - topCardButtonCoordinates[0],
+                                    TranslateAnimation.RELATIVE_TO_SELF,
+                                    0,
+                                    TranslateAnimation.ABSOLUTE,
+                                    playerDeckCoordinates[1] - topCardButtonCoordinates[1],
+                                    TranslateAnimation.RELATIVE_TO_SELF,
+                                    0
+                            );
+                            animation.setDuration(CARD_DISTRIBUTION_ANIMATION_DURATION_MILLIS);
+                            mTopCardImageButton.startAnimation(animation);
                         } else if (moveWinner.equals(mSecondPlayerNameTextView.getText().toString())) {
                             mSecondPlayerCardsNumTextView.setText(String.valueOf(Integer.parseInt(
-                                    mSecondPlayerCardsNumTextView.getText().toString()) + 1));
+                                    mSecondPlayerCardsNumTextView.getText().toString()) - 1));
+                            mSecondPlayerDeck.getLocationOnScreen(playerDeckCoordinates);
+                            animation = new TranslateAnimation(
+                                    TranslateAnimation.ABSOLUTE,
+                                    playerDeckCoordinates[0] - topCardButtonCoordinates[0],
+                                    TranslateAnimation.RELATIVE_TO_SELF,
+                                    0,
+                                    TranslateAnimation.ABSOLUTE,
+                                    playerDeckCoordinates[1] - topCardButtonCoordinates[1],
+                                    TranslateAnimation.RELATIVE_TO_SELF,
+                                    0
+                            );
+                            animation.setDuration(CARD_DISTRIBUTION_ANIMATION_DURATION_MILLIS);
+                            mTopCardImageButton.startAnimation(animation);
                         } else if (moveWinner.equals(mThirdPlayerNameTextView.getText().toString())) {
                             mThirdPlayerCardsNumTextView.setText(String.valueOf(Integer.parseInt(
-                                    mThirdPlayerCardsNumTextView.getText().toString()) + 1));
-                        } else if (moveWinner.equals(SessionInfo.getUserName())) {
-                            mUserCardsNumTextView.setText(String.valueOf(Integer.parseInt(
-                                    mUserCardsNumTextView.getText().toString()) + 1));
+                                    mThirdPlayerCardsNumTextView.getText().toString()) - 1));
+                            mThirdPlayerDeck.getLocationOnScreen(playerDeckCoordinates);
+                            animation = new TranslateAnimation(
+                                    TranslateAnimation.ABSOLUTE,
+                                    playerDeckCoordinates[0] - topCardButtonCoordinates[0],
+                                    TranslateAnimation.RELATIVE_TO_SELF,
+                                    0,
+                                    TranslateAnimation.ABSOLUTE,
+                                    playerDeckCoordinates[1] - topCardButtonCoordinates[1],
+                                    TranslateAnimation.RELATIVE_TO_SELF,
+                                    0
+                            );
+                            animation.setDuration(CARD_DISTRIBUTION_ANIMATION_DURATION_MILLIS);
+                            RotateAnimation rotateAnimation = new RotateAnimation(0, 90,
+                                    Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+                            rotateAnimation.setDuration(CARD_DISTRIBUTION_ANIMATION_DURATION_MILLIS);
+                            AnimationSet animationSet = new AnimationSet(false);
+                            animationSet.addAnimation(rotateAnimation);
+                            animationSet.addAnimation(animation);
+                            mTopCardImageButton.startAnimation(animationSet);
                         }
+                        mCardUnderTopCardImageButton.setImageDrawable(mTopCardImageButton.getDrawable());
+                        mTopCardImageButton.bringToFront();
                     }
                     mTopCard = newStateNotification.getNextCard();
                     mMoveNumber = newStateNotification.getMoveNumber();

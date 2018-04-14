@@ -14,9 +14,9 @@ import android.widget.TextView;
 
 import com.yatty.sevenatenine.api.commands_with_data.PrivateLobbyInfo;
 import com.yatty.sevenatenine.api.in_commands.GameStartedNotification;
+import com.yatty.sevenatenine.api.in_commands.LobbyStateChangedNotification;
 import com.yatty.sevenatenine.api.out_commands.LeaveGameRequest;
 import com.yatty.sevenatenine.api.out_commands.LeaveLobbyRequest;
-import com.yatty.sevenatenine.api.out_commands.LogOutRequest;
 
 public class LobbyActivity extends AppCompatActivity {
     private static final String EXTRA_PRIVATE_LOBBY_INFO = "private_lobby_info";
@@ -64,11 +64,11 @@ public class LobbyActivity extends AppCompatActivity {
                 Intent intent = GameActivity.getStartIntent(getApplicationContext(), gameStartedNotification);
                 startActivity(intent);
                 finish();
-            } else if (msg.obj instanceof PrivateLobbyInfo) {
-                PrivateLobbyInfo privateLobbyInfo = (PrivateLobbyInfo) msg.obj;
-                SessionInfo.setPrivateLobbyInfo(privateLobbyInfo);
-                mPlayersNumberTextView.setText(String.valueOf(privateLobbyInfo.getPlayers().length));
-                // TODO add player names
+            } else if (msg.obj instanceof LobbyStateChangedNotification) {
+                LobbyStateChangedNotification lobbyStateChangedNotification = (LobbyStateChangedNotification) msg.obj;
+                SessionInfo.setPrivateLobbyInfo(lobbyStateChangedNotification.getPrivateLobbyInfo());
+                mPlayersNumberTextView.setText(String.valueOf(lobbyStateChangedNotification
+                        .getPrivateLobbyInfo().getPlayers().length));
             }
         }
     }
@@ -90,7 +90,8 @@ public class LobbyActivity extends AppCompatActivity {
                         Context context = LobbyActivity.this.getApplicationContext();
                         Intent nextActivity = LobbyListActivity.getStartIntent(context);
                         context.startActivity(nextActivity);
-                    }})
+                    }
+                })
                 .setNegativeButton("No", null).show();
     }
 }

@@ -63,7 +63,7 @@ public class NettyClient {
     private static final int SLEEP_TIME_IF_HAS_NO_HANDLER_MS = 5;
 
     private static NettyClient sNettyClient;
-    private String mServerIp = "192.168.0.103";
+    private String mServerIp = "192.168.0.101";
     private HashMap<String, Class> mCommands;
     private EventLoopGroup eventLoopGroup = new NioEventLoopGroup();
     private Channel mChannel;
