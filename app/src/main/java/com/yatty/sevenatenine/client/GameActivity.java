@@ -34,6 +34,7 @@ public class GameActivity extends AppCompatActivity {
     public static final String NEW_LINE_SYMBOL = "\n";
 
     private static final int VIBRATE_TIME_MS = 100;
+    private static final int LONG_VIBRATE_TIME_MS = 400;
     public static final int MAX_NUM_CARDS_ON_TABLE = 8;
     public static final int MAX_CARD = 10;
     private static final String INITIAL_COUNTER_VALUE = "0";
@@ -97,6 +98,8 @@ public class GameActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View view) {
+                if (BruteForceGuard.isImprisoned()) return;
+
                 if (mNumOfCardsOnDesk < MAX_NUM_CARDS_ON_TABLE) {
                     if (!mCardArrayList.isEmpty()) {
                         Card card = mCardArrayList.get(0);
@@ -251,12 +254,19 @@ public class GameActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             if (BruteForceGuard.isImprisoned()) {
-                Toast.makeText(
+                final Toast toast = Toast.makeText(
                         GameActivity.this.getApplicationContext(),
                         "Stop cheating!",
                         Toast.LENGTH_SHORT
-                ).show();
-                mVibrator.vibrate(VIBRATE_TIME_MS);
+                );
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        toast.cancel();
+                    }
+                }, 1000);
+                toast.show();
+                mVibrator.vibrate(LONG_VIBRATE_TIME_MS);
                 return;
             }
             int rightValue1 = mTopCard.getValue() + mTopCard.getModifier();
@@ -278,6 +288,7 @@ public class GameActivity extends AppCompatActivity {
                 view.setVisibility(View.INVISIBLE);
                 view.setOnClickListener(null);
                 mNumOfCardsOnDesk--;
+                BruteForceGuard.forgive();
             } else {
                 BruteForceGuard.recordMistake();
                 mVibrator.vibrate(VIBRATE_TIME_MS);
