@@ -1,6 +1,8 @@
 package com.yatty.sevenatenine.api.out_commands;
 
-public class EnterLobbyRequest {
+import java.io.Serializable;
+
+public class EnterLobbyRequest  implements Serializable {
     private String lobbyId;
     private String authToken;
 

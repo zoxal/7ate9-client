@@ -11,7 +11,6 @@ import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.RotateAnimation;
 import android.view.animation.TranslateAnimation;
@@ -407,8 +406,11 @@ public class GameActivity extends AppCompatActivity {
                                     0
                             );
                             animation.setDuration(CARD_DISTRIBUTION_ANIMATION_DURATION_MILLIS);
-                            RotateAnimation rotateAnimation = new RotateAnimation(0, 90,
+                            /*RotateAnimation rotateAnimation = new RotateAnimation(0, 90,
                                     Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+                            rotateAnimation.setDuration(CARD_DISTRIBUTION_ANIMATION_DURATION_MILLIS);*/
+                            RotateAnimation rotateAnimation = (RotateAnimation) getResources()
+                                    .getAnimation(R.anim.animation_card_rotate);
                             rotateAnimation.setDuration(CARD_DISTRIBUTION_ANIMATION_DURATION_MILLIS);
                             AnimationSet animationSet = new AnimationSet(false);
                             animationSet.addAnimation(rotateAnimation);

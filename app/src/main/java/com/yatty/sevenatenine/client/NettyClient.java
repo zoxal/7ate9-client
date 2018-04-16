@@ -58,12 +58,12 @@ import io.netty.util.concurrent.GenericFutureListener;
 public class NettyClient {
     private static final String TAG = NettyClient.class.getSimpleName();
     private static final String TYPE_FIELD = "_type";
-    private static final int PORT = 39405;
     private static final String COMMAND_TYPE_FIELD = "_type";
     private static final int SLEEP_TIME_IF_HAS_NO_HANDLER_MS = 5;
 
     private static NettyClient sNettyClient;
-    private String mServerIp = "192.168.43.141";
+    private String mServerIp = "192.168.100.4";
+    private int mPort = 39405;
     private HashMap<String, Class> mCommands;
     private EventLoopGroup eventLoopGroup = new NioEventLoopGroup();
     private Channel mChannel;
@@ -123,7 +123,7 @@ public class NettyClient {
             Bootstrap bootstrap = new Bootstrap();
             bootstrap.group(eventLoopGroup)
                     .channel(NioSocketChannel.class)
-                    .remoteAddress(new InetSocketAddress(mServerIp, PORT))
+                    .remoteAddress(new InetSocketAddress(mServerIp, mPort))
                     .handler(new PipeLineInitializer());
             mChannel = bootstrap.connect().addListener(new ChannelFutureListener() {
                 @Override
@@ -259,6 +259,15 @@ public class NettyClient {
             Log.d(TAG, "Sending: " + json);
             out.add(Unpooled.wrappedBuffer(json.getBytes()));
         }
+    }
+
+
+    public int getPort() {
+        return mPort;
+    }
+
+    public void setPort(int mPort) {
+        mPort = mPort;
     }
 
     public void setHandler(Handler handler) {

@@ -2,7 +2,9 @@ package com.yatty.sevenatenine.api.out_commands;
 
 import com.yatty.sevenatenine.api.commands_with_data.Card;
 
-public class MoveRequest {
+import java.io.Serializable;
+
+public class MoveRequest implements Serializable {
     private String gameId;
     private String authToken;
     private int moveNumber;

@@ -1,6 +1,8 @@
 package com.yatty.sevenatenine.api.out_commands;
 
-public class LogOutRequest {
+import java.io.Serializable;
+
+public class LogOutRequest implements Serializable {
     private String authToken;
 
     public LogOutRequest() {

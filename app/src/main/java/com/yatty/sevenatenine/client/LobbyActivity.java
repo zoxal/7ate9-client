@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -70,6 +69,9 @@ public class LobbyActivity extends AppCompatActivity {
             } else if (msg.obj instanceof LobbyStateChangedNotification) {
                 Log.d(TAG, "Got LobbyStateChangedNotification");
                 LobbyStateChangedNotification lobbyStateChangedNotification = (LobbyStateChangedNotification) msg.obj;
+                if (lobbyStateChangedNotification.getPrivateLobbyInfo() == null) {
+                    Log.d(TAG, "Private lobby info is null!!!!");
+                }
                 SessionInfo.setPrivateLobbyInfo(lobbyStateChangedNotification.getPrivateLobbyInfo());
                 mPlayersNumberTextView.setText(String.valueOf(lobbyStateChangedNotification
                         .getPrivateLobbyInfo().getPlayers().length));
@@ -104,6 +106,7 @@ public class LobbyActivity extends AppCompatActivity {
         super.onPause();
         BackgroundMusicService.getInstance(this.getApplicationContext()).pause();
     }
+
     @Override
     protected void onResume() {
         super.onResume();

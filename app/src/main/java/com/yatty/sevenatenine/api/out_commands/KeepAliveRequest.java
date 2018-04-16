@@ -1,6 +1,8 @@
 package com.yatty.sevenatenine.api.out_commands;
 
-public class KeepAliveRequest {
+import java.io.Serializable;
+
+public class KeepAliveRequest implements Serializable {
     private String authToken;
 
     public KeepAliveRequest(String authToken) {

@@ -1,6 +1,8 @@
 package com.yatty.sevenatenine.api.out_commands;
 
-public class LobbyListSubscribeRequest {
+import java.io.Serializable;
+
+public class LobbyListSubscribeRequest  implements Serializable {
     private String authToken;
 
     public LobbyListSubscribeRequest() {
