@@ -4,12 +4,14 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
+import android.util.Log;
 
 import java.io.Serializable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class NetworkService extends Service {
+    private static final String TAG = NetworkService.class.getSimpleName();
     private static final String KEY_ACTION = "key_action";
     private static final String KEY_IP = "key_ip";
     private static final String KEY_PORT = "key_port";
@@ -24,14 +26,17 @@ public class NetworkService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        Log.d(TAG, "onCreate");
         mExecutorService = Executors.newSingleThreadExecutor();
     }
 
     @Override
     public int onStartCommand(final Intent intent, int flags, int startId) {
+        Log.d(TAG, "onStartCommand");
         int action = intent.getIntExtra(KEY_ACTION, -1);
         switch (action) {
             case ACTION_CONNECT:
+                Log.d(TAG, "ACTION_CONNECT");
                 mExecutorService.execute(new Runnable() {
                     @Override
                     public void run() {
@@ -40,10 +45,13 @@ public class NetworkService extends Service {
                         NettyClient nettyClient = NettyClient.getInstance();
                         nettyClient.setServerIp(ip);
                         nettyClient.setPort(port);
+                        nettyClient.connect();
+                        Log.d(TAG, "Connected");
                     }
                 });
                 break;
             case ACTION_SEND_MESSAGE:
+                Log.d(TAG, "ACTION_SEND_MESSAGE");
                 mExecutorService.execute(new Runnable() {
                     @Override
                     public void run() {
@@ -51,6 +59,7 @@ public class NetworkService extends Service {
                         boolean keepAlive = intent.getBooleanExtra(KEY_KEEP_ALIVE, false);
                         NettyClient nettyClient = NettyClient.getInstance();
                         nettyClient.write(message, keepAlive);
+                        Log.d(TAG, "message was sent");
                     }
                 });
         }

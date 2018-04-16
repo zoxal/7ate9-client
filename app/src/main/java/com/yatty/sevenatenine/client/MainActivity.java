@@ -2,7 +2,6 @@ package com.yatty.sevenatenine.client;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -35,7 +34,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // TODO find reason of long start
         super.onCreate(savedInstanceState);
         Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_main);
@@ -62,10 +60,13 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 try {
                     if (!mNameEditText.getText().toString().isEmpty()) {
-                        mNettyClient.connect();
+                        startService(NetworkService.getConnectionIntent(getApplicationContext(),
+                                "192.168.100.4", 39405));
                         LogInRequest logInRequest = new LogInRequest();
                         logInRequest.setName(mNameEditText.getText().toString());
-                        mNettyClient.write(logInRequest, false);
+                        startService(NetworkService.getSendIntent(getApplicationContext(),
+                                logInRequest, false));
+                        //mNettyClient.write(logInRequest, false);
                         view.setClickable(false);
                         Snackbar.make(view, "Connecting...", Snackbar.LENGTH_SHORT).show();
                         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
