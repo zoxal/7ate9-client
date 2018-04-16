@@ -1,36 +1,57 @@
 package com.yatty.sevenatenine.client;
 
-import android.app.Service;
-import android.content.Intent;
+import android.content.Context;
 import android.media.MediaPlayer;
-import android.os.IBinder;
-import android.widget.Toast;
 
-public class BackgroundMusicService extends Service {
-    private MediaPlayer mPlayer;
+public class BackgroundMusicService {
+    private static final String TAG = "MusicManager";
+    private static MediaPlayer sMediaPlayer;
+    private static BackgroundMusicService instance;
 
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
+    private BackgroundMusicService(Context context) {
+        sMediaPlayer = MediaPlayer.create(context, R.raw.background_sound);
+        sMediaPlayer.setLooping(true);
     }
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        mPlayer = MediaPlayer.create(this, R.raw.background_sound);
-        mPlayer.setLooping(true);
+    public static BackgroundMusicService getInstance(Context context) {
+        if (instance == null) {
+            instance = new BackgroundMusicService(context);
+        }
+        return instance;
     }
 
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        mPlayer.start();
-        return super.onStartCommand(intent, flags, startId);
+    public static BackgroundMusicService getInstance() {
+        return instance;
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        mPlayer.stop();
+    public void start() {
+        if (!sMediaPlayer.isPlaying()) {
+            sMediaPlayer.start();
+        }
+//        mp.setVolume(volume, volume);
+    }
+
+    public void pause() {
+        if (sMediaPlayer.isPlaying()) {
+            sMediaPlayer.pause();
+        }
+    }
+
+    public void stop() {
+        if (sMediaPlayer.isPlaying()) {
+            sMediaPlayer.pause();
+        }
+        sMediaPlayer.stop();
+    }
+
+//    public static void updateVolumeFromPrefs(Context context, float volume) {
+//        sMediaPlayer.setVolume(volume, volume);
+//    }
+
+    public void release() {
+        if (sMediaPlayer.isPlaying()) {
+            sMediaPlayer.stop();
+        }
+        sMediaPlayer.release();
     }
 }

@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -25,7 +26,6 @@ import com.yatty.sevenatenine.api.in_commands.EnterLobbyResponse;
 import com.yatty.sevenatenine.api.in_commands.LobbyListUpdatedNotification;
 import com.yatty.sevenatenine.api.out_commands.CreateLobbyRequest;
 import com.yatty.sevenatenine.api.out_commands.EnterLobbyRequest;
-import com.yatty.sevenatenine.api.out_commands.LeaveGameRequest;
 import com.yatty.sevenatenine.api.out_commands.LobbyListSubscribeRequest;
 import com.yatty.sevenatenine.api.out_commands.LobbyListUnsubscribeRequest;
 import com.yatty.sevenatenine.api.out_commands.LogOutRequest;
@@ -43,6 +43,7 @@ public class LobbyListActivity extends AppCompatActivity {
     private TextView mEmptyLobbyListTextView;
     private LobbyAdapter mLobbyAdapter;
     private NettyClient mNettyClient;
+    private boolean shouldMusicStay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +93,47 @@ public class LobbyListActivity extends AppCompatActivity {
             publicLobbyInfo.setMaxPlayersNumber(createLobbyRequest.getMaxPlayersNumber());
             SessionInfo.setPublicLobbyInfo(publicLobbyInfo);
             mNettyClient.write(createLobbyRequest, true);
+        }
+    }
+
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        shouldMusicStay = false;
+//        startService(new Intent(getApplicationContext(), BackgroundMusicService.class));
+//    }
+//
+//    @Override
+//    protected void onPause() {
+//        super.onPause();
+//        if (!shouldMusicStay) {
+//            stopService(new Intent(getApplicationContext(), BackgroundMusicService.class));
+//        }
+//    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        BackgroundMusicService.getInstance(this.getApplicationContext()).pause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+//        SharedPreferences sharedPreferences = getPreferences(Context.MODE_PRIVATE);
+//        boolean musicEnabled = sharedPreferences.getBoolean(
+//                getResources().getString(R.string.key_is_music_enabled), true
+//        );
+//        Log.i(TAG, "getPreferences: " + musicEnabled);
+
+//        SharedPreferences sharedPreferences = getSharedPreferences();
+//        boolean musicEnabled = sharedPreferences.getBoolean(
+//                getResources().getString(R.string.key_is_music_enabled), true
+//        );
+//        Log.i(TAG, "getPreferences: " + musicEnabled);
+
+        if (PreferenceFragment.musicEnabled) {
+            BackgroundMusicService.getInstance(this.getApplicationContext()).start();
         }
     }
 
@@ -244,7 +286,8 @@ public class LobbyListActivity extends AppCompatActivity {
                         Context context = LobbyListActivity.this.getApplicationContext();
                         Intent nextActivity = MainActivity.getStartIntent(context);
                         context.startActivity(nextActivity);
-                    }})
+                    }
+                })
                 .setNegativeButton("No", null).show();
     }
 }

@@ -110,4 +110,15 @@ public class GameOverActivity extends AppCompatActivity implements View.OnClickL
                     res[j] = tmp;
                 }
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        BackgroundMusicService.getInstance(this.getApplicationContext()).pause();
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        BackgroundMusicService.getInstance(this.getApplicationContext()).start();
+    }
 }

@@ -2,6 +2,7 @@ package com.yatty.sevenatenine.client;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -30,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
     private Button mConnectButton;
     private EditText mNameEditText;
     private NettyClient mNettyClient;
+    private boolean shouldMusicStay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,16 +80,30 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        startService(new Intent(getApplicationContext(), BackgroundMusicService.class));
-    }
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        shouldMusicStay = false;
+//        startService(new Intent(getApplicationContext(), BackgroundMusicService.class));
+//    }
+//
+//    @Override
+//    protected void onPause() {
+//        super.onPause();
+//        if (!shouldMusicStay) {
+//            stopService(new Intent(getApplicationContext(), BackgroundMusicService.class));
+//        }
+//    }
 
     @Override
     protected void onPause() {
         super.onPause();
-        stopService(new Intent(getApplicationContext(), BackgroundMusicService.class));
+        BackgroundMusicService.getInstance(this.getApplicationContext()).pause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
     public static Intent getStartIntent(Context context) {
@@ -103,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
-    static class MainActivityHandler extends Handler {
+    class MainActivityHandler extends Handler {
         private Context context;
         private EditText nameEditText;
         private Button connectButton;
@@ -127,6 +143,7 @@ public class MainActivity extends AppCompatActivity {
                 NettyClient.getInstance().setHandler(null);
                 Intent nextActivity = LobbyListActivity.getStartIntent(context);
                 context.startActivity(nextActivity);
+                shouldMusicStay = true;
                 appCompatActivity.finish();
             } else if (msg.obj instanceof ErrorResponse) {
                 ErrorResponse errorResponse = (ErrorResponse) msg.obj;

@@ -2,6 +2,7 @@ package com.yatty.sevenatenine.client;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -44,5 +45,22 @@ public class CreateLobbyActivity extends AppCompatActivity {
     public static Intent getStartIntent(Context context) {
         Intent intent = new Intent(context, CreateLobbyActivity.class);
         return intent;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        BackgroundMusicService.getInstance(this.getApplicationContext()).pause();
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        SharedPreferences sharedPreferences = getPreferences(Context.MODE_PRIVATE);
+        boolean musicEnabled = sharedPreferences.getBoolean(
+                getResources().getString(R.string.key_is_music_enabled), false
+        );
+        if (musicEnabled) {
+            BackgroundMusicService.getInstance(this.getApplicationContext()).start();
+        }
     }
 }

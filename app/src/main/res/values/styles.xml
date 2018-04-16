@@ -10,6 +10,7 @@
 
     <style name="TextStyleSmall" parent="android:TextAppearance.Small">
         <item name="android:textColor">@color/black</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="TextStyleMedium" parent="android:TextAppearance.Medium">
@@ -42,5 +43,14 @@
         <item name="android:scaleType">fitXY</item>
         <item name="android:background">@drawable/shape_game_card</item>
         <item name="android:src">@drawable/r1</item>
+    </style>
+
+    <style name="ImageButtonStyleCardHorizontal" parent="Base.Widget.AppCompat.ImageButton">
+        <item name="android:layout_width">90dp</item>
+        <item name="android:layout_height">62dp</item>
+        <item name="android:layout_margin">5dp</item>
+        <item name="background">@drawable/shape_game_card</item>
+        <item name="android:scaleType">fitXY</item>
+        <item name="android:src">@drawable/shirt</item>
     </style>
 </resources>

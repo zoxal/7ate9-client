@@ -68,11 +68,10 @@
 
     <ImageButton
         android:id="@+id/ib_third_player_deck"
-        style="@style/ImageButtonStyleCard"
+        style="@style/ImageButtonStyleCardHorizontal"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"
-        android:rotation="90"
         android:src="@drawable/shirt"
         android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/ib_top_card"
@@ -157,7 +156,6 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"
-        android:text="TextView"
         android:textAppearance="@style/TextStyleSmall"
         app:layout_constraintEnd_toEndOf="@+id/ib_first_player_deck"
         app:layout_constraintStart_toStartOf="@+id/ib_first_player_deck"
@@ -168,7 +166,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="TextView"
         android:textAppearance="@style/TextStyleSmall"
         app:layout_constraintEnd_toEndOf="@+id/ib_second_player_deck"
         app:layout_constraintStart_toStartOf="@+id/ib_second_player_deck"
@@ -179,8 +176,8 @@
         android:layout_width="wrap_content"
         android:layout_height="16dp"
         android:layout_marginEnd="8dp"
-        android:text="TextView"
         android:textAppearance="@style/TextStyleSmall"
+        android:visibility="visible"
         app:layout_constraintEnd_toEndOf="@+id/ib_third_player_deck"
         app:layout_constraintStart_toStartOf="@+id/ib_third_player_deck"
         app:layout_constraintTop_toBottomOf="@+id/ib_third_player_deck"/>

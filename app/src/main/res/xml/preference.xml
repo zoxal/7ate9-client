@@ -9,22 +9,5 @@
             android:key="@string/key_is_music_enabled"
             android:summary="Enable background music"
             android:title="Music"/>
-        <SwitchPreference
-            android:id="@+id/enEffectsSwitch"
-            android:defaultValue="true"
-            android:key="@string/key_is_effects_on"
-            android:summary="Enable effects"
-            android:title="Effects"/>
-        <Preference android:layout="@layout/sliderlayout"/>
-    </PreferenceCategory>
-    <PreferenceCategory
-        android:title="Background Settings"
-        >
-        <ListPreference
-            android:dependency=""
-            android:entries="@array/backgrounds_list"
-            android:entryValues="@array/backgrounds_list"
-            android:key="@string/key_background_picture"
-            android:title="Choose background"/>
     </PreferenceCategory>
 </PreferenceScreen>

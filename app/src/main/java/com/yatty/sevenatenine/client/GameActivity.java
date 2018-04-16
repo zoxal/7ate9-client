@@ -447,4 +447,10 @@ public class GameActivity extends AppCompatActivity {
                 })
                 .setNegativeButton("No", null).show();
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        BackgroundMusicService.getInstance(this.getApplicationContext()).stop();
+    }
 }

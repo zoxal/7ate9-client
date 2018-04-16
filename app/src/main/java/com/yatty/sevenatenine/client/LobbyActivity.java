@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -96,5 +97,18 @@ public class LobbyActivity extends AppCompatActivity {
                     }
                 })
                 .setNegativeButton("No", null).show();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        BackgroundMusicService.getInstance(this.getApplicationContext()).pause();
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (PreferenceFragment.musicEnabled) {
+            BackgroundMusicService.getInstance(this.getApplicationContext()).start();
+        }
     }
 }

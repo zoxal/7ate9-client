@@ -2,8 +2,12 @@ package com.yatty.sevenatenine.client;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.Preference;
 import android.preference.PreferenceActivity;
+import android.preference.SwitchPreference;
+import android.util.Log;
 import android.widget.SeekBar;
 import android.widget.Switch;
 
@@ -23,20 +27,32 @@ public class SettingsActivity extends PreferenceActivity {
                 .replace(android.R.id.content, new PreferenceFragment()).commit();
         mMusicSeekBar = findViewById(R.id.sb_music_volume);
         mEffectsSeekBar = findViewById(R.id.sb_effects_volume);
-        if (appSettings.prefs != null) {
-            //mMusicSeekBar.setProgress(appSettings.getMusicVolume(this));
-            //mEffectsSeekBar.setProgress(appSettings.loadEffectsVolume());
-        } else {
 
-        }
+//        final SwitchPreference sp = (SwitchPreference) findViewById(R.id.enMusicSwitch);
+//        sp.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+//            @Override
+//            public boolean onPreferenceChange(Preference preference, Object newValue) {
+//                if (sp.isChecked()) {
+//                    BackgroundMusicService.getInstance(getApplicationContext()).start();
+//                } else {
+//                    BackgroundMusicService.getInstance(getApplicationContext()).pause();
+//                }
+//                return true;
+//            }
+//        });
+
+//        if (appSettings.prefs != null) {
+//            //mMusicSeekBar.setProgress(appSettings.getMusicVolume(this));
+//            //mEffectsSeekBar.setProgress(appSettings.loadEffectsVolume());
+//        } else {
+//
+//        }
     }
 
     @Override
     public void onBackPressed() {
         mMusicSeekBar = findViewById(R.id.sb_music_volume);
-        appSettings.saveMusicVolume(mMusicSeekBar);
         mEffectsSeekBar = findViewById(R.id.sb_effects_volume);
-        appSettings.saveEffectsVolume(mEffectsSeekBar);
         super.onBackPressed();
     }
 
@@ -44,4 +60,18 @@ public class SettingsActivity extends PreferenceActivity {
         Intent intent = new Intent(context, SettingsActivity.class);
         return intent;
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        BackgroundMusicService.getInstance(this.getApplicationContext()).pause();
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (PreferenceFragment.musicEnabled) {
+            BackgroundMusicService.getInstance(this.getApplicationContext()).start();
+        }
+    }
+
 }
