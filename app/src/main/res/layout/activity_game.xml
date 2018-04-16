@@ -68,17 +68,15 @@
 
     <ImageButton
         android:id="@+id/ib_third_player_deck"
-        style="@style/ImageButtonStyleCardHorizontal"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginTop="8dp"
+        style="@style/ImageButtonStyleCard"
+        android:rotation="90"
         android:src="@drawable/shirt"
         android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/ib_top_card"
         app:layout_constraintEnd_toEndOf="@+id/ib_top_card"
         app:layout_constraintStart_toStartOf="@+id/ib_top_card"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.39"
+        app:layout_constraintVertical_bias="0.45"
         tools:visibility="visible"/>
 
     <TableLayout
@@ -189,6 +187,7 @@
         android:textAppearance="@style/TextStyleLargeBold"
         app:layout_constraintBottom_toTopOf="@+id/ib_third_player_deck"
         app:layout_constraintEnd_toEndOf="@+id/ib_third_player_deck"
+        app:layout_constraintHorizontal_bias="0.51"
         app:layout_constraintStart_toStartOf="@+id/ib_third_player_deck"
         tools:text="5"/>
 
