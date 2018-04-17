@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.AnimationSet;
+import android.view.animation.AnimationUtils;
 import android.view.animation.RotateAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageButton;
@@ -26,6 +27,7 @@ import com.yatty.sevenatenine.api.in_commands.MoveRejectedResponse;
 import com.yatty.sevenatenine.api.in_commands.NewStateNotification;
 import com.yatty.sevenatenine.api.out_commands.LeaveGameRequest;
 import com.yatty.sevenatenine.api.out_commands.MoveRequest;
+import com.yatty.sevenatenine.client.network.NetworkService;
 
 import java.util.ArrayList;
 
@@ -43,7 +45,6 @@ public class GameActivity extends AppCompatActivity {
     private static final String INITIAL_COUNTER_VALUE = "0";
     public static final int CARD_DISTRIBUTION_ANIMATION_DURATION_MILLIS = 300;
 
-    private NettyClient mNettyClient;
     private String mGameId;
     private ImageButton mGetCardImageButton;
     private ImageButton mCardsOnTableImageButtons[];
@@ -183,8 +184,7 @@ public class GameActivity extends AppCompatActivity {
         mTopCardImageButton.setImageDrawable(getDrawableCard(mTopCard));
         mVibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         Handler handler = new GameActivityHandler();
-        mNettyClient = NettyClient.getInstance();
-        mNettyClient.setHandler(handler);
+        NetworkService.setHandler(handler);
     }
 
     public static Intent getStartIntent(Context context, GameStartedNotification gameStartedNotification) {
@@ -315,7 +315,8 @@ public class GameActivity extends AppCompatActivity {
                 moveRequest.setMove(card);
                 moveRequest.setAuthToken(SessionInfo.getAuthToken());
                 moveRequest.setMoveNumber(mMoveNumber);
-                mNettyClient.write(moveRequest, true);
+                startService(NetworkService.getSendIntent(getApplicationContext(),
+                        moveRequest, true));
                 view.setVisibility(View.INVISIBLE);
                 view.setOnClickListener(null);
                 mNumOfCardsOnDesk--;
@@ -347,7 +348,7 @@ public class GameActivity extends AppCompatActivity {
             } else if (msg.obj instanceof NewStateNotification) {
                 NewStateNotification newStateNotification = (NewStateNotification) msg.obj;
                 if (newStateNotification.isLastMove()) {
-                    mNettyClient.setHandler(null);
+                    NetworkService.setHandler(null);
                     Intent nextActivity = GameOverActivity.newIntent(getApplicationContext(), SessionInfo.getUserName(),
                             newStateNotification.getGameResult().getWinner(), newStateNotification.getGameResult().getScores());
                     startActivity(nextActivity);
@@ -409,8 +410,8 @@ public class GameActivity extends AppCompatActivity {
                             /*RotateAnimation rotateAnimation = new RotateAnimation(0, 90,
                                     Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
                             rotateAnimation.setDuration(CARD_DISTRIBUTION_ANIMATION_DURATION_MILLIS);*/
-                            RotateAnimation rotateAnimation = (RotateAnimation) getResources()
-                                    .getAnimation(R.anim.animation_card_rotate);
+                            RotateAnimation rotateAnimation = (RotateAnimation) AnimationUtils.loadAnimation(getApplicationContext(),
+                                    R.anim.animation_card_rotate);
                             rotateAnimation.setDuration(CARD_DISTRIBUTION_ANIMATION_DURATION_MILLIS);
                             AnimationSet animationSet = new AnimationSet(false);
                             animationSet.addAnimation(rotateAnimation);
@@ -440,7 +441,8 @@ public class GameActivity extends AppCompatActivity {
                         leaveGameRequest.setAuthToken(SessionInfo.getAuthToken());
                         leaveGameRequest.setGameId(SessionInfo.getGameId());
 
-                        NettyClient.getInstance().write(leaveGameRequest, true);
+                        startService(NetworkService.getSendIntent(getApplicationContext(),
+                                leaveGameRequest, true));
 
                         Context context = GameActivity.this.getApplicationContext();
                         Intent nextActivity = LobbyListActivity.getStartIntent(context);

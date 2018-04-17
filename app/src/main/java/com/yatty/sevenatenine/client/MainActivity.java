@@ -21,6 +21,7 @@ import com.crashlytics.android.Crashlytics;
 import com.yatty.sevenatenine.api.in_commands.ErrorResponse;
 import com.yatty.sevenatenine.api.in_commands.LogInResponse;
 import com.yatty.sevenatenine.api.out_commands.LogInRequest;
+import com.yatty.sevenatenine.client.network.NetworkService;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -29,7 +30,6 @@ public class MainActivity extends AppCompatActivity {
 
     private Button mConnectButton;
     private EditText mNameEditText;
-    private NettyClient mNettyClient;
     private boolean shouldMusicStay;
 
     @Override
@@ -42,8 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
         final MainActivityHandler mainActivityHandler = new MainActivityHandler(this, mNameEditText,
                 mConnectButton);
-        mNettyClient = NettyClient.getInstance();
-        mNettyClient.setHandler(mainActivityHandler);
+        NetworkService.setHandler(mainActivityHandler);
 
         mConnectButton.setOnLongClickListener(new View.OnLongClickListener() {
 
@@ -60,8 +59,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 try {
                     if (!mNameEditText.getText().toString().isEmpty()) {
-                        startService(NetworkService.getConnectionIntent(getApplicationContext(),
-                                "192.168.100.4", 39405));
+                        startService(NetworkService.getConnectionIntent(getApplicationContext()));
                         LogInRequest logInRequest = new LogInRequest();
                         logInRequest.setName(mNameEditText.getText().toString());
                         startService(NetworkService.getSendIntent(getApplicationContext(),
@@ -81,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-//    @Override
+    //    @Override
 //    protected void onResume() {
 //        super.onResume();
 //        shouldMusicStay = false;
@@ -113,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
         return intent;
     }
 
-    public boolean isOnline() {
+    private boolean isOnline() {
         ConnectivityManager connectivityManager =
                 (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = connectivityManager.getActiveNetworkInfo();
@@ -141,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
                 SessionInfo.setAuthToken(logInResponse.getAuthToken());
                 SessionInfo.setUserName(nameEditText.getText().toString());
                 Log.d(TAG, "Connected");
-                NettyClient.getInstance().setHandler(null);
+                NetworkService.setHandler(null);
                 Intent nextActivity = LobbyListActivity.getStartIntent(context);
                 context.startActivity(nextActivity);
                 shouldMusicStay = true;

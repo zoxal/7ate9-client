@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -29,6 +28,7 @@ import com.yatty.sevenatenine.api.out_commands.EnterLobbyRequest;
 import com.yatty.sevenatenine.api.out_commands.LobbyListSubscribeRequest;
 import com.yatty.sevenatenine.api.out_commands.LobbyListUnsubscribeRequest;
 import com.yatty.sevenatenine.api.out_commands.LogOutRequest;
+import com.yatty.sevenatenine.client.network.NetworkService;
 
 import java.util.ArrayList;
 
@@ -42,7 +42,6 @@ public class LobbyListActivity extends AppCompatActivity {
     private RecyclerView mLobbyListRecyclerView;
     private TextView mEmptyLobbyListTextView;
     private LobbyAdapter mLobbyAdapter;
-    private NettyClient mNettyClient;
     private boolean shouldMusicStay;
 
     @Override
@@ -55,8 +54,7 @@ public class LobbyListActivity extends AppCompatActivity {
         mLobbyListRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         final LobbyListActivityHandler lobbyListActivityHandler =
                 new LobbyListActivityHandler();
-        mNettyClient = NettyClient.getInstance();
-        mNettyClient.setHandler(lobbyListActivityHandler);
+        NetworkService.setHandler(lobbyListActivityHandler);
         mAddFloatingActionButton = findViewById(R.id.fab_add_lobby);
         mAddFloatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,7 +72,8 @@ public class LobbyListActivity extends AppCompatActivity {
             }
         });
         LobbyListSubscribeRequest lobbyListSubscribeRequest = new LobbyListSubscribeRequest(SessionInfo.getAuthToken());
-        mNettyClient.write(lobbyListSubscribeRequest, true);
+        startService(NetworkService.getSendIntent(getApplicationContext(),
+                lobbyListSubscribeRequest, true));
     }
 
     @Override
@@ -92,7 +91,8 @@ public class LobbyListActivity extends AppCompatActivity {
             publicLobbyInfo.setLobbyName(createLobbyRequest.getLobbyName());
             publicLobbyInfo.setMaxPlayersNumber(createLobbyRequest.getMaxPlayersNumber());
             SessionInfo.setPublicLobbyInfo(publicLobbyInfo);
-            mNettyClient.write(createLobbyRequest, true);
+            startService(NetworkService.getSendIntent(getApplicationContext(),
+                    createLobbyRequest, true));
         }
     }
 
@@ -195,7 +195,9 @@ public class LobbyListActivity extends AppCompatActivity {
             EnterLobbyRequest enterLobbyRequest = new EnterLobbyRequest(mPublicLobbyInfo.getLobbyId(),
                     SessionInfo.getAuthToken());
             SessionInfo.setPublicLobbyInfo(mPublicLobbyInfo);
-            mNettyClient.write(enterLobbyRequest, true);
+            startService(NetworkService.getSendIntent(getApplicationContext(),
+                    enterLobbyRequest, true));
+
         }
     }
 
@@ -249,10 +251,11 @@ public class LobbyListActivity extends AppCompatActivity {
                 updateLobbyList(lobbyListUpdatedNotification.getLobbyList());
             } else if (msg.obj instanceof EnterLobbyResponse) {
                 Log.d(TAG, "LobbyListActivityHandler: LobbyListUpdatedNotification");
-                mNettyClient.write(new LobbyListUnsubscribeRequest(SessionInfo.getAuthToken()), true);
+                startService(NetworkService.getSendIntent(getApplicationContext(),
+                        new LobbyListUnsubscribeRequest(SessionInfo.getAuthToken()), true));
                 EnterLobbyResponse enterLobbyResponse = (EnterLobbyResponse) msg.obj;
                 SessionInfo.setPrivateLobbyInfo(enterLobbyResponse.getPrivateLobbyInfo());
-                mNettyClient.setHandler(null);
+                NetworkService.setHandler(null);
                 Intent nextActivity = LobbyActivity.getStartIntent(getApplicationContext(),
                         enterLobbyResponse.getPrivateLobbyInfo(), null);
                 startActivity(nextActivity);
@@ -260,10 +263,11 @@ public class LobbyListActivity extends AppCompatActivity {
             } else if (msg.obj instanceof CreateLobbyResponse) {
                 Log.d(TAG, "LobbyListActivityHandler: CreateLobbyResponse");
                 SessionInfo.setGameId(((CreateLobbyResponse) msg.obj).getLobbyId());
-                mNettyClient.write(new LobbyListUnsubscribeRequest(SessionInfo.getAuthToken()), true);
+                startService(NetworkService.getSendIntent(getApplicationContext(),
+                        new LobbyListUnsubscribeRequest(SessionInfo.getAuthToken()), true));
                 CreateLobbyResponse createLobbyResponse = (CreateLobbyResponse) msg.obj;
                 SessionInfo.getPublicLobbyInfo().setLobbyId(createLobbyResponse.getLobbyId());
-                mNettyClient.setHandler(null);
+                NetworkService.setHandler(null);
                 Intent intent = LobbyActivity.getStartIntent(getApplicationContext(), new PrivateLobbyInfo(),
                         createLobbyResponse.getLobbyId());
                 startActivity(intent);
@@ -281,7 +285,8 @@ public class LobbyListActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         LogOutRequest logOutRequest = new LogOutRequest(SessionInfo.getAuthToken());
 
-                        NettyClient.getInstance().write(logOutRequest, true);
+                        startService(NetworkService.getSendIntent(getApplicationContext(),
+                                logOutRequest, true));
 
                         Context context = LobbyListActivity.this.getApplicationContext();
                         Intent nextActivity = MainActivity.getStartIntent(context);

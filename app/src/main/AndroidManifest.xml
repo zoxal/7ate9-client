@@ -51,7 +51,7 @@
             android:exported="true">
         </service>
         <service
-            android:name=".NetworkService"
+            android:name=".network.NetworkService"
             android:enabled="true"
             android:exported="true">
         </service>

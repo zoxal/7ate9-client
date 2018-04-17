@@ -1,4 +1,4 @@
-package com.yatty.sevenatenine.client;
+package com.yatty.sevenatenine.client.network;
 
 import android.os.Handler;
 import android.util.Log;
@@ -29,6 +29,7 @@ import com.yatty.sevenatenine.api.out_commands.LobbyListUnsubscribeRequest;
 import com.yatty.sevenatenine.api.out_commands.LogInRequest;
 import com.yatty.sevenatenine.api.out_commands.LogOutRequest;
 import com.yatty.sevenatenine.api.out_commands.MoveRequest;
+import com.yatty.sevenatenine.client.SessionInfo;
 
 import java.net.InetSocketAddress;
 import java.nio.charset.Charset;
@@ -55,7 +56,7 @@ import io.netty.handler.codec.json.JsonObjectDecoder;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
 
-public class NettyClient {
+class NettyClient {
     private static final String TAG = NettyClient.class.getSimpleName();
     private static final String TYPE_FIELD = "_type";
     private static final String COMMAND_TYPE_FIELD = "_type";

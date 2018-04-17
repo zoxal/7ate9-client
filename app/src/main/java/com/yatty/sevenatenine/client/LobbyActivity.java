@@ -18,6 +18,7 @@ import com.yatty.sevenatenine.api.in_commands.GameStartedNotification;
 import com.yatty.sevenatenine.api.in_commands.LobbyStateChangedNotification;
 import com.yatty.sevenatenine.api.out_commands.LeaveGameRequest;
 import com.yatty.sevenatenine.api.out_commands.LeaveLobbyRequest;
+import com.yatty.sevenatenine.client.network.NetworkService;
 
 public class LobbyActivity extends AppCompatActivity {
     private static final String TAG = LobbyActivity.class.getSimpleName();
@@ -40,14 +41,15 @@ public class LobbyActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 LeaveLobbyRequest leaveLobbyRequest = new LeaveLobbyRequest(mLobbyId);
-                NettyClient.getInstance().write(leaveLobbyRequest, false);
+                startService(NetworkService.getSendIntent(getApplicationContext(),
+                        leaveLobbyRequest, false));
                 Intent lobbyListActivityIntent = LobbyListActivity.getStartIntent(getApplicationContext());
                 startActivity(lobbyListActivityIntent);
                 finish();
             }
         });
         LobbyActivityHandler lobbyActivityHandler = new LobbyActivityHandler();
-        NettyClient.getInstance().setHandler(lobbyActivityHandler);
+        NetworkService.setHandler(lobbyActivityHandler);
     }
 
     public static Intent getStartIntent(Context context, PrivateLobbyInfo privateLobbyInfo, String lobbyId) {
@@ -62,7 +64,7 @@ public class LobbyActivity extends AppCompatActivity {
         public void handleMessage(Message msg) {
             if (msg.obj instanceof GameStartedNotification) {
                 GameStartedNotification gameStartedNotification = (GameStartedNotification) msg.obj;
-                NettyClient.getInstance().setHandler(null);
+                NetworkService.setHandler(null);
                 Intent intent = GameActivity.getStartIntent(getApplicationContext(), gameStartedNotification);
                 startActivity(intent);
                 finish();
@@ -91,7 +93,8 @@ public class LobbyActivity extends AppCompatActivity {
                         leaveGameRequest.setAuthToken(SessionInfo.getAuthToken());
                         leaveGameRequest.setGameId(SessionInfo.getGameId());
 
-                        NettyClient.getInstance().write(leaveGameRequest, true);
+                        startService(NetworkService.getSendIntent(getApplicationContext(),
+                                leaveGameRequest, true));
 
                         Context context = LobbyActivity.this.getApplicationContext();
                         Intent nextActivity = LobbyListActivity.getStartIntent(context);
