@@ -3,7 +3,9 @@ package com.yatty.sevenatenine.api.commands_with_data;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class PublicLobbyInfo implements Parcelable {
+import java.io.Serializable;
+
+public class PublicLobbyInfo implements Parcelable ,Serializable {
     private String lobbyId;
     private String lobbyName;
     private int maxPlayersNumber;

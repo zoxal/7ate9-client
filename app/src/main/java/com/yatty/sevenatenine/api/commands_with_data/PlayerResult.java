@@ -3,7 +3,9 @@ package com.yatty.sevenatenine.api.commands_with_data;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class PlayerResult implements Parcelable {
+import java.io.Serializable;
+
+public class PlayerResult implements Parcelable, Serializable {
     private String playerName;
     private int cardsLeft;
 

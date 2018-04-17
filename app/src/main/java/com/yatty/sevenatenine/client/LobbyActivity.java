@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -54,7 +55,7 @@ public class LobbyActivity extends AppCompatActivity {
 
     public static Intent getStartIntent(Context context, PrivateLobbyInfo privateLobbyInfo, String lobbyId) {
         Intent intent = new Intent(context, LobbyActivity.class);
-        intent.putExtra(EXTRA_PRIVATE_LOBBY_INFO, privateLobbyInfo);
+        intent.putExtra(EXTRA_PRIVATE_LOBBY_INFO, (Parcelable) privateLobbyInfo);
         intent.putExtra(EXTRA_LOBBY_ID, lobbyId);
         return intent;
     }

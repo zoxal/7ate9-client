@@ -8,9 +8,11 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
 import android.view.animation.RotateAnimation;
@@ -46,7 +48,8 @@ public class GameActivity extends AppCompatActivity {
     public static final int CARD_DISTRIBUTION_ANIMATION_DURATION_MILLIS = 300;
 
     private String mGameId;
-    private ImageButton mGetCardImageButton;
+    private ImageButton mUserDeckImageButton;
+    private ImageButton mSecondCardInUserDeckImageButton;
     private ImageButton mCardsOnTableImageButtons[];
     private ImageButton mTopCardImageButton;
     private ImageButton mCardUnderTopCardImageButton;
@@ -121,8 +124,9 @@ public class GameActivity extends AppCompatActivity {
             mCardsOnTableImageButtons[i + firstCardRow.getVirtualChildCount()].setVisibility(View.INVISIBLE);
         }
 
-        mGetCardImageButton = findViewById(R.id.button_get_card);
-        mGetCardImageButton.setOnClickListener(new View.OnClickListener() {
+        mUserDeckImageButton = findViewById(R.id.ib_user_deck);
+        mSecondCardInUserDeckImageButton = findViewById(R.id.ib_second_card_in_user_deck);
+        mUserDeckImageButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
@@ -130,34 +134,57 @@ public class GameActivity extends AppCompatActivity {
 
                 if (mNumOfCardsOnDesk < MAX_NUM_CARDS_ON_TABLE) {
                     if (!mCardArrayList.isEmpty()) {
-                        Card card = mCardArrayList.get(0);
+                        final Card card = mCardArrayList.get(0);
                         mCardArrayList.remove(0);
+                        if (mCardArrayList.isEmpty()) {
+                            mSecondCardInUserDeckImageButton.setVisibility(View.INVISIBLE);
+                        }
                         int i = 0;
                         while (mCardsOnTableImageButtons[i].hasOnClickListeners()) {
                             i++;
                         }
-                        int getCardButtonCoordinates[] = new int[2];
-                        mGetCardImageButton.getLocationOnScreen(getCardButtonCoordinates);
+                        final ImageButton cardOnTableImageButton = mCardsOnTableImageButtons[i];
+                        int userDeckCoordinates[] = new int[2];
+                        mUserDeckImageButton.getLocationOnScreen(userDeckCoordinates);
                         int cardCoordinates[] = new int[2];
-                        mCardsOnTableImageButtons[i].getLocationOnScreen(cardCoordinates);
+                        cardOnTableImageButton.getLocationOnScreen(cardCoordinates);
                         TranslateAnimation animation = new TranslateAnimation(
-                                TranslateAnimation.ABSOLUTE,
-                                getCardButtonCoordinates[0] - cardCoordinates[0],
                                 TranslateAnimation.RELATIVE_TO_SELF,
                                 0,
                                 TranslateAnimation.ABSOLUTE,
-                                getCardButtonCoordinates[1] - cardCoordinates[1],
+                                cardCoordinates[0] - userDeckCoordinates[0],
                                 TranslateAnimation.RELATIVE_TO_SELF,
-                                0
+                                0,
+                                TranslateAnimation.ABSOLUTE,
+                                cardCoordinates[1] - userDeckCoordinates[1]
                         );
                         animation.setDuration(CARD_DISTRIBUTION_ANIMATION_DURATION_MILLIS);
+                        final Drawable cardDrawable = getDrawableCard(card);
+                        final Drawable shirtDrawable = ContextCompat
+                                .getDrawable(getApplicationContext(), R.drawable.shirt);
+                        animation.setAnimationListener(new Animation.AnimationListener() {
+                            @Override
+                            public void onAnimationStart(Animation animation) {
+                                mUserDeckImageButton.setImageDrawable(cardDrawable);
+                            }
 
-                        Drawable drawable = getDrawableCard(card);
-                        mCardsOnTableImageButtons[i].setImageDrawable(drawable);
-                        mCardsOnTableImageButtons[i].setOnClickListener(new CardButtonOnClickListener(card));
-                        mCardsOnTableImageButtons[i].setVisibility(View.VISIBLE);
-                        //mCardsOnTableImageButtons[i].bringToFront();
-                        //mCardsOnTableImageButtons[i].startAnimation(animation);
+                            @Override
+                            public void onAnimationEnd(Animation animation) {
+                                cardOnTableImageButton.setImageDrawable(cardDrawable);
+                                cardOnTableImageButton.setOnClickListener(new CardButtonOnClickListener(card));
+                                cardOnTableImageButton.setVisibility(View.VISIBLE);
+                                mUserDeckImageButton.setImageDrawable(shirtDrawable);
+                            }
+
+                            @Override
+                            public void onAnimationRepeat(Animation animation) {
+
+                            }
+                        });
+
+                        mUserDeckImageButton.startAnimation(animation);
+                        //mUserDeckImageButton.bringToFront();
+
                         mNumOfCardsOnDesk++;
                         mUserCardsNumTextView.setText(String.valueOf(Integer.parseInt(
                                 mUserCardsNumTextView.getText().toString()) - 1));

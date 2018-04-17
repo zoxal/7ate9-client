@@ -3,7 +3,9 @@ package com.yatty.sevenatenine.api.commands_with_data;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class PlayerInfo implements Parcelable {
+import java.io.Serializable;
+
+public class PlayerInfo implements Parcelable, Serializable {
     private String name;
 
     protected PlayerInfo(Parcel in) {
