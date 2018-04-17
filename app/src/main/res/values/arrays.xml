@@ -5,10 +5,14 @@
         <item>3</item>
         <item>4</item>
     </string-array>
-    <string-array name="backgrounds_list">
+    <string-array name="background_pictures">
         <item>Wood</item>
+        <item>Gray</item>
+        <item>Red</item>
     </string-array>
-    <string name="backgrounds_list_default">
-        <item>Wood</item>>
-    </string>>
+    <integer-array name="values_background_pictures">
+        <item>@drawable/table</item>
+        <item>@drawable/shirt</item>
+        <item>@drawable/b1</item>
+    </integer-array>
 </resources>

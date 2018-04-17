@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -196,6 +197,8 @@ public class GameActivity extends AppCompatActivity {
         hideStatusBar();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
+        ConstraintLayout parentLayout = findViewById(R.id.cl_main_layout);
+        parentLayout.setBackground(ApplicationSettings.getBackgroundPicture(this));
         GameStartedNotification gameStartedNotification = getIntent().getParcelableExtra(EXTRA_GAME_STARTED_EVENT);
         initUi(gameStartedNotification);
         mTopCard = gameStartedNotification.getFirstCard();

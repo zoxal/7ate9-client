@@ -9,4 +9,17 @@
             android:summary="Enable background music"
             android:title="Music"/>
     </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="Visual Settings">
+        <ListPreference
+            android:defaultValue="1"
+            android:dialogTitle="Choose background picture"
+            android:entries="@array/background_pictures"
+            android:entryValues="@array/values_background_pictures"
+            android:key="@string/key_background_picture"
+            android:summary="Tap to choose background picture"
+            android:title="Background image"
+            />
+    </PreferenceCategory>
 </PreferenceScreen>
