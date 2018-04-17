@@ -1,24 +1,24 @@
 package com.yatty.sevenatenine.client;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 
 public class ApplicationSettings {
 
-    public static boolean isMusicEnabled(AppCompatActivity appCompatActivity) {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(appCompatActivity);
-        return sharedPreferences.getBoolean(appCompatActivity.getResources()
+    public static boolean isMusicEnabled(Context context) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return sharedPreferences.getBoolean(context.getResources()
                 .getString(R.string.key_is_music_enabled), true);
     }
 
     //TODO: test this
-    public static Drawable getBackgroundPicture(AppCompatActivity appCompatActivity) {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(appCompatActivity);
+    public static Drawable getBackgroundPicture(Context context) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         int drawableId = sharedPreferences.getInt(String.valueOf(R.string.key_background_picture)
                 , R.drawable.table);
-        return ContextCompat.getDrawable(appCompatActivity, drawableId);
+        return ContextCompat.getDrawable(context, drawableId);
     }
 }

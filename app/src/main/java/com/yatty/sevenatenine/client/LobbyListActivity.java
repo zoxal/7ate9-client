@@ -132,7 +132,7 @@ public class LobbyListActivity extends AppCompatActivity {
 //        );
 //        Log.i(TAG, "getPreferences: " + musicEnabled);
 
-        if (PreferenceFragment.musicEnabled) {
+        if (ApplicationSettings.isMusicEnabled(this)){
             BackgroundMusicService.getInstance(this.getApplicationContext()).start();
         }
     }

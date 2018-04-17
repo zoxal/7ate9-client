@@ -69,7 +69,7 @@ public class SettingsActivity extends PreferenceActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (PreferenceFragment.musicEnabled) {
+        if (ApplicationSettings.isMusicEnabled(this)) {
             BackgroundMusicService.getInstance(this.getApplicationContext()).start();
         }
     }
