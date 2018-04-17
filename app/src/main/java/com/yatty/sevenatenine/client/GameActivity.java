@@ -36,15 +36,12 @@ import java.util.ArrayList;
 public class GameActivity extends AppCompatActivity {
     public static final String TAG = GameActivity.class.getSimpleName();
     private static final String EXTRA_GAME_STARTED_EVENT = "game_started_event";
-    public static final String PLUS_MINUS_SYMBOL = "±";
-    public static final String NEW_LINE_SYMBOL = "\n";
 
     private static final int VIBRATE_TIME_MS = 100;
     private static final int LONG_VIBRATE_TIME_MS = 400;
     private static boolean notifyMistake = false;
     public static final int MAX_NUM_CARDS_ON_TABLE = 8;
     public static final int MAX_CARD = 10;
-    private static final String INITIAL_COUNTER_VALUE = "0";
     public static final int CARD_DISTRIBUTION_ANIMATION_DURATION_MILLIS = 300;
 
     private String mGameId;
@@ -183,7 +180,6 @@ public class GameActivity extends AppCompatActivity {
                         });
 
                         mUserDeckImageButton.startAnimation(animation);
-                        //mUserDeckImageButton.bringToFront();
 
                         mNumOfCardsOnDesk++;
                         mUserCardsNumTextView.setText(String.valueOf(Integer.parseInt(
@@ -347,6 +343,23 @@ public class GameActivity extends AppCompatActivity {
                 view.setVisibility(View.INVISIBLE);
                 view.setOnClickListener(null);
                 mNumOfCardsOnDesk--;
+                int cardViewCoordinates[] = new int[2];
+                view.getLocationOnScreen(cardViewCoordinates);
+                int topCardCoordinates[] = new int[2];
+                mTopCardImageButton.getLocationOnScreen(topCardCoordinates);
+                TranslateAnimation animation = new TranslateAnimation(
+                        TranslateAnimation.ABSOLUTE,
+                        cardViewCoordinates[0] - topCardCoordinates[0],
+                        TranslateAnimation.RELATIVE_TO_SELF,
+                        0,
+                        TranslateAnimation.ABSOLUTE,
+                        cardViewCoordinates[1] - topCardCoordinates[1],
+                        TranslateAnimation.RELATIVE_TO_SELF,
+                        0
+                );
+                animation.setDuration(CARD_DISTRIBUTION_ANIMATION_DURATION_MILLIS);
+                mCardUnderTopCardImageButton.setImageDrawable(mTopCardImageButton.getDrawable());
+                mTopCardImageButton.startAnimation(animation);
                 BruteForceGuard.forgive();
             } else {
                 BruteForceGuard.recordMistake();
