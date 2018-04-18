@@ -10,9 +10,9 @@
         <item>Gray</item>
         <item>Red</item>
     </string-array>
-    <integer-array name="values_background_pictures">
-        <item>@drawable/table</item>
-        <item>@drawable/shirt</item>
-        <item>@drawable/b1</item>
-    </integer-array>
+    <string-array name="values_background_pictures">
+        <item>wood</item>
+        <item>grey</item>
+        <item>red</item>
+    </string-array>
 </resources>

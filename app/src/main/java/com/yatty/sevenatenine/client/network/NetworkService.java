@@ -20,7 +20,7 @@ public class NetworkService extends Service {
     private static final int ACTION_SEND_MESSAGE = 2;
     private static final int ACTION_DISCONNECT = 99;
 
-    private static String sIp = "192.168.100.4";
+    private static String sIp = "192.168.0.103";
     private static int sPort = 39405;
 
     private ExecutorService mExecutorService;
