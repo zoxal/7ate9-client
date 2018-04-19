@@ -3,7 +3,9 @@ package com.yatty.sevenatenine.client;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
-public class PreferenceFragment extends android.preference.PreferenceFragment {
+public class
+
+PreferenceFragment extends android.preference.PreferenceFragment {
 
     public static final String TAG = "PreferenceFragment";
 
