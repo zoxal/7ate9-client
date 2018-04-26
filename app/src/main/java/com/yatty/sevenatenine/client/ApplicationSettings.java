@@ -21,7 +21,6 @@ public class ApplicationSettings {
                 .getString(R.string.key_is_music_enabled), true);
     }
 
-    //TODO: test this
     public static Drawable getBackgroundPicture(Context context) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         String backgroundPicture = sharedPreferences.getString(context.getResources()

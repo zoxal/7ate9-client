@@ -34,13 +34,12 @@ public class CreateLobbyActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                if (mLobbyNameEditText.getText().toString().isEmpty()) {
+                if (!mLobbyNameEditText.getText().toString().isEmpty()) {
                     CreateLobbyRequest createLobbyRequest = new CreateLobbyRequest();
                     createLobbyRequest.setLobbyName(mLobbyNameEditText.getText().toString());
                     createLobbyRequest.setMaxPlayersNumber(Integer.parseInt(mPlayersNumberSpinner.getSelectedItem().toString()));
                     createLobbyRequest.setAuthToken(SessionInfo.getAuthToken());
                     Intent intentWithData = LobbyListActivity.getIntentWithData(getApplicationContext(), createLobbyRequest);
-                    // TODO set public lobby info
                     setResult(RESULT_OK, intentWithData);
                     finish();
                 } else {

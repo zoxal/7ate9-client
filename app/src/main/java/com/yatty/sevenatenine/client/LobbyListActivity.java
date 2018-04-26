@@ -90,6 +90,7 @@ public class LobbyListActivity extends AppCompatActivity {
             PublicLobbyInfo publicLobbyInfo = new PublicLobbyInfo();
             publicLobbyInfo.setLobbyName(createLobbyRequest.getLobbyName());
             publicLobbyInfo.setMaxPlayersNumber(createLobbyRequest.getMaxPlayersNumber());
+            publicLobbyInfo.setCurrentPlayersNumber(1);
             SessionInfo.setPublicLobbyInfo(publicLobbyInfo);
             startService(NetworkService.getSendIntent(getApplicationContext(),
                     createLobbyRequest, true));
@@ -132,7 +133,7 @@ public class LobbyListActivity extends AppCompatActivity {
 //        );
 //        Log.i(TAG, "getPreferences: " + musicEnabled);
 
-        if (ApplicationSettings.isMusicEnabled(this)){
+        if (ApplicationSettings.isMusicEnabled(this)) {
             BackgroundMusicService.getInstance(this.getApplicationContext()).start();
         }
     }
