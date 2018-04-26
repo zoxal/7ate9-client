@@ -11,10 +11,12 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
@@ -58,19 +60,21 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 try {
+                    if (!isOnline()) {
+                        Log.d(TAG, "Status: offline");
+                        showSnackbar("No connection.");
+                        return;
+                    }
                     if (!mNameEditText.getText().toString().isEmpty()) {
                         startService(NetworkService.getConnectionIntent(getApplicationContext()));
                         LogInRequest logInRequest = new LogInRequest();
                         logInRequest.setName(mNameEditText.getText().toString());
                         startService(NetworkService.getSendIntent(getApplicationContext(),
                                 logInRequest, false));
-                        //mNettyClient.write(logInRequest, false);
                         view.setClickable(false);
-                        Snackbar.make(view, "Connecting...", Snackbar.LENGTH_SHORT).show();
-                        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+                        showSnackbar("Connecting...");
                     } else {
-                        Snackbar.make(view, "Enter name.", Snackbar.LENGTH_SHORT).show();
-                        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+                        showSnackbar("Enter nickname.");
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -115,7 +119,18 @@ public class MainActivity extends AppCompatActivity {
         ConnectivityManager connectivityManager =
                 (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = connectivityManager.getActiveNetworkInfo();
-        return netInfo != null && netInfo.isConnectedOrConnecting();
+        NetworkInfo wifiInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        return (netInfo != null && netInfo.isConnected()) || (wifiInfo != null && wifiInfo.isConnected());
+    }
+
+    private void showSnackbar(String title) {
+        FrameLayout parentFrameLayout = findViewById(R.id.fl_parent);
+        Snackbar snackbar = Snackbar.make(parentFrameLayout,
+                title, Snackbar.LENGTH_SHORT);
+        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) snackbar.getView().getLayoutParams();
+        params.gravity = Gravity.TOP;
+        snackbar.getView().setLayoutParams(params);
+        snackbar.show();
     }
 
     class MainActivityHandler extends Handler {
