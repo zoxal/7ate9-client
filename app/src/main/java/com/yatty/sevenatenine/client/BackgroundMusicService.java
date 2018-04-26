@@ -4,12 +4,12 @@ import android.content.Context;
 import android.media.MediaPlayer;
 
 public class BackgroundMusicService {
-    private static final String TAG = "MusicManager";
+    private static final String TAG = BackgroundMusicService.class.getSimpleName();
     private static MediaPlayer sMediaPlayer;
     private static BackgroundMusicService instance;
 
     private BackgroundMusicService(Context context) {
-        sMediaPlayer = MediaPlayer.create(context, R.raw.background_sound);
+        sMediaPlayer = MediaPlayer.create(context, R.raw.music_background);
         sMediaPlayer.setLooping(true);
     }
 
@@ -43,10 +43,6 @@ public class BackgroundMusicService {
         }
         sMediaPlayer.stop();
     }
-
-//    public static void updateVolumeFromPrefs(Context context, float volume) {
-//        sMediaPlayer.setVolume(volume, volume);
-//    }
 
     public void release() {
         if (sMediaPlayer.isPlaying()) {

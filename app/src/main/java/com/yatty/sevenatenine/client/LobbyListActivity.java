@@ -121,18 +121,6 @@ public class LobbyListActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-//        SharedPreferences sharedPreferences = getPreferences(Context.MODE_PRIVATE);
-//        boolean musicEnabled = sharedPreferences.getBoolean(
-//                getResources().getString(R.string.key_is_music_enabled), true
-//        );
-//        Log.i(TAG, "getPreferences: " + musicEnabled);
-
-//        SharedPreferences sharedPreferences = getSharedPreferences();
-//        boolean musicEnabled = sharedPreferences.getBoolean(
-//                getResources().getString(R.string.key_is_music_enabled), true
-//        );
-//        Log.i(TAG, "getPreferences: " + musicEnabled);
-
         if (ApplicationSettings.isMusicEnabled(this)) {
             BackgroundMusicService.getInstance(this.getApplicationContext()).start();
         }

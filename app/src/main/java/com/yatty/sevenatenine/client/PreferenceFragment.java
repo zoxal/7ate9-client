@@ -35,7 +35,6 @@ PreferenceFragment extends android.preference.PreferenceFragment
         super.onPause();
     }
 
-    // TODO: test this code
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         Log.d(TAG, "onSharedPreferenceChanged: SharedPreferences key: " + key);
