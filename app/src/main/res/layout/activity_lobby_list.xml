@@ -36,18 +36,9 @@
         android:id="@+id/fab_settings"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
         android:layout_margin="@dimen/floating_action_button_margin"
         app:srcCompat="@drawable/ic_settings_white"/>
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_exit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@id/fab_settings"
-        android:layout_below="@+id/fab_settings"
-        app:srcCompat="@drawable/ic_exit_white"
-        />
 
 </RelativeLayout>

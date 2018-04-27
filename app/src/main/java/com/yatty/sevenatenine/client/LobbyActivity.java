@@ -10,15 +10,12 @@ import android.os.Message;
 import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.yatty.sevenatenine.api.commands_with_data.PrivateLobbyInfo;
 import com.yatty.sevenatenine.api.in_commands.GameStartedNotification;
 import com.yatty.sevenatenine.api.in_commands.LobbyStateChangedNotification;
 import com.yatty.sevenatenine.api.out_commands.LeaveGameRequest;
-import com.yatty.sevenatenine.api.out_commands.LeaveLobbyRequest;
 import com.yatty.sevenatenine.client.network.NetworkService;
 
 public class LobbyActivity extends AppCompatActivity {
@@ -27,7 +24,6 @@ public class LobbyActivity extends AppCompatActivity {
     private static final String EXTRA_LOBBY_ID = "lobby_id";
 
     private TextView mPlayersNumberTextView;
-    private ImageButton mLeaveLobbyImageButton;
     private String mLobbyId;
 
     @Override
@@ -36,19 +32,7 @@ public class LobbyActivity extends AppCompatActivity {
         Intent intent = getIntent();
         mLobbyId = getIntent().getExtras().getString(EXTRA_LOBBY_ID);
         setContentView(R.layout.activity_lobby);
-        mLeaveLobbyImageButton = findViewById(R.id.ib_leave_lobby);
         mPlayersNumberTextView = findViewById(R.id.tv_lobby_players);
-        mLeaveLobbyImageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                LeaveLobbyRequest leaveLobbyRequest = new LeaveLobbyRequest(mLobbyId);
-                startService(NetworkService.getSendIntent(getApplicationContext(),
-                        leaveLobbyRequest, false));
-                Intent lobbyListActivityIntent = LobbyListActivity.getStartIntent(getApplicationContext());
-                startActivity(lobbyListActivityIntent);
-                finish();
-            }
-        });
         LobbyActivityHandler lobbyActivityHandler = new LobbyActivityHandler();
         NetworkService.setHandler(lobbyActivityHandler);
     }
@@ -97,9 +81,10 @@ public class LobbyActivity extends AppCompatActivity {
                         startService(NetworkService.getSendIntent(getApplicationContext(),
                                 leaveGameRequest, true));
 
-                        Context context = LobbyActivity.this.getApplicationContext();
+                        Context context = getApplicationContext();
                         Intent nextActivity = LobbyListActivity.getStartIntent(context);
                         context.startActivity(nextActivity);
+                        finish();
                     }
                 })
                 .setNegativeButton("No", null).show();

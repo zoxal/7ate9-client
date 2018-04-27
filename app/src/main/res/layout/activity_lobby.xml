@@ -22,17 +22,6 @@
         android:layout_marginTop="16dp"
         android:text="@string/title_players_in_lobby"/>
 
-    <ImageButton
-        android:background="@drawable/shape_image_button_exit"
-        android:id="@+id/ib_leave_lobby"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentTop="true"
-        android:layout_margin="16dp"
-        app:srcCompat="@drawable/ic_exit_white"
-        />
-
     <TextView
         android:id="@+id/tv_lobby_players"
         android:layout_width="wrap_content"

@@ -467,7 +467,8 @@ public class GameActivity extends AppCompatActivity {
                             mThirdPlayerDeck.getLocationOnScreen(playerDeckCoordinates);
                             animation = new TranslateAnimation(
                                     TranslateAnimation.ABSOLUTE,
-                                    playerDeckCoordinates[0] - topCardButtonCoordinates[0],
+                                    playerDeckCoordinates[0] - topCardButtonCoordinates[0]
+                                            - mThirdPlayerDeck.getWidth(),
                                     TranslateAnimation.RELATIVE_TO_SELF,
                                     0,
                                     TranslateAnimation.ABSOLUTE,
