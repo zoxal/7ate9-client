@@ -13,9 +13,9 @@ public class NewStateNotification implements InCommandInterface {
     private int moveNumber;
     private String moveWinner;
     private boolean lastMove;
+    private Boolean stalemate;
     private Card nextCard;
     private GameResult gameResult;
-    private Boolean stalemate;
 
     protected NewStateNotification(Parcel in) {
         moveNumber = in.readInt();

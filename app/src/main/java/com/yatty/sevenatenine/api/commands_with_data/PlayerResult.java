@@ -6,11 +6,11 @@ import android.os.Parcelable;
 import java.io.Serializable;
 
 public class PlayerResult implements Parcelable, Serializable {
-    private String playerName;
+    private String playerId;
     private int cardsLeft;
 
     protected PlayerResult(Parcel in) {
-        playerName = in.readString();
+        playerId = in.readString();
         cardsLeft = in.readInt();
     }
 
@@ -33,12 +33,12 @@ public class PlayerResult implements Parcelable, Serializable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(playerName);
+        dest.writeString(playerId);
         dest.writeInt(cardsLeft);
     }
 
-    public String getPlayerName() {
-        return playerName;
+    public String getPlayerId() {
+        return playerId;
     }
 
     public int getCardsLeft() {

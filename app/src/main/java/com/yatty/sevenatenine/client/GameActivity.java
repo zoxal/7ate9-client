@@ -99,7 +99,7 @@ public class GameActivity extends AppCompatActivity {
         PlayerInfo otherPlayersInfo[] = new PlayerInfo[allPlayersInfo.length - 1];
 
         for (int i = 0, j = 0; i < allPlayersInfo.length; i++) {
-            if (!allPlayersInfo[i].getName().equals(SessionInfo.getUserName())) {
+            if (!allPlayersInfo[i].getPlayerId().equals(SessionInfo.getUserName())) {
                 otherPlayersInfo[j] = allPlayersInfo[i];
                 j++;
             }
@@ -108,15 +108,15 @@ public class GameActivity extends AppCompatActivity {
         switch (otherPlayersInfo.length) {
             case 3:
                 mThirdPlayerDeck.setVisibility(View.VISIBLE);
-                mThirdPlayerNameTextView.setText(otherPlayersInfo[2].getName());
+                mThirdPlayerNameTextView.setText(otherPlayersInfo[2].getPlayerId());
                 mThirdPlayerCardsNumTextView.setText(String.valueOf(cardsNum));
             case 2:
                 mSecondPlayerDeck.setVisibility(View.VISIBLE);
-                mSecondPlayerNameTextView.setText(otherPlayersInfo[1].getName());
+                mSecondPlayerNameTextView.setText(otherPlayersInfo[1].getPlayerId());
                 mSecondPlayerCardsNumTextView.setText(String.valueOf(cardsNum));
             case 1:
                 mFirstPlayerDeck.setVisibility(View.VISIBLE);
-                mFirstPlayerNameTextView.setText(otherPlayersInfo[0].getName());
+                mFirstPlayerNameTextView.setText(otherPlayersInfo[0].getPlayerId());
                 mFirstPlayerCardsNumTextView.setText(String.valueOf(cardsNum));
         }
         mUserCardsNumTextView.setText(String.valueOf(cardsNum));

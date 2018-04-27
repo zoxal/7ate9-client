@@ -41,7 +41,7 @@ public class LobbyActivity extends AppCompatActivity {
         NetworkService.setHandler(lobbyActivityHandler);
         Log.d(TAG, "Lobby players:");
         for (PlayerInfo playerInfo : SessionInfo.getPrivateLobbyInfo().getPlayers()) {
-            Log.d(TAG, playerInfo.getName());
+            Log.d(TAG, playerInfo.getPlayerId());
         }
         mLobbyPlayersListView.setAdapter(new LobbyPlayersListAdapter(this, SessionInfo
                 .getPrivateLobbyInfo().getPlayers()));
@@ -127,7 +127,7 @@ public class LobbyActivity extends AppCompatActivity {
             }
 
             ((TextView) listView.findViewById(android.R.id.text1))
-                    .setText(playerInfo.getName());
+                    .setText(playerInfo.getPlayerId());
             ((TextView) listView.findViewById(android.R.id.text2))
                     .setText("rating");
             return listView;

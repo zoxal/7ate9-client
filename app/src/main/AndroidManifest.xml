@@ -2,9 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.yatty.sevenatenine.client">
 
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:playerId="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:playerId="android.permission.INTERNET"/>
+    <uses-permission android:playerId="android.permission.VIBRATE"/>
 
     <application
         android:allowBackup="true"
@@ -14,44 +14,44 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
+            android:playerId=".MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:playerId="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:playerId="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
         <activity
-            android:name=".GameActivity"
+            android:playerId=".GameActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".GameOverActivity"
+            android:playerId=".GameOverActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".LobbyListActivity"
+            android:playerId=".LobbyListActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".LobbyActivity"
+            android:playerId=".LobbyActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".CreateLobbyActivity"
+            android:playerId=".CreateLobbyActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".SettingsActivity"
+            android:playerId=".SettingsActivity"
             android:screenOrientation="portrait"/>
 
         <meta-data
-            android:name="io.fabric.ApiKey"
+            android:playerId="io.fabric.ApiKey"
             android:value="4105998427a115f63abdde2ae901d1a80bfe904c"/>
 
         <service
-            android:name=".BackgroundMusicService"
+            android:playerId=".BackgroundMusicService"
             android:enabled="true"
             android:exported="true">
         </service>
         <service
-            android:name=".network.NetworkService"
+            android:playerId=".network.NetworkService"
             android:enabled="true"
             android:exported="true">
         </service>

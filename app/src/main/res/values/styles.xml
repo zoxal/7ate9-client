@@ -1,56 +1,56 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style playerId="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item playerId="colorPrimary">@color/colorPrimary</item>
+        <item playerId="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item playerId="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="TextStyleSmall" parent="android:TextAppearance.Small">
-        <item name="android:textColor">@color/black</item>
-        <item name="android:textStyle">bold</item>
+    <style playerId="TextStyleSmall" parent="android:TextAppearance.Small">
+        <item playerId="android:textColor">@color/black</item>
+        <item playerId="android:textStyle">bold</item>
     </style>
 
-    <style name="TextStyleMedium" parent="android:TextAppearance.Medium">
-        <item name="android:textColor">@color/black</item>
+    <style playerId="TextStyleMedium" parent="android:TextAppearance.Medium">
+        <item playerId="android:textColor">@color/black</item>
     </style>
 
-    <style name="TextStyleMediumBold" parent="android:TextAppearance.Medium">
-        <item name="android:textColor">@color/black</item>
-        <item name="android:textStyle">bold</item>
+    <style playerId="TextStyleMediumBold" parent="android:TextAppearance.Medium">
+        <item playerId="android:textColor">@color/black</item>
+        <item playerId="android:textStyle">bold</item>
     </style>
 
-    <style name="TextStyleLarge" parent="android:TextAppearance.Large">
-        <item name="android:textColor">@color/black</item>
+    <style playerId="TextStyleLarge" parent="android:TextAppearance.Large">
+        <item playerId="android:textColor">@color/black</item>
     </style>
 
-    <style name="TextStyleLargeBold" parent="android:TextAppearance.Large">
-        <item name="android:textColor">@color/black</item>
-        <item name="android:textStyle">bold</item>
+    <style playerId="TextStyleLargeBold" parent="android:TextAppearance.Large">
+        <item playerId="android:textColor">@color/black</item>
+        <item playerId="android:textStyle">bold</item>
     </style>
 
-    <style name="ButtonStyle" parent="Widget.AppCompat.Button.Colored">
-        <item name="android:textAllCaps">false</item>
+    <style playerId="ButtonStyle" parent="Widget.AppCompat.Button.Colored">
+        <item playerId="android:textAllCaps">false</item>
     </style>
 
-    <style name="ImageButtonStyleCard" parent="Base.Widget.AppCompat.ImageButton">
-        <item name="android:layout_width">62dp</item>
-        <item name="android:layout_height">90dp</item>
-        <item name="android:layout_margin">5dp</item>
-        <item name="android:layout_weight">1</item>
-        <item name="android:scaleType">fitXY</item>
-        <item name="android:background">@drawable/shape_game_card</item>
-        <item name="android:src">@drawable/r1</item>
+    <style playerId="ImageButtonStyleCard" parent="Base.Widget.AppCompat.ImageButton">
+        <item playerId="android:layout_width">62dp</item>
+        <item playerId="android:layout_height">90dp</item>
+        <item playerId="android:layout_margin">5dp</item>
+        <item playerId="android:layout_weight">1</item>
+        <item playerId="android:scaleType">fitXY</item>
+        <item playerId="android:background">@drawable/shape_game_card</item>
+        <item playerId="android:src">@drawable/r1</item>
     </style>
 
-    <style name="ImageButtonStyleCardHorizontal" parent="Base.Widget.AppCompat.ImageButton">
-        <item name="android:layout_width">90dp</item>
-        <item name="android:layout_height">62dp</item>
-        <item name="android:layout_margin">5dp</item>
+    <style playerId="ImageButtonStyleCardHorizontal" parent="Base.Widget.AppCompat.ImageButton">
+        <item playerId="android:layout_width">90dp</item>
+        <item playerId="android:layout_height">62dp</item>
+        <item playerId="android:layout_margin">5dp</item>
 
-        <item name="android:scaleType">fitXY</item>
-        <item name="android:src">@drawable/shirt_horizontal</item>
+        <item playerId="android:scaleType">fitXY</item>
+        <item playerId="android:src">@drawable/shirt_horizontal</item>
     </style>
 </resources>
