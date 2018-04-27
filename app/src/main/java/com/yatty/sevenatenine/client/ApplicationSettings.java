@@ -21,6 +21,12 @@ public class ApplicationSettings {
                 .getString(R.string.key_is_music_enabled), true);
     }
 
+    public static boolean areGameSoundsEnabled(Context context) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return sharedPreferences.getBoolean(context.getResources()
+                .getString(R.string.key_are_game_sounds_enabled), true);
+    }
+
     public static Drawable getBackgroundPicture(Context context) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         String backgroundPicture = sharedPreferences.getString(context.getResources()

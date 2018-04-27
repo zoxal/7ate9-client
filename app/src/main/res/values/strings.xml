@@ -106,6 +106,7 @@
     <string name="action_apply">apply</string>
     <string name="action_cancel">Cancel</string>
     <string name="key_is_music_enabled">key_music_on</string>
+    <string name="key_are_game_sounds_enabled">key_are_game_sounds_enabled</string>
     <string name="key_is_effects_on">key_effects_on</string>
     <string name="key_background_picture">key_background_picture</string>
 </resources>

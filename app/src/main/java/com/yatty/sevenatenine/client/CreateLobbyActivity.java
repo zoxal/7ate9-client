@@ -2,7 +2,6 @@ package com.yatty.sevenatenine.client;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -22,6 +21,7 @@ public class CreateLobbyActivity extends AppCompatActivity {
     private Spinner mPlayersNumberSpinner;
     private EditText mLobbyNameEditText;
     private Button mCreateLobbyButton;
+    private boolean shouldMusicStay = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +41,7 @@ public class CreateLobbyActivity extends AppCompatActivity {
                     createLobbyRequest.setAuthToken(SessionInfo.getAuthToken());
                     Intent intentWithData = LobbyListActivity.getIntentWithData(getApplicationContext(), createLobbyRequest);
                     setResult(RESULT_OK, intentWithData);
+                    shouldMusicStay = true;
                     finish();
                 } else {
                     showSnackbar("Enter lobby name.");
@@ -57,17 +58,15 @@ public class CreateLobbyActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        BackgroundMusicService.getInstance(this.getApplicationContext()).pause();
+        if (!shouldMusicStay) {
+            BackgroundMusicService.getInstance(this.getApplicationContext()).pause();
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        SharedPreferences sharedPreferences = getPreferences(Context.MODE_PRIVATE);
-        boolean musicEnabled = sharedPreferences.getBoolean(
-                getResources().getString(R.string.key_is_music_enabled), false
-        );
-        if (musicEnabled) {
+        if (ApplicationSettings.isMusicEnabled(this)) {
             BackgroundMusicService.getInstance(this.getApplicationContext()).start();
         }
     }

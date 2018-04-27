@@ -212,7 +212,9 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void playSound(int soundId) {
-        mSoundPool.play(soundId, 1.0f, 1.0f, 1, 0, 1.0f);
+        if (ApplicationSettings.areGameSoundsEnabled(this)) {
+            mSoundPool.play(soundId, 1.0f, 1.0f, 1, 0, 1.0f);
+        }
     }
 
     @Override

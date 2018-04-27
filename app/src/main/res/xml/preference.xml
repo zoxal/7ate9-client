@@ -3,14 +3,19 @@
     <PreferenceCategory
         android:title="Volume Settings">
         <SwitchPreference
-            android:id="@+id/enMusicSwitch"
             android:defaultValue="true"
             android:key="@string/key_is_music_enabled"
             android:summary="Enable background music"
             android:title="Music"/>
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/key_are_game_sounds_enabled"
+            android:summary="Enable game sounds"
+            android:title="Game sounds"/>
     </PreferenceCategory>
 
-   <PreferenceCategory
+    <PreferenceCategory
         android:title="Visual Settings">
         <ListPreference
             android:defaultValue="wood"

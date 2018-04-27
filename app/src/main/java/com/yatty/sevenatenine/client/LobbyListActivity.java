@@ -97,25 +97,12 @@ public class LobbyListActivity extends AppCompatActivity {
         }
     }
 
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        shouldMusicStay = false;
-//        startService(new Intent(getApplicationContext(), BackgroundMusicService.class));
-//    }
-//
-//    @Override
-//    protected void onPause() {
-//        super.onPause();
-//        if (!shouldMusicStay) {
-//            stopService(new Intent(getApplicationContext(), BackgroundMusicService.class));
-//        }
-//    }
-
     @Override
     protected void onPause() {
         super.onPause();
-        BackgroundMusicService.getInstance(this.getApplicationContext()).pause();
+        if (!shouldMusicStay) {
+            BackgroundMusicService.getInstance(this.getApplicationContext()).pause();
+        }
     }
 
     @Override
@@ -248,6 +235,7 @@ public class LobbyListActivity extends AppCompatActivity {
                 Intent nextActivity = LobbyActivity.getStartIntent(getApplicationContext(),
                         enterLobbyResponse.getPrivateLobbyInfo(), null);
                 startActivity(nextActivity);
+                shouldMusicStay = true;
                 finish();
             } else if (msg.obj instanceof CreateLobbyResponse) {
                 Log.d(TAG, "LobbyListActivityHandler: CreateLobbyResponse");

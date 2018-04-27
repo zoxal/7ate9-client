@@ -24,6 +24,7 @@ public class LobbyActivity extends AppCompatActivity {
     private static final String EXTRA_LOBBY_ID = "lobby_id";
 
     private TextView mPlayersNumberTextView;
+    private boolean shouldMusicStay = false;
     private String mLobbyId;
 
     @Override
@@ -84,6 +85,7 @@ public class LobbyActivity extends AppCompatActivity {
                         Context context = getApplicationContext();
                         Intent nextActivity = LobbyListActivity.getStartIntent(context);
                         context.startActivity(nextActivity);
+                        shouldMusicStay = true;
                         finish();
                     }
                 })
@@ -93,7 +95,9 @@ public class LobbyActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        BackgroundMusicService.getInstance(this.getApplicationContext()).pause();
+        if (!shouldMusicStay) {
+            BackgroundMusicService.getInstance(this.getApplicationContext()).pause();
+        }
     }
 
     @Override
