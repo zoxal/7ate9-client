@@ -8,6 +8,10 @@ import java.io.Serializable;
 public class PlayerInfo implements Parcelable, Serializable {
     private String name;
 
+    public PlayerInfo(String name) {
+        this.name = name;
+    }
+
     protected PlayerInfo(Parcel in) {
         name = in.readString();
     }

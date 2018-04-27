@@ -35,11 +35,7 @@ public class SessionInfo {
     }
 
     public static String getGameId() {
-        return gameId;
-    }
-
-    public static void setGameId(String gameId) {
-        SessionInfo.gameId = gameId;
+        return getPublicLobbyInfo().getLobbyId();
     }
 
     public static PublicLobbyInfo getsPublicLobbyInfo() {

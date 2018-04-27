@@ -116,6 +116,7 @@ public class GameOverActivity extends AppCompatActivity implements View.OnClickL
         super.onPause();
         BackgroundMusicService.getInstance(this.getApplicationContext()).pause();
     }
+
     @Override
     protected void onResume() {
         super.onResume();

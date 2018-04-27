@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.yatty.sevenatenine.api.commands_with_data.PlayerInfo;
 import com.yatty.sevenatenine.api.commands_with_data.PrivateLobbyInfo;
 import com.yatty.sevenatenine.api.commands_with_data.PublicLobbyInfo;
 import com.yatty.sevenatenine.api.in_commands.CreateLobbyResponse;
@@ -232,21 +233,19 @@ public class LobbyListActivity extends AppCompatActivity {
                 EnterLobbyResponse enterLobbyResponse = (EnterLobbyResponse) msg.obj;
                 SessionInfo.setPrivateLobbyInfo(enterLobbyResponse.getPrivateLobbyInfo());
                 NetworkService.setHandler(null);
-                Intent nextActivity = LobbyActivity.getStartIntent(getApplicationContext(),
-                        enterLobbyResponse.getPrivateLobbyInfo(), null);
+                Intent nextActivity = LobbyActivity.getStartIntent(getApplicationContext());
                 startActivity(nextActivity);
                 shouldMusicStay = true;
                 finish();
             } else if (msg.obj instanceof CreateLobbyResponse) {
                 Log.d(TAG, "LobbyListActivityHandler: CreateLobbyResponse");
-                SessionInfo.setGameId(((CreateLobbyResponse) msg.obj).getLobbyId());
                 startService(NetworkService.getSendIntent(getApplicationContext(),
                         new LobbyListUnsubscribeRequest(SessionInfo.getAuthToken()), true));
                 CreateLobbyResponse createLobbyResponse = (CreateLobbyResponse) msg.obj;
                 SessionInfo.getPublicLobbyInfo().setLobbyId(createLobbyResponse.getLobbyId());
+                SessionInfo.setPrivateLobbyInfo(new PrivateLobbyInfo(new PlayerInfo(SessionInfo.getUserName())));
                 NetworkService.setHandler(null);
-                Intent intent = LobbyActivity.getStartIntent(getApplicationContext(), new PrivateLobbyInfo(),
-                        createLobbyResponse.getLobbyId());
+                Intent intent = LobbyActivity.getStartIntent(getApplicationContext());
                 startActivity(intent);
             }
         }
