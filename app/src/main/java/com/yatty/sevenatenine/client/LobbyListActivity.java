@@ -268,6 +268,7 @@ public class LobbyListActivity extends AppCompatActivity {
                         Context context = LobbyListActivity.this.getApplicationContext();
                         Intent nextActivity = MainActivity.getStartIntent(context);
                         context.startActivity(nextActivity);
+                        finish();
                     }
                 })
                 .setNegativeButton("No", null).show();
