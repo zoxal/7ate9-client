@@ -1,6 +1,7 @@
 buildscript {
     repositories {
         maven { url 'https://maven.fabric.io/public' }
+        maven { url "https://packagecloud.io/zoxal/7ate9" }
     }
 
     dependencies {
@@ -16,6 +17,26 @@ repositories {
 
 
 android {
+    signingConfigs {
+        config {
+            keyAlias 'sevenateninekey'
+            keyPassword 'lfifdf1234'
+            storeFile file('E:/study/TRTPO/keystore/keystore.jks')
+            storePassword 'lfifdf1234'
+        }
+        config1 {
+            keyAlias 'key0'
+            keyPassword 'lfifdf1234'
+            storeFile file('E:/study/TRTPO/keystore/7ate9-keystore.jks')
+            storePassword 'lfifdf1234'
+        }
+        config2 {
+            keyAlias 'key0'
+            keyPassword 'lfifdf1234'
+            storeFile file('E:/study/TRTPO/keystore/7ate9-yatty-keystore.jks')
+            storePassword 'lfifdf1234'
+        }
+    }
     compileSdkVersion 27
     defaultConfig {
         applicationId "com.yatty.sevenatenine"
@@ -25,14 +46,21 @@ android {
         versionName "0.5"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
+        signingConfig signingConfigs.config
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config2
         }
     }
     buildToolsVersion '27.0.3'
+    productFlavors {
+    }
+    lintOptions {
+        abortOnError false
+    }
 }
 
 dependencies {
@@ -46,7 +74,9 @@ dependencies {
     implementation 'com.android.support:recyclerview-v7:27.1.0'
     implementation 'com.android.support:appcompat-v7:27.1.0'
     implementation 'com.android.support:design:27.1.0'
+    implementation 'com.google.android.gms:play-services-auth:11.8.0'
     implementation('com.crashlytics.sdk.android:crashlytics:2.9.1@aar') {
         transitive = true;
     }
+    implementation 'com.yatty.sevennine:client:4.0.0'
 }

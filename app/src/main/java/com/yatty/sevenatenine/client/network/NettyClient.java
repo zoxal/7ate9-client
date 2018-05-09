@@ -35,6 +35,7 @@ import java.net.InetSocketAddress;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import io.netty.bootstrap.Bootstrap;
@@ -70,6 +71,7 @@ class NettyClient {
     private Channel mChannel;
     private volatile Handler mHandler;
     private volatile AtomicBoolean keepAlive = new AtomicBoolean(false);
+    private Semaphore mConnectedSemaphore = new Semaphore(1);
 
     private NettyClient() {
         mCommands = new HashMap<>();
@@ -121,6 +123,7 @@ class NettyClient {
 
     public void connect() {
         try {
+            mConnectedSemaphore.acquire();
             Bootstrap bootstrap = new Bootstrap();
             bootstrap.group(eventLoopGroup)
                     .channel(NioSocketChannel.class)
@@ -142,6 +145,7 @@ class NettyClient {
             mChannel.closeFuture().addListener(new GenericFutureListener<Future<? super Void>>() {
                 @Override
                 public void operationComplete(Future<? super Void> e) throws Exception {
+                    mConnectedSemaphore.release();
                     if (keepAlive.get()) {
                         Log.d(TAG, "Connection closed, reopening...");
                         NettyClient.this.connect();
@@ -159,6 +163,11 @@ class NettyClient {
     }
 
     public void write(Object obj, boolean keepAlive) {
+        try {
+            mConnectedSemaphore.acquire();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         this.keepAlive.set(keepAlive);
         if (mChannel == null) return;
         if (!mChannel.isOpen()) {
@@ -167,6 +176,7 @@ class NettyClient {
         mChannel.writeAndFlush(obj).addListener(new ChannelFutureListener() {
             @Override
             public void operationComplete(ChannelFuture future) throws Exception {
+                mConnectedSemaphore.release();
                 if (future.isSuccess()) {
                     Log.d(TAG, "Message sent");
                 } else {

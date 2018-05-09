@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color playerId="colorPrimary">#3F51B5</color>
-    <color playerId="colorPrimaryDark">#198401</color>
-    <color playerId="colorAccent">#00C900</color>
-    <color playerId="red">#ff0011</color>
-    <color playerId="black">#000000</color>
-    <color playerId="white">#ffffff</color>
-    <color playerId="transparency">#80000000</color>
-    <color playerId="colorMain">#00C900</color>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#198401</color>
+    <color name="colorAccent">#00C900</color>
+    <color name="red">#ff0011</color>
+    <color name="black">#000000</color>
+    <color name="white">#ffffff</color>
+    <color name="transparency">#80000000</color>
+    <color name="colorMain">#00C900</color>
 </resources>

@@ -23,7 +23,7 @@ public class NetworkService extends Service {
     private static String sIp = "192.168.0.103";
     private static int sPort = 39405;
 
-    private ExecutorService mExecutorService;
+    private volatile ExecutorService mExecutorService;
 
     @Override
     public void onCreate() {
@@ -38,15 +38,19 @@ public class NetworkService extends Service {
         int action = intent.getIntExtra(KEY_ACTION, -1);
         switch (action) {
             case ACTION_CONNECT:
-                Log.d(TAG, "ACTION_CONNECT");
+                Log.d(TAG, "ACTION_CONNECT, service is " + mExecutorService);
                 mExecutorService.execute(new Runnable() {
                     @Override
                     public void run() {
-                        NettyClient nettyClient = NettyClient.getInstance();
-                        nettyClient.setServerIp(sIp);
-                        nettyClient.setPort(sPort);
-                        nettyClient.connect();
-                        Log.d(TAG, "Connected");
+                        try {
+                            NettyClient nettyClient = NettyClient.getInstance();
+                            nettyClient.setServerIp(sIp);
+                            nettyClient.setPort(sPort);
+                            nettyClient.connect();
+                            Log.d(TAG, "Connected");
+                        } catch (Exception e) {
+                            Log.d(TAG, "Exception in service run", e);
+                        }
                     }
                 });
                 break;
