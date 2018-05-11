@@ -159,9 +159,7 @@
                 />
 
         </TableRow>
-
     </TableLayout>
-
 
     <TextView
         android:id="@+id/tv_first_player_name"
