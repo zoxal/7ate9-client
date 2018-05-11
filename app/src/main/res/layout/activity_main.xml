@@ -31,9 +31,11 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:background="@drawable/shape_button"
+            android:fontFamily="@font/permanent_marker"
+            android:onClick="connectButtonClicked"
             android:text="@string/action_connect"
             android:textAllCaps="false"
-            android:onClick="connectButtonClicked"/>
+            android:textAppearance="@android:style/TextAppearance.Material.Title.Inverse" />
 
     </LinearLayout>
 

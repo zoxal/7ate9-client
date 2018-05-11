@@ -56,5 +56,6 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"
         android:background="@drawable/shape_button"
-        android:text="@string/action_create_lobby"/>
+        android:fontFamily="@font/permanent_marker"
+        android:text="@string/action_create_lobby" />
 </RelativeLayout>
