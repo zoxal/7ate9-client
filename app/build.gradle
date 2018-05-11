@@ -1,53 +1,86 @@
 apply plugin: 'com.android.application'
+//apply plugin: 'io.fabric'
 
-android {
-    lintOptions {
-        checkReleaseBuilds false
-        // Or, if you prefer, you can continue to check for errors in release builds,
-        // but continue the build even when errors are found:
-        abortOnError false
-    }
-    signingConfigs {
-        config {
-            keyAlias 'android'
-            keyPassword '778213'
-            storeFile file('/home/zoxal/.android/7ate9.jks')
-            storePassword '947500'
+buildscript {
+    repositories {
+        maven {
+            url 'https://maven.fabric.io/public'
         }
     }
+
+    dependencies {
+        classpath 'io.fabric.tools:gradle:1.+'
+    }
+}
+
+def keystoreProperties = new Properties()
+keystoreProperties.load(new FileInputStream(rootProject.file("keystore.properties")))
+
+android {
     compileSdkVersion 27
     buildToolsVersion "27.0.3"
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    signingConfigs {
+        release {
+            storeFile file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+        }
+    }
     defaultConfig {
         applicationId "com.yatty.sevenatenine.client"
         minSdkVersion 18
         versionCode 1
         versionName "1.0"
         vectorDrawables.useSupportLibrary = true
+        multiDexEnabled true
     }
     buildTypes {
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.config
+            signingConfig signingConfigs.release
         }
         debug {
-            signingConfig signingConfigs.config
+            signingConfig signingConfigs.release
         }
     }
-    // Resolve dependency differences between app and tests
     configurations.all {
         resolutionStrategy.force 'com.android.support:support-annotations:26.1.0'
+    }
+}
+
+repositories {
+    maven {
+        url 'https://maven.fabric.io/public'
+    }
+    maven {
+        url "https://packagecloud.io/zoxal/7ate9/maven2"
     }
 }
 
 dependencies {
     api 'com.android.support:appcompat-v7:27.1.1'
     api 'com.android.support:design:27.1.1'
-    // Dependency for Google Sign-In
-    //    api 'com.google.android.gms:play-services-auth:11.6.0'
     api 'com.google.android.gms:play-services-auth:15.0.1'
-    // Dependencies for the REST API example
+
     api 'com.google.api-client:google-api-client:1.22.0'
     api 'com.google.api-client:google-api-client-android:1.22.0'
     api 'com.google.apis:google-api-services-people:v1-rev139-1.22.0'
+
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    implementation 'com.google.code.gson:gson:2.8.0'
+    implementation 'com.android.support:recyclerview-v7:27.1.0'
+    implementation('com.crashlytics.sdk.android:crashlytics:2.9.1@aar') {
+        transitive = true;
+    }
+    implementation 'com.yatty.sevennine:client:4.1.0'
 }
