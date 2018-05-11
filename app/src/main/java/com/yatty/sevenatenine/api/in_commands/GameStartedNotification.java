@@ -3,6 +3,7 @@ package com.yatty.sevenatenine.api.in_commands;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
 
 import com.yatty.sevenatenine.api.commands_with_data.Card;
@@ -23,7 +24,7 @@ public class GameStartedNotification implements InCommandInterface {
         lobbyId = in.readString();
     }
 
-    public static final Creator<GameStartedNotification> CREATOR = new Creator<GameStartedNotification>() {
+    public static final Parcelable.Creator<GameStartedNotification> CREATOR = new Parcelable.Creator<GameStartedNotification>() {
         @Override
         public GameStartedNotification createFromParcel(Parcel in) {
             return new GameStartedNotification(in);

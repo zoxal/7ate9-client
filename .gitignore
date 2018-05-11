@@ -10,3 +10,4 @@
 .idea/
 app/proguard-rules.pro
 gradle/
+keystore.properties

@@ -2,8 +2,8 @@ package com.yatty.sevenatenine.client;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -13,100 +13,91 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
-import com.crashlytics.android.Crashlytics;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.Task;
 import com.yatty.sevenatenine.api.in_commands.ErrorResponse;
 import com.yatty.sevenatenine.api.in_commands.LogInResponse;
 import com.yatty.sevenatenine.api.out_commands.LogInRequest;
+import com.yatty.sevenatenine.client.auth.AuthManager;
+import com.yatty.sevenatenine.client.auth.SessionInfo;
 import com.yatty.sevenatenine.client.network.NetworkService;
-
-import io.fabric.sdk.android.Fabric;
 
 public class MainActivity extends AppCompatActivity {
     public static final String TAG = MainActivity.class.getSimpleName();
+    private static final int RC_SIGN_IN = 9001;
 
     private Button mConnectButton;
     private EditText mNameEditText;
     private boolean shouldMusicStay;
+    private Handler mHandler;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Fabric.with(this, new Crashlytics());
+//        Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_main);
         mConnectButton = findViewById(R.id.button_connect);
         mNameEditText = findViewById(R.id.et_name);
-
-        final MainActivityHandler mainActivityHandler = new MainActivityHandler(this, mNameEditText,
-                mConnectButton);
-        NetworkService.setHandler(mainActivityHandler);
-
-        mConnectButton.setOnLongClickListener(new View.OnLongClickListener() {
-
-            @Override
-            public boolean onLongClick(View v) {
-                DialogFragment dialogFragment = new IpSettingsDialog();
-                dialogFragment.show(getSupportFragmentManager(), "Enter IP");
-                return false;
-            }
-        });
-
-        mConnectButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                try {
-                    if (!isOnline()) {
-                        Log.d(TAG, "Status: offline");
-                        showSnackbar("No connection.");
-                        return;
-                    }
-                    if (!mNameEditText.getText().toString().isEmpty()) {
-                        startService(NetworkService.getConnectionIntent(getApplicationContext()));
-                        LogInRequest logInRequest = new LogInRequest();
-                        logInRequest.setName(mNameEditText.getText().toString());
-                        startService(NetworkService.getSendIntent(getApplicationContext(),
-                                logInRequest, false));
-                        view.setClickable(false);
-                        showSnackbar("Connecting...");
-                    } else {
-                        showSnackbar("Enter nickname.");
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
+        mHandler = new MainActivityHandler(this, mNameEditText, mConnectButton);
+        mConnectButton.setOnLongClickListener(v -> {
+            DialogFragment dialogFragment = new IpSettingsDialog();
+            dialogFragment.show(getSupportFragmentManager(), "Enter IP");
+            return false;
         });
     }
 
-    //    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        shouldMusicStay = false;
-//        startService(new Intent(getApplicationContext(), BackgroundMusicService.class));
-//    }
-//
-//    @Override
-//    protected void onPause() {
-//        super.onPause();
-//        if (!shouldMusicStay) {
-//            stopService(new Intent(getApplicationContext(), BackgroundMusicService.class));
-//        }
-//    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        BackgroundMusicService.getInstance(this.getApplicationContext()).pause();
+    public void connectButtonClicked(View view) {
+        try {
+            if (!NetworkService.isOnline(getApplicationContext())) {
+                showSnackbar("No connection.");
+                return;
+            }
+            if (!mNameEditText.getText().toString().isEmpty()) {
+                view.setEnabled(false);
+                showSnackbar("Connecting...");
+                enterServer(
+                        mNameEditText.getText().toString(),
+                        AuthManager.getUniqueDeviceHash(getApplicationContext())
+                );
+            } else {
+                showSnackbar("Enter nickname.");
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Exception during connect", e);
+        }
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
+    public void googleSignInClicked(View view) {
+        view.setEnabled(false);
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+        GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+        try {
+            if (account != null) {
+                String personId = account.getId();
+                enterServer(account);
+                Log.d(TAG, "Acc id: " + personId);
+            } else {
+                Log.d(TAG, "No acc");
+                Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+                startActivityForResult(signInIntent, RC_SIGN_IN);
+            }
+        } catch (Exception e) {
+            showSnackbar("Failed to connect");
+            Log.e(TAG, "Failed to connect to server", e);
+        }
     }
 
     public static Intent getStartIntent(Context context) {
@@ -115,22 +106,53 @@ public class MainActivity extends AppCompatActivity {
         return intent;
     }
 
-    private boolean isOnline() {
-        ConnectivityManager connectivityManager =
-                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = connectivityManager.getActiveNetworkInfo();
-        NetworkInfo wifiInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-        return (netInfo != null && netInfo.isConnected()) || (wifiInfo != null && wifiInfo.isConnected());
+    private void enterServer(GoogleSignInAccount account) {
+        enterServer(account.getDisplayName(), AuthManager.getSHAHash(account.getId()));
+    }
+
+    private void enterServer(String name, String passwordHash) {
+//        startService(NetworkService.getConnectionIntent(getApplicationContext()));
+        LogInRequest logInRequest = new LogInRequest();
+        logInRequest.setName(name);
+        logInRequest.setPasswordHash(passwordHash);
+        showSnackbar("Connecting...");
+        NetworkService.setHandler(mHandler);
+//        startService(NetworkService.getSendIntent(getApplicationContext(), logInRequest, false));
     }
 
     private void showSnackbar(String title) {
         FrameLayout parentFrameLayout = findViewById(R.id.fl_parent);
-        Snackbar snackbar = Snackbar.make(parentFrameLayout,
-                title, Snackbar.LENGTH_SHORT);
+        Snackbar snackbar = Snackbar.make(parentFrameLayout, title, Snackbar.LENGTH_SHORT);
         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) snackbar.getView().getLayoutParams();
         params.gravity = Gravity.TOP;
         snackbar.getView().setLayoutParams(params);
         snackbar.show();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RC_SIGN_IN) {
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            try {
+                Log.d(TAG, "getting google account");
+                GoogleSignInAccount account = task.getResult(ApiException.class);
+                Log.d(TAG, "Got acc width id: " + account.getId());
+                Log.d(TAG, "Acc display name: " + account.getDisplayName());
+                Log.d(TAG, "Acc family name: " + account.getFamilyName());
+                Log.d(TAG, "Acc given name: " + account.getGivenName());
+                showSnackbar("winner-winner!");
+
+                if (account.getId() == null) {
+                    Log.e(TAG, "Failed to get Google Account id");
+                    showSnackbar("Failed to connect to Google Account");
+                }
+                enterServer(account);
+            } catch (Exception e) {
+                showSnackbar("Failed to connect to Google Account");
+                Log.e(TAG, "Exception", e);
+            }
+        }
     }
 
     class MainActivityHandler extends Handler {

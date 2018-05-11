@@ -8,8 +8,9 @@ import java.io.Serializable;
 public class PrivateLobbyInfo implements Parcelable, Serializable {
     private PlayerInfo players[];
 
-    public PrivateLobbyInfo() {
-        players = new PlayerInfo[0];
+    public PrivateLobbyInfo(PlayerInfo playerInfo) {
+        players = new PlayerInfo[1];
+        players[0] = playerInfo;
     }
 
     protected PrivateLobbyInfo(Parcel in) {

@@ -13,6 +13,9 @@ public class BackgroundMusicService {
         sMediaPlayer.setLooping(true);
     }
 
+    public BackgroundMusicService() {
+    }
+
     public static BackgroundMusicService getInstance(Context context) {
         if (instance == null) {
             instance = new BackgroundMusicService(context);

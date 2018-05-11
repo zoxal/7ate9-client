@@ -1,4 +1,4 @@
-package com.yatty.sevenatenine.client;
+package com.yatty.sevenatenine.client.auth;
 
 import com.yatty.sevenatenine.api.commands_with_data.PrivateLobbyInfo;
 import com.yatty.sevenatenine.api.commands_with_data.PublicLobbyInfo;

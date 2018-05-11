@@ -14,6 +14,7 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 
 import com.yatty.sevenatenine.api.out_commands.CreateLobbyRequest;
+import com.yatty.sevenatenine.client.auth.SessionInfo;
 
 public class CreateLobbyActivity extends AppCompatActivity {
     public static final String TAG = CreateLobbyActivity.class.getSimpleName();
