@@ -78,6 +78,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void googleSignInClicked(View view) {
+        if (!NetworkService.isOnline(getApplicationContext())) {
+            showSnackbar("No connection.");
+            return;
+        }
         view.setEnabled(false);
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
@@ -94,7 +98,9 @@ public class MainActivity extends AppCompatActivity {
                 Intent signInIntent = mGoogleSignInClient.getSignInIntent();
                 startActivityForResult(signInIntent, RC_SIGN_IN);
             }
+            view.setEnabled(true);
         } catch (Exception e) {
+            view.setEnabled(true);
             showSnackbar("Failed to connect");
             Log.e(TAG, "Failed to connect to server", e);
         }
@@ -111,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void enterServer(String name, String passwordHash) {
-//        startService(NetworkService.getConnectionIntent(getApplicationContext()));
+        startService(NetworkService.getConnectionIntent(getApplicationContext()));
         LogInRequest logInRequest = new LogInRequest();
         logInRequest.setName(name);
         logInRequest.setPasswordHash(passwordHash);

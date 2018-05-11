@@ -56,21 +56,22 @@ public class NetworkService extends Service {
 
     @Override
     public int onStartCommand(final Intent intent, int flags, int startId) {
-        int action = intent.getIntExtra(KEY_ACTION, -1);
-        switch (action) {
-            case ACTION_CONNECT:
-                Log.d(TAG, "ACTION_CONNECT");
-                mExecutorService.execute(this::connect);
-                break;
-            case ACTION_SEND_MESSAGE:
-                Log.d(TAG, "ACTION_SEND_MESSAGE");
-                mExecutorService.execute(() -> {
-                    Serializable message = intent.getSerializableExtra(KEY_MESSAGE);
-                    boolean keepAlive = intent.getBooleanExtra(KEY_KEEP_ALIVE, false);
-                    sendMessage(message, keepAlive);
-                });
-                break;
-        }
+        Log.d(TAG, "Start network command");
+//        int action = intent.getIntExtra(KEY_ACTION, -1);
+//        switch (action) {
+//            case ACTION_CONNECT:
+//                Log.d(TAG, "ACTION_CONNECT");
+//                mExecutorService.execute(this::connect);
+//                break;
+//            case ACTION_SEND_MESSAGE:
+//                Log.d(TAG, "ACTION_SEND_MESSAGE");
+//                mExecutorService.execute(() -> {
+//                    Serializable message = intent.getSerializableExtra(KEY_MESSAGE);
+//                    boolean keepAlive = intent.getBooleanExtra(KEY_KEEP_ALIVE, false);
+//                    sendMessage(message, keepAlive);
+//                });
+//                break;
+//        }
         return START_REDELIVER_INTENT;
     }
 
@@ -93,6 +94,7 @@ public class NetworkService extends Service {
     public static Intent getConnectionIntent(Context context) {
         Intent intent = new Intent(context, NetworkService.class);
         intent.putExtra(KEY_ACTION, ACTION_CONNECT);
+        Log.d(TAG, "Intent created");
         return intent;
     }
 
