@@ -9,25 +9,9 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
 
-import com.google.gson.ExclusionStrategy;
-import com.google.gson.FieldAttributes;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.yatty.sevenatenine.api.CommandsTypeMapper;
-import com.yatty.sevenatenine.api.in_commands.InCommandInterface;
-import com.yatty.sevennine.client.SevenAteNineClient;
-import com.yatty.sevennine.client.SevenAteNineClientFactory;
-
 import java.io.Serializable;
-import java.net.InetSocketAddress;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
-import static com.yatty.sevenatenine.api.CommandsTypeMapper.COMMAND_TYPE_FIELD;
-import static com.yatty.sevenatenine.api.CommandsTypeMapper.TYPE_FIELD;
 
 public class NetworkService extends Service {
     private static final String TAG = NetworkService.class.getSimpleName();
@@ -41,37 +25,34 @@ public class NetworkService extends Service {
     private static String sIp = "192.168.0.103";
     private static int sPort = 39405;
 
-    private SevenAteNineClientFactory networkClientFactory;
-    private SevenAteNineClient networkClient;
     private volatile ExecutorService mExecutorService;
     private static volatile Handler responseHandler;
+    private NettyClient mNettyClient;
 
     @Override
     public void onCreate() {
         super.onCreate();
         mExecutorService = Executors.newSingleThreadExecutor();
-        networkClientFactory = new SevenAteNineClientFactory();
-        configureNetworkClientFactory(networkClientFactory);
     }
 
     @Override
     public int onStartCommand(final Intent intent, int flags, int startId) {
         Log.d(TAG, "Start network command");
-//        int action = intent.getIntExtra(KEY_ACTION, -1);
-//        switch (action) {
-//            case ACTION_CONNECT:
-//                Log.d(TAG, "ACTION_CONNECT");
-//                mExecutorService.execute(this::connect);
-//                break;
-//            case ACTION_SEND_MESSAGE:
-//                Log.d(TAG, "ACTION_SEND_MESSAGE");
-//                mExecutorService.execute(() -> {
-//                    Serializable message = intent.getSerializableExtra(KEY_MESSAGE);
-//                    boolean keepAlive = intent.getBooleanExtra(KEY_KEEP_ALIVE, false);
-//                    sendMessage(message, keepAlive);
-//                });
-//                break;
-//        }
+        int action = intent.getIntExtra(KEY_ACTION, -1);
+        switch (action) {
+            case ACTION_CONNECT:
+                Log.d(TAG, "ACTION_CONNECT");
+                mExecutorService.execute(this::connect);
+                break;
+            case ACTION_SEND_MESSAGE:
+                Log.d(TAG, "ACTION_SEND_MESSAGE");
+                mExecutorService.execute(() -> {
+                    Serializable message = intent.getSerializableExtra(KEY_MESSAGE);
+                    boolean keepAlive = intent.getBooleanExtra(KEY_KEEP_ALIVE, false);
+                    sendMessage(message, keepAlive);
+                });
+                break;
+        }
         return START_REDELIVER_INTENT;
     }
 
@@ -129,52 +110,14 @@ public class NetworkService extends Service {
     }
 
     private void connect() {
-//        try {
-//            networkClient = networkClientFactory.getClient(new InetSocketAddress(sIp, sPort));
-//            NettyClient nettyClient = NettyClient.getInstance();
-//            nettyClient.connect();
-//            Log.d(TAG, "Connected");
-//        } catch (Exception e) {
-//            Log.d(TAG, "Exception in service run", e);
-//        }
+        NettyClient nettyClient = NettyClient.getInstance();
+        nettyClient.setServerIp(sIp);
+        nettyClient.setPort(sPort);
+        nettyClient.connect();
+        Log.d(TAG, "Connected");
     }
 
     private void sendMessage(Object message, boolean keepAlive) {
-//        networkClient.sendMessage(message, keepAlive);
-    }
-
-    private void configureNetworkClientFactory(SevenAteNineClientFactory factory) {
-        factory.addMessageHandler(
-                m -> m.doLogic(responseHandler),
-                InCommandInterface.class
-        );
-        factory.setCustomEncoder(o -> {
-            Gson gson = new Gson();
-            JsonElement jsonElement = gson.toJsonTree(o);
-            jsonElement.getAsJsonObject().addProperty(TYPE_FIELD, o.getClass().getSimpleName());
-            return gson.toJson(jsonElement);
-        });
-        factory.setCustomDecoder(json -> {
-            Gson gson = new GsonBuilder().setExclusionStrategies(new ExclusionStrategy() {
-                @Override
-                public boolean shouldSkipField(FieldAttributes fieldAttributes) {
-                    return fieldAttributes.getName().equals(COMMAND_TYPE_FIELD);
-                }
-                @Override
-                public boolean shouldSkipClass(Class<?> aClass) {
-                    return false;
-                }
-            }).create();
-            Log.d(TAG, "Got json: " + json);
-            JsonParser parser = new JsonParser();
-            JsonObject obj = parser.parse(json).getAsJsonObject();
-            String type = obj.get(COMMAND_TYPE_FIELD).getAsString();
-            Log.d(TAG, "Parsed type: " + type);
-            Class clazz = CommandsTypeMapper.getClass(type);
-            return gson.fromJson(json, clazz);
-        });
-        factory.setExceptionHandler(e -> {
-            Log.e(TAG, "Unexpected network error", e);
-        });
+        mNettyClient.sendMessage(message, keepAlive);
     }
 }

@@ -135,7 +135,6 @@ class NettyClient {
                     if (future.isSuccess()) {
                         Log.d(TAG, "Connected to server");
                     } else {
-                        System.out.println("Failed to connect to server");
                         future.cause().printStackTrace();
                         Log.d(TAG, "Failed to connect to server", future.cause());
                         throw new RuntimeException("Failed to connect to server", future.cause());
@@ -157,12 +156,12 @@ class NettyClient {
                     }
                 }
             });
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            Log.e(TAG, "Failed to connect to server", e);
         }
     }
 
-    public void write(Object obj, boolean keepAlive) {
+    public void sendMessage(Object obj, boolean keepAlive) {
         try {
             mConnectedSemaphore.acquire();
         } catch (InterruptedException e) {
