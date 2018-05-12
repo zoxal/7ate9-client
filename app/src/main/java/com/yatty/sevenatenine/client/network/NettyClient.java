@@ -64,7 +64,7 @@ class NettyClient {
     private static final int SLEEP_TIME_IF_HAS_NO_HANDLER_MS = 5;
 
     private static NettyClient sNettyClient;
-    private String mServerIp = "192.168.100.4";
+    private String mServerIp = "192.168.0.101";
     private int mPort = 39405;
     private HashMap<String, Class> mCommands;
     private EventLoopGroup eventLoopGroup = new NioEventLoopGroup();
@@ -162,13 +162,19 @@ class NettyClient {
     }
 
     public void sendMessage(Object obj, boolean keepAlive) {
+        Log.d(TAG, "sendMessage started");
         try {
+            Log.d(TAG, " mConnectedSemaphore.acquire();");
             mConnectedSemaphore.acquire();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        Log.d(TAG, "Got semaphore");
         this.keepAlive.set(keepAlive);
-        if (mChannel == null) return;
+        if (mChannel == null) {
+            Log.d(TAG, "Channel is null!!!");
+            return;
+        }
         if (!mChannel.isOpen()) {
             connect();
         }
@@ -261,7 +267,7 @@ class NettyClient {
 
         @Override
         protected void encode(ChannelHandlerContext ctx, Object msg, List<Object> out) throws Exception {
-            //Log.d(TAG, "Encoding...");
+            Log.d(TAG, "Encoding...");
             Gson gson = new Gson();
             JsonElement jsonElement = gson.toJsonTree(msg);
             jsonElement.getAsJsonObject().addProperty(TYPE_FIELD, msg.getClass().getSimpleName());
