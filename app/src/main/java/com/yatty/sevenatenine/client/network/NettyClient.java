@@ -145,7 +145,6 @@ class NettyClient {
             mChannel.closeFuture().addListener(new GenericFutureListener<Future<? super Void>>() {
                 @Override
                 public void operationComplete(Future<? super Void> e) throws Exception {
-                    Log.d("NetworkService", "Connected successfully");
                     if (keepAlive.get()) {
                         Log.d(TAG, "Connection closed, reopening...");
                         NettyClient.this.connect();
@@ -163,7 +162,6 @@ class NettyClient {
     }
 
     public void sendMessage(Object obj, boolean keepAlive) {
-        Log.d("NetworkService", "NettyClient called");
         try {
             mConnectedSemaphore.acquire();
         } catch (InterruptedException e) {
@@ -172,10 +170,8 @@ class NettyClient {
         this.keepAlive.set(keepAlive);
         if (mChannel == null) return;
         if (!mChannel.isOpen()) {
-            Log.d("NetworkService", "Connection closed, reopening");
             connect();
         }
-        Log.d("NetworkService", "Sending message...");
         mChannel.writeAndFlush(obj).addListener(new ChannelFutureListener() {
             @Override
             public void operationComplete(ChannelFuture future) throws Exception {
