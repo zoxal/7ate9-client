@@ -27,7 +27,6 @@ public class NetworkService extends Service {
 
     private volatile ExecutorService mExecutorService;
     private static volatile Handler responseHandler;
-    private NettyClient mNettyClient;
 
     @Override
     public void onCreate() {
@@ -50,6 +49,7 @@ public class NetworkService extends Service {
                     Serializable message = intent.getSerializableExtra(KEY_MESSAGE);
                     boolean keepAlive = intent.getBooleanExtra(KEY_KEEP_ALIVE, false);
                     sendMessage(message, keepAlive);
+                    Log.d(TAG,"Message sent");
                 });
                 break;
         }
@@ -118,6 +118,6 @@ public class NetworkService extends Service {
     }
 
     private void sendMessage(Object message, boolean keepAlive) {
-        mNettyClient.sendMessage(message, keepAlive);
+        NettyClient.getInstance().sendMessage(message, keepAlive);
     }
 }
