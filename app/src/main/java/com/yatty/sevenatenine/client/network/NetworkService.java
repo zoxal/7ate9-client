@@ -46,10 +46,15 @@ public class NetworkService extends Service {
             case ACTION_SEND_MESSAGE:
                 Log.d(TAG, "ACTION_SEND_MESSAGE");
                 mExecutorService.execute(() -> {
-                    Serializable message = intent.getSerializableExtra(KEY_MESSAGE);
-                    boolean keepAlive = intent.getBooleanExtra(KEY_KEEP_ALIVE, false);
-                    sendMessage(message, keepAlive);
-                    Log.d(TAG,"Message sent");
+                    Log.d(TAG, "Trying to send message...");
+                    try {
+                        Serializable message = intent.getSerializableExtra(KEY_MESSAGE);
+                        boolean keepAlive = intent.getBooleanExtra(KEY_KEEP_ALIVE, false);
+                        sendMessage(message, keepAlive);
+                        Log.d(TAG, "Message sent");
+                    } catch (Exception e) {
+                        Log.d(TAG, "Failed to send message", e);
+                    }
                 });
                 break;
         }

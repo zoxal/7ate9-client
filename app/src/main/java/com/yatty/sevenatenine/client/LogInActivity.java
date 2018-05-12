@@ -115,11 +115,13 @@ public class LogInActivity extends AppCompatActivity {
     }
 
     private void enterServer(String name, String passwordHash) {
+        Log.d(TAG, "Connecting to server...");
         startService(NetworkService.getConnectionIntent(getApplicationContext()));
         LogInRequest logInRequest = new LogInRequest();
         logInRequest.setName(name);
         logInRequest.setPasswordHash(passwordHash);
         NetworkService.setHandler(mHandler);
+        Log.d(TAG, "Sending login request");
         startService(NetworkService.getSendIntent(getApplicationContext(), logInRequest, false));
     }
 
