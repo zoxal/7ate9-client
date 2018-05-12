@@ -130,7 +130,7 @@ public class LobbyActivity extends AppCompatActivity {
             ((TextView) listView.findViewById(android.R.id.text1))
                     .setText(playerInfo.getPlayerId());
             ((TextView) listView.findViewById(android.R.id.text2))
-                    .setText("rating");
+                    .setText(playerInfo.getRating());
             return listView;
         }
 

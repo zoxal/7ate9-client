@@ -7,6 +7,7 @@ import java.io.Serializable;
 
 public class PlayerInfo implements Parcelable, Serializable {
     private String playerId;
+    private int rating;
 
     public PlayerInfo(String playerId) {
         this.playerId = playerId;
@@ -14,6 +15,7 @@ public class PlayerInfo implements Parcelable, Serializable {
 
     protected PlayerInfo(Parcel in) {
         playerId = in.readString();
+        rating = in.readInt();
     }
 
     @Override
@@ -24,11 +26,17 @@ public class PlayerInfo implements Parcelable, Serializable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(playerId);
+        dest.writeInt(rating);
     }
 
     public String getPlayerId() {
         return playerId;
     }
+
+    public int getRating() {
+        return rating;
+    }
+
 
     public static final Creator<PlayerInfo> CREATOR = new Creator<PlayerInfo>() {
         @Override
