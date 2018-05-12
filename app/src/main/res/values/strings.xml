@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">SevenAteNine</string>
     <string name="action_connect">Connect</string>
+    <string name="action_google_auth">Google Auth</string>
     <string name="action_get_card">Get card</string>
     <string name="action_to_lobby_list">to lobby list</string>
     <string name="hint_login_name">Name</string>

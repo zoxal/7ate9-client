@@ -35,11 +35,18 @@
             android:text="@string/action_connect"
             android:textAllCaps="false"/>
 
+        <Button
+            android:id="@+id/ib_sing_in_via_google_acc"
+            style="@style/ButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/shape_button"
+            android:fontFamily="@font/permanent_marker"
+            android:onClick="googleSignInClicked"
+            android:text="@string/action_google_auth"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:textAllCaps="false"/>
     </LinearLayout>
-
-    <com.google.android.gms.common.SignInButton
-        android:id="@+id/ib_sing_in_via_google_acc"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="googleSignInClicked"/>
 </FrameLayout>
