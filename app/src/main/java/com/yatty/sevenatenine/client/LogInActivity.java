@@ -54,6 +54,13 @@ public class LogInActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        View rootView = findViewById(android.R.id.content);
+        rootView.setBackground(ApplicationSettings.getBackgroundPicture(this));
+    }
+
     public void connectButtonClicked(View view) {
         try {
             if (!NetworkService.isOnline(getApplicationContext())) {
@@ -179,7 +186,7 @@ public class LogInActivity extends AppCompatActivity {
             if (msg.obj instanceof LogInResponse) {
                 LogInResponse logInResponse = (LogInResponse) msg.obj;
                 SessionInfo.setAuthToken(logInResponse.getAuthToken());
-                SessionInfo.setUserName(nameEditText.getText().toString());
+                SessionInfo.setUserName(logInResponse.getPlayerId());
                 Log.d(TAG, "Connected");
                 NetworkService.setHandler(null);
                 Intent nextActivity = LobbyListActivity.getStartIntent(context);
