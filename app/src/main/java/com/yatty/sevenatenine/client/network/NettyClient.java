@@ -133,6 +133,7 @@ class NettyClient {
                 @Override
                 public void operationComplete(ChannelFuture future) throws Exception {
                     if (future.isSuccess()) {
+                        mConnectedSemaphore.release();
                         Log.d(TAG, "Connected to server");
                     } else {
                         future.cause().printStackTrace();
