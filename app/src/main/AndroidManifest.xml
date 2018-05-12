@@ -15,7 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
+            android:name=".LogInActivity"
             android:screenOrientation="portrait">
         </activity>
         <activity
@@ -44,7 +44,7 @@
         </service>
 
         <activity
-            android:name=".Main2Activity"
+            android:name=".MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

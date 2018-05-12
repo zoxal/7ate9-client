@@ -23,9 +23,9 @@ public class BackgroundMusicService {
         return instance;
     }
 
-    public static BackgroundMusicService getInstance() {
-        return instance;
-    }
+//    public static BackgroundMusicService getInstance() {
+//        return instance;
+//    }
 
     public void start() {
         if (!sMediaPlayer.isPlaying()) {

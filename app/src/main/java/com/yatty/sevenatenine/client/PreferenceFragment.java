@@ -41,10 +41,10 @@ PreferenceFragment extends android.preference.PreferenceFragment
         boolean musicEnabled = ApplicationSettings.isMusicEnabled(getActivity().getApplicationContext());
         if (musicEnabled) {
             Log.i(TAG, "Music enabled");
-            BackgroundMusicService.getInstance().start();
+            BackgroundMusicService.getInstance(getActivity().getApplicationContext()).start();
         } else {
             Log.i(TAG, "Music disabled");
-            BackgroundMusicService.getInstance().pause();
+            BackgroundMusicService.getInstance(getActivity().getApplicationContext()).pause();
         }
     }
 }

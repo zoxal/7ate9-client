@@ -266,7 +266,7 @@ public class LobbyListActivity extends AppCompatActivity {
                                 logOutRequest, true));
 
                         Context context = LobbyListActivity.this.getApplicationContext();
-                        Intent nextActivity = MainActivity.getStartIntent(context);
+                        Intent nextActivity = LogInActivity.getStartIntent(context);
                         context.startActivity(nextActivity);
                         finish();
                     }
