@@ -31,16 +31,17 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:background="@drawable/shape_button"
+            android:fontFamily="@font/permanent_marker"
+            android:onClick="connectButtonClicked"
             android:text="@string/action_connect"
             android:textAllCaps="false"
-            android:onClick="connectButtonClicked"/>
+            android:textAppearance="@android:style/TextAppearance.Material.Title.Inverse" />
 
     </LinearLayout>
 
-    <ImageButton
+    <com.google.android.gms.common.SignInButton
         android:id="@+id/ib_sing_in_via_google_acc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:srcCompat="@drawable/google_acc"
         android:onClick="googleSignInClicked"/>
 </FrameLayout>
