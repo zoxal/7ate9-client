@@ -120,7 +120,16 @@ class NettyClient {
             }
         });
     }
-
+//05-12 09:09:10.128 18276-18317/? D/NettyClient: Connected to server
+//05-12 09:09:10.144 18276-18317/? D/NettyClient: Sending: {"name":"username","passwordHash":"��V\u001e��\u0001HJ���^�Fp�q�O�2|c1�̣��","_type":"LogInRequest"}
+//05-12 09:09:10.147 18276-18317/? D/NettyClient: Message sent
+//05-12 09:09:10.259 18276-18317/? D/NettyClient: Decoding...
+//            05-12 09:09:10.260 18276-18317/? D/NettyClient: Get json: {"authToken":"2fa5e0de-7d1f-466a-95bb-d608f7bf4e95","playerId":"username|14871","rating":1600,"_type":"LogInResponse"}
+//    Parsed type: LogInResponse
+//05-12 09:09:10.265 18276-18317/? D/NettyClient: Connection closed, do not reopen
+//    Got class: class com.yatty.sevenatenine.api.in_commands.LogInResponse
+//05-12 09:09:10.266 18276-18317/? D/NettyClient: SLEEP_TIME_IF_HAS_NO_HANDLER_MS
+//05-12 09:09:10.271 18276-18317/? D/NettyClient: SLEEP_TIME_IF_HAS_NO_HANDLER_MS
     public void connect() {
         try {
             mConnectedSemaphore.acquire();
@@ -163,9 +172,10 @@ class NettyClient {
 
     public void sendMessage(Object obj, boolean keepAlive) {
         try {
+            Log.d(TAG, "Sending message, semaphore: " + mConnectedSemaphore.availablePermits());
             mConnectedSemaphore.acquire();
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            Log.e(TAG, "Failed to acquire netty sending semaphores", e);
         }
         this.keepAlive.set(keepAlive);
         if (mChannel == null) return;
@@ -177,10 +187,9 @@ class NettyClient {
             public void operationComplete(ChannelFuture future) throws Exception {
                 mConnectedSemaphore.release();
                 if (future.isSuccess()) {
-                    Log.d(TAG, "Message sent");
+                    Log.d(TAG, "Message sent, semaphore: " + mConnectedSemaphore.availablePermits());
                 } else {
-                    System.out.println("Fail");
-                    future.cause().printStackTrace();
+                    Log.e(TAG, "Failed to send message", future.cause());
                 }
             }
         });

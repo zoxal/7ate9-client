@@ -111,7 +111,7 @@ public class NetworkService extends Service {
     }
 
     public static void setHandler(Handler handler) {
-        responseHandler = handler;
+        NettyClient.getInstance().setHandler(handler);
     }
 
     private void connect() {
