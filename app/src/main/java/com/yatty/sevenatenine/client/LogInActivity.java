@@ -187,6 +187,7 @@ public class LogInActivity extends AppCompatActivity {
                 LogInResponse logInResponse = (LogInResponse) msg.obj;
                 SessionInfo.setAuthToken(logInResponse.getAuthToken());
                 SessionInfo.setUserName(logInResponse.getPlayerId());
+                SessionInfo.setUserRating(logInResponse.getRating());
                 Log.d(TAG, "Connected");
                 NetworkService.setHandler(null);
                 Intent nextActivity = LobbyListActivity.getStartIntent(context);

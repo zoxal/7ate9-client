@@ -60,6 +60,8 @@ public class LobbyActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        View rootView = findViewById(android.R.id.content);
+        rootView.setBackground(ApplicationSettings.getBackgroundPicture(this));
         if (ApplicationSettings.isMusicEnabled(this)) {
             BackgroundMusicService.getInstance(this.getApplicationContext()).start();
         }

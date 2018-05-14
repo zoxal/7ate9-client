@@ -9,8 +9,9 @@ public class PlayerInfo implements Parcelable, Serializable {
     private String playerId;
     private int rating;
 
-    public PlayerInfo(String playerId) {
+    public PlayerInfo(String playerId, int rating) {
         this.playerId = playerId;
+        this.rating = rating;
     }
 
     protected PlayerInfo(Parcel in) {

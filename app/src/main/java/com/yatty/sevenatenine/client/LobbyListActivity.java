@@ -244,7 +244,8 @@ public class LobbyListActivity extends AppCompatActivity {
                         new LobbyListUnsubscribeRequest(SessionInfo.getAuthToken()), true));
                 CreateLobbyResponse createLobbyResponse = (CreateLobbyResponse) msg.obj;
                 SessionInfo.getPublicLobbyInfo().setLobbyId(createLobbyResponse.getLobbyId());
-                SessionInfo.setPrivateLobbyInfo(new PrivateLobbyInfo(new PlayerInfo(SessionInfo.getUserName())));
+                SessionInfo.setPrivateLobbyInfo(new PrivateLobbyInfo(new PlayerInfo(SessionInfo.getUserName(),
+                        SessionInfo.getUserRating())));
                 NetworkService.setHandler(null);
                 Intent intent = LobbyActivity.getStartIntent(getApplicationContext());
                 startActivity(intent);

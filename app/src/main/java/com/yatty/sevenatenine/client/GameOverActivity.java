@@ -120,6 +120,8 @@ public class GameOverActivity extends AppCompatActivity implements View.OnClickL
     @Override
     protected void onResume() {
         super.onResume();
+        View rootView = findViewById(android.R.id.content);
+        rootView.setBackground(ApplicationSettings.getBackgroundPicture(this));
         BackgroundMusicService.getInstance(this.getApplicationContext()).start();
     }
 }
