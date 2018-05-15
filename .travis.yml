@@ -1,7 +1,7 @@
 language: android
 sudo: enabled
 jdk: oraclejdk8
-script: "gradle build"
+script: "./gradlew build"
 deploy:
   provider: releases
   file_glob: true
