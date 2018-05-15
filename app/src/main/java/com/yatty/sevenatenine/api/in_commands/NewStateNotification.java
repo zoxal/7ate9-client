@@ -3,6 +3,7 @@ package com.yatty.sevenatenine.api.in_commands;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
 
 import com.yatty.sevenatenine.api.commands_with_data.Card;
@@ -13,9 +14,9 @@ public class NewStateNotification implements InCommandInterface {
     private int moveNumber;
     private String moveWinner;
     private boolean lastMove;
+    private Boolean stalemate;
     private Card nextCard;
     private GameResult gameResult;
-    private Boolean stalemate;
 
     protected NewStateNotification(Parcel in) {
         moveNumber = in.readInt();
@@ -26,7 +27,7 @@ public class NewStateNotification implements InCommandInterface {
         stalemate = in.readByte() != 0;
     }
 
-    public static final Creator<NewStateNotification> CREATOR = new Creator<NewStateNotification>() {
+    public static final Parcelable.Creator<NewStateNotification> CREATOR = new Parcelable.Creator<NewStateNotification>() {
         @Override
         public NewStateNotification createFromParcel(Parcel in) {
             return new NewStateNotification(in);

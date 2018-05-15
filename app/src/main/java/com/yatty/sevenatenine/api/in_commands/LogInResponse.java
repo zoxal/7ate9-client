@@ -7,6 +7,8 @@ import android.os.Parcel;
 public class LogInResponse implements InCommandInterface {
     public static final String TAG = LogInResponse.class.getSimpleName();
     private String authToken;
+    private String playerId;
+    private int rating;
 
     protected LogInResponse(Parcel in) {
         authToken = in.readString();
@@ -31,6 +33,14 @@ public class LogInResponse implements InCommandInterface {
 
     public String getAuthToken() {
         return authToken;
+    }
+
+    public String getPlayerId() {
+        return playerId;
+    }
+
+    public int getRating() {
+        return rating;
     }
 
     public static final Creator<LogInResponse> CREATOR = new Creator<LogInResponse>() {

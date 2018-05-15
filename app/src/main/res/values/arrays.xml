@@ -6,13 +6,19 @@
         <item>4</item>
     </string-array>
     <string-array name="background_pictures">
-        <item>Wood</item>
-        <item>Gray</item>
-        <item>Red</item>
+        <item>Cards1</item>
+        <item>Cards2</item>
+        <item>Cards3</item>
+        <item>Wood1</item>
+        <item>Wood2</item>
+        <item>Wood3</item>
     </string-array>
     <string-array name="values_background_pictures">
-        <item>wood</item>
-        <item>grey</item>
-        <item>red</item>
+        <item>cards1</item>
+        <item>cards2</item>
+        <item>cards3</item>
+        <item>wood1</item>
+        <item>wood2</item>
+        <item>wood3</item>
     </string-array>
 </resources>

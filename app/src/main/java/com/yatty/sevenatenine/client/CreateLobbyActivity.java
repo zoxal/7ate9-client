@@ -2,7 +2,6 @@ package com.yatty.sevenatenine.client;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -15,6 +14,7 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 
 import com.yatty.sevenatenine.api.out_commands.CreateLobbyRequest;
+import com.yatty.sevenatenine.client.auth.SessionInfo;
 
 public class CreateLobbyActivity extends AppCompatActivity {
     public static final String TAG = CreateLobbyActivity.class.getSimpleName();
@@ -22,6 +22,7 @@ public class CreateLobbyActivity extends AppCompatActivity {
     private Spinner mPlayersNumberSpinner;
     private EditText mLobbyNameEditText;
     private Button mCreateLobbyButton;
+    private boolean shouldMusicStay = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,14 +35,14 @@ public class CreateLobbyActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                if (mLobbyNameEditText.getText().toString().isEmpty()) {
+                if (!mLobbyNameEditText.getText().toString().isEmpty()) {
                     CreateLobbyRequest createLobbyRequest = new CreateLobbyRequest();
                     createLobbyRequest.setLobbyName(mLobbyNameEditText.getText().toString());
                     createLobbyRequest.setMaxPlayersNumber(Integer.parseInt(mPlayersNumberSpinner.getSelectedItem().toString()));
                     createLobbyRequest.setAuthToken(SessionInfo.getAuthToken());
                     Intent intentWithData = LobbyListActivity.getIntentWithData(getApplicationContext(), createLobbyRequest);
-                    // TODO set public lobby info
                     setResult(RESULT_OK, intentWithData);
+                    shouldMusicStay = true;
                     finish();
                 } else {
                     showSnackbar("Enter lobby name.");
@@ -58,17 +59,17 @@ public class CreateLobbyActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        BackgroundMusicService.getInstance(this.getApplicationContext()).pause();
+        if (!shouldMusicStay) {
+            BackgroundMusicService.getInstance(this.getApplicationContext()).pause();
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        SharedPreferences sharedPreferences = getPreferences(Context.MODE_PRIVATE);
-        boolean musicEnabled = sharedPreferences.getBoolean(
-                getResources().getString(R.string.key_is_music_enabled), false
-        );
-        if (musicEnabled) {
+        View rootView = findViewById(android.R.id.content);
+        rootView.setBackground(ApplicationSettings.getBackgroundPicture(this));
+        if (ApplicationSettings.isMusicEnabled(this)) {
             BackgroundMusicService.getInstance(this.getApplicationContext()).start();
         }
     }

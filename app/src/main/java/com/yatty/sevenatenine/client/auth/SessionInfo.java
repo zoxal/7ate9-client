@@ -1,10 +1,11 @@
-package com.yatty.sevenatenine.client;
+package com.yatty.sevenatenine.client.auth;
 
 import com.yatty.sevenatenine.api.commands_with_data.PrivateLobbyInfo;
 import com.yatty.sevenatenine.api.commands_with_data.PublicLobbyInfo;
 
 public class SessionInfo {
     private static String userName;
+    private static int userRating;
     private static String authToken;
     private static String gameId;
     private static PublicLobbyInfo sPublicLobbyInfo;
@@ -16,6 +17,14 @@ public class SessionInfo {
 
     public static void setUserName(String userName) {
         SessionInfo.userName = userName;
+    }
+
+    public static int getUserRating() {
+        return userRating;
+    }
+
+    public static void setUserRating(int userRating) {
+        SessionInfo.userRating = userRating;
     }
 
     public static String getAuthToken() {
@@ -35,11 +44,7 @@ public class SessionInfo {
     }
 
     public static String getGameId() {
-        return gameId;
-    }
-
-    public static void setGameId(String gameId) {
-        SessionInfo.gameId = gameId;
+        return getPublicLobbyInfo().getLobbyId();
     }
 
     public static PublicLobbyInfo getsPublicLobbyInfo() {

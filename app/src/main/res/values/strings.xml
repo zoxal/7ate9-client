@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">SevenAteNine</string>
     <string name="action_connect">Connect</string>
+    <string name="action_google_auth">Google Auth</string>
     <string name="action_get_card">Get card</string>
     <string name="action_to_lobby_list">to lobby list</string>
     <string name="hint_login_name">Name</string>
@@ -10,7 +11,7 @@
     <string name="title_max_players_number">Max number of players:</string>
     <string name="action_create_lobby">create</string>
     <string name="title_wait_request">Wait, please.</string>
-    <string name="title_players_in_lobby">Players:</string>
+    <string name="title_players_in_lobby">Players number:</string>
     <string name="action_leave_lobby">Leave lobby</string>
     <string name="title_cards_left">Card left:</string>
     <string name="action_leave_game">Leave</string>
@@ -21,6 +22,8 @@
     <string name="prompt_password">Password (optional)</string>
     <string name="action_sign_in">Sign in or register</string>
     <string name="action_sign_in_short">Sign in</string>
+    <string name="action_log_in">Log in</string>
+    <string name="action_exit">Exit</string>
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">This password is incorrect</string>
@@ -28,7 +31,7 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
-    <string name="title_activity_settings">Settings</string>
+    <string name="title_settings">Settings</string>
 
     <!-- Strings related to Settings -->
 
@@ -58,38 +61,6 @@
     <!-- Example settings for Data & Sync -->
     <string name="pref_header_data_sync">Data &amp; sync</string>
 
-    <string name="pref_title_sync_frequency">Sync frequency</string>
-    <string-array name="pref_sync_frequency_titles">
-        <item>15 minutes</item>
-        <item>30 minutes</item>
-        <item>1 hour</item>
-        <item>3 hours</item>
-        <item>6 hours</item>
-        <item>Never</item>
-    </string-array>
-    <string-array name="pref_sync_frequency_values">
-        <item>15</item>
-        <item>30</item>
-        <item>60</item>
-        <item>180</item>
-        <item>360</item>
-        <item>-1</item>
-    </string-array>
-
-    <string-array name="list_preference_entries">
-        <item>Entry 1</item>
-        <item>Entry 2</item>
-        <item>Entry 3</item>
-    </string-array>
-
-    <string-array name="list_preference_entry_values">
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-    </string-array>
-
-    <string-array name="multi_select_list_preference_default_value"/>
-
     <string name="pref_title_system_sync_settings">System sync settings</string>
 
     <!-- Example settings for Notifications -->
@@ -106,6 +77,11 @@
     <string name="action_apply">apply</string>
     <string name="action_cancel">Cancel</string>
     <string name="key_is_music_enabled">key_music_on</string>
+    <string name="key_are_game_sounds_enabled">key_are_game_sounds_enabled</string>
     <string name="key_is_effects_on">key_effects_on</string>
     <string name="key_background_picture">key_background_picture</string>
+    <string name="key_server_ip">key_ip</string>
+    <string name="key_server_port">key_port</string>
+    <string name="default_server_ip">192.168.0.0</string>
+    <string name="default_server_port">39405</string>
 </resources>

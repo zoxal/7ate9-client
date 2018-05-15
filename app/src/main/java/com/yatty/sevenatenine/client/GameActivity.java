@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.media.AudioManager;
+import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
@@ -19,6 +21,7 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.RotateAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageButton;
+import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,6 +33,7 @@ import com.yatty.sevenatenine.api.in_commands.MoveRejectedResponse;
 import com.yatty.sevenatenine.api.in_commands.NewStateNotification;
 import com.yatty.sevenatenine.api.out_commands.LeaveGameRequest;
 import com.yatty.sevenatenine.api.out_commands.MoveRequest;
+import com.yatty.sevenatenine.client.auth.SessionInfo;
 import com.yatty.sevenatenine.client.network.NetworkService;
 
 import java.util.ArrayList;
@@ -40,10 +44,12 @@ public class GameActivity extends AppCompatActivity {
 
     private static final int VIBRATE_TIME_MS = 100;
     private static final int LONG_VIBRATE_TIME_MS = 400;
+    private static final int STREAMS_NUM = 3;
     private static boolean notifyMistake = false;
     public static final int MAX_NUM_CARDS_ON_TABLE = 8;
     public static final int MAX_CARD = 10;
     public static final int CARD_DISTRIBUTION_ANIMATION_DURATION_MILLIS = 300;
+    public static final int GET_CARD_ANIMATION_DURATION_MILLIS = 150;
 
     private String mGameId;
     private ImageButton mUserDeckImageButton;
@@ -67,6 +73,10 @@ public class GameActivity extends AppCompatActivity {
     private ArrayList<Card> mCardArrayList;
     private int mNumOfCardsOnDesk;
     private int mMoveNumber;
+    private int mSoundCardSlideId;
+    private int mSoundCardSlideOpponentId;
+    private int mSoundCardPlaceId;
+    private SoundPool mSoundPool;
 
     private void initUi(GameStartedNotification gameStartedNotification) {
         mTopCardImageButton = findViewById(R.id.ib_top_card);
@@ -90,7 +100,7 @@ public class GameActivity extends AppCompatActivity {
         PlayerInfo otherPlayersInfo[] = new PlayerInfo[allPlayersInfo.length - 1];
 
         for (int i = 0, j = 0; i < allPlayersInfo.length; i++) {
-            if (!allPlayersInfo[i].getName().equals(SessionInfo.getUserName())) {
+            if (!allPlayersInfo[i].getPlayerId().equals(SessionInfo.getUserName())) {
                 otherPlayersInfo[j] = allPlayersInfo[i];
                 j++;
             }
@@ -99,15 +109,15 @@ public class GameActivity extends AppCompatActivity {
         switch (otherPlayersInfo.length) {
             case 3:
                 mThirdPlayerDeck.setVisibility(View.VISIBLE);
-                mThirdPlayerNameTextView.setText(otherPlayersInfo[2].getName());
+                mThirdPlayerNameTextView.setText(otherPlayersInfo[2].getPlayerId());
                 mThirdPlayerCardsNumTextView.setText(String.valueOf(cardsNum));
             case 2:
                 mSecondPlayerDeck.setVisibility(View.VISIBLE);
-                mSecondPlayerNameTextView.setText(otherPlayersInfo[1].getName());
+                mSecondPlayerNameTextView.setText(otherPlayersInfo[1].getPlayerId());
                 mSecondPlayerCardsNumTextView.setText(String.valueOf(cardsNum));
             case 1:
                 mFirstPlayerDeck.setVisibility(View.VISIBLE);
-                mFirstPlayerNameTextView.setText(otherPlayersInfo[0].getName());
+                mFirstPlayerNameTextView.setText(otherPlayersInfo[0].getPlayerId());
                 mFirstPlayerCardsNumTextView.setText(String.valueOf(cardsNum));
         }
         mUserCardsNumTextView.setText(String.valueOf(cardsNum));
@@ -156,32 +166,35 @@ public class GameActivity extends AppCompatActivity {
                                 TranslateAnimation.ABSOLUTE,
                                 cardCoordinates[1] - userDeckCoordinates[1]
                         );
-                        animation.setDuration(CARD_DISTRIBUTION_ANIMATION_DURATION_MILLIS);
+                        animation.setDuration(GET_CARD_ANIMATION_DURATION_MILLIS);
                         final Drawable cardDrawable = getDrawableCard(card);
                         final Drawable shirtDrawable = ContextCompat
                                 .getDrawable(getApplicationContext(), R.drawable.shirt);
                         animation.setAnimationListener(new Animation.AnimationListener() {
                             @Override
                             public void onAnimationStart(Animation animation) {
+                                mUserDeckImageButton.setClickable(false);
                                 mUserDeckImageButton.setImageDrawable(cardDrawable);
                             }
 
                             @Override
                             public void onAnimationEnd(Animation animation) {
+                                TableLayout userCardsTableLayout = findViewById(R.id.tl_user_cards);
+                                userCardsTableLayout.bringToFront();
                                 cardOnTableImageButton.setImageDrawable(cardDrawable);
                                 cardOnTableImageButton.setOnClickListener(new CardButtonOnClickListener(card));
                                 cardOnTableImageButton.setVisibility(View.VISIBLE);
+                                mUserDeckImageButton.setClickable(true);
                                 mUserDeckImageButton.setImageDrawable(shirtDrawable);
                             }
 
                             @Override
                             public void onAnimationRepeat(Animation animation) {
-
                             }
                         });
-
                         mUserDeckImageButton.startAnimation(animation);
-
+                        mUserDeckImageButton.bringToFront();
+                        playSound(mSoundCardSlideId);
                         mNumOfCardsOnDesk++;
                         mUserCardsNumTextView.setText(String.valueOf(Integer.parseInt(
                                 mUserCardsNumTextView.getText().toString()) - 1));
@@ -192,11 +205,25 @@ public class GameActivity extends AppCompatActivity {
 
     }
 
+    private void prepareSoundPool() {
+        mSoundPool = new SoundPool(STREAMS_NUM, AudioManager.STREAM_MUSIC, 0);
+        mSoundCardSlideId = mSoundPool.load(this, R.raw.sound_card_slide, 1);
+        mSoundCardSlideOpponentId = mSoundPool.load(this, R.raw.sound_card_slide_opponent, 1);
+        mSoundCardPlaceId = mSoundPool.load(this, R.raw.sound_card_place, 1);
+    }
+
+    private void playSound(int soundId) {
+        if (ApplicationSettings.areGameSoundsEnabled(this)) {
+            mSoundPool.play(soundId, 1.0f, 1.0f, 1, 0, 1.0f);
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         hideStatusBar();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
+        prepareSoundPool();
         ConstraintLayout parentLayout = findViewById(R.id.cl_main_layout);
         parentLayout.setBackground(ApplicationSettings.getBackgroundPicture(this));
         GameStartedNotification gameStartedNotification = getIntent().getParcelableExtra(EXTRA_GAME_STARTED_EVENT);
@@ -336,6 +363,7 @@ public class GameActivity extends AppCompatActivity {
             }
             if (card.getValue() == rightValue1 ||
                     card.getValue() == rightValue2) {
+                playSound(mSoundCardPlaceId);
                 MoveRequest moveRequest = new MoveRequest();
                 moveRequest.setGameId(mGameId);
                 moveRequest.setMove(card);
@@ -362,6 +390,7 @@ public class GameActivity extends AppCompatActivity {
                 );
                 animation.setDuration(CARD_DISTRIBUTION_ANIMATION_DURATION_MILLIS);
                 mCardUnderTopCardImageButton.setImageDrawable(mTopCardImageButton.getDrawable());
+                mTopCardImageButton.setImageDrawable(getDrawableCard(card));
                 mTopCardImageButton.startAnimation(animation);
                 BruteForceGuard.forgive();
             } else {
@@ -441,7 +470,8 @@ public class GameActivity extends AppCompatActivity {
                             mThirdPlayerDeck.getLocationOnScreen(playerDeckCoordinates);
                             animation = new TranslateAnimation(
                                     TranslateAnimation.ABSOLUTE,
-                                    playerDeckCoordinates[0] - topCardButtonCoordinates[0],
+                                    playerDeckCoordinates[0] - topCardButtonCoordinates[0]
+                                            - mThirdPlayerDeck.getWidth(),
                                     TranslateAnimation.RELATIVE_TO_SELF,
                                     0,
                                     TranslateAnimation.ABSOLUTE,
@@ -461,6 +491,7 @@ public class GameActivity extends AppCompatActivity {
                             animationSet.addAnimation(animation);
                             mTopCardImageButton.startAnimation(animationSet);
                         }
+                        playSound(mSoundCardSlideOpponentId);
                         mCardUnderTopCardImageButton.setImageDrawable(mTopCardImageButton.getDrawable());
                         mTopCardImageButton.bringToFront();
                     }
@@ -499,5 +530,11 @@ public class GameActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         BackgroundMusicService.getInstance(this.getApplicationContext()).stop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mSoundPool.release();
     }
 }

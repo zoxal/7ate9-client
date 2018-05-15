@@ -28,7 +28,7 @@
 
     <style name="TextStyleLargeBold" parent="android:TextAppearance.Large">
         <item name="android:textColor">@color/black</item>
-        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">@font/permanent_marker</item>
     </style>
 
     <style name="ButtonStyle" parent="Widget.AppCompat.Button.Colored">

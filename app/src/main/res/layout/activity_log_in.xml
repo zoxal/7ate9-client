@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fl_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.yatty.sevenatenine.client.LogInActivity">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/et_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:ems="10"
+            android:fontFamily="@font/permanent_marker"
+            android:hint="@string/hint_login_name"
+            android:inputType="textPersonName"
+            android:text="username"/>
+
+        <Button
+            android:id="@+id/button_log_in"
+            style="@style/ButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/shape_button"
+            android:fontFamily="@font/permanent_marker"
+            android:onClick="connectButtonClicked"
+            android:text="@string/action_connect"
+            android:textAllCaps="false"/>
+
+        <Button
+            android:id="@+id/ib_sing_in_via_google_acc"
+            style="@style/ButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/shape_button"
+            android:fontFamily="@font/permanent_marker"
+            android:onClick="googleSignInClicked"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:text="@string/action_google_auth"
+            android:textAllCaps="false"/>
+    </LinearLayout>
+</FrameLayout>

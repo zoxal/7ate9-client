@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.yatty.sevenatenine.api.commands_with_data.PlayerInfo;
 import com.yatty.sevenatenine.api.commands_with_data.PrivateLobbyInfo;
 import com.yatty.sevenatenine.api.commands_with_data.PublicLobbyInfo;
 import com.yatty.sevenatenine.api.in_commands.CreateLobbyResponse;
@@ -28,6 +29,7 @@ import com.yatty.sevenatenine.api.out_commands.EnterLobbyRequest;
 import com.yatty.sevenatenine.api.out_commands.LobbyListSubscribeRequest;
 import com.yatty.sevenatenine.api.out_commands.LobbyListUnsubscribeRequest;
 import com.yatty.sevenatenine.api.out_commands.LogOutRequest;
+import com.yatty.sevenatenine.client.auth.SessionInfo;
 import com.yatty.sevenatenine.client.network.NetworkService;
 
 import java.util.ArrayList;
@@ -90,49 +92,25 @@ public class LobbyListActivity extends AppCompatActivity {
             PublicLobbyInfo publicLobbyInfo = new PublicLobbyInfo();
             publicLobbyInfo.setLobbyName(createLobbyRequest.getLobbyName());
             publicLobbyInfo.setMaxPlayersNumber(createLobbyRequest.getMaxPlayersNumber());
+            publicLobbyInfo.setCurrentPlayersNumber(1);
             SessionInfo.setPublicLobbyInfo(publicLobbyInfo);
             startService(NetworkService.getSendIntent(getApplicationContext(),
                     createLobbyRequest, true));
         }
     }
 
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        shouldMusicStay = false;
-//        startService(new Intent(getApplicationContext(), BackgroundMusicService.class));
-//    }
-//
-//    @Override
-//    protected void onPause() {
-//        super.onPause();
-//        if (!shouldMusicStay) {
-//            stopService(new Intent(getApplicationContext(), BackgroundMusicService.class));
-//        }
-//    }
-
     @Override
     protected void onPause() {
         super.onPause();
-        BackgroundMusicService.getInstance(this.getApplicationContext()).pause();
+        if (!shouldMusicStay) {
+            BackgroundMusicService.getInstance(this.getApplicationContext()).pause();
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-//        SharedPreferences sharedPreferences = getPreferences(Context.MODE_PRIVATE);
-//        boolean musicEnabled = sharedPreferences.getBoolean(
-//                getResources().getString(R.string.key_is_music_enabled), true
-//        );
-//        Log.i(TAG, "getPreferences: " + musicEnabled);
-
-//        SharedPreferences sharedPreferences = getSharedPreferences();
-//        boolean musicEnabled = sharedPreferences.getBoolean(
-//                getResources().getString(R.string.key_is_music_enabled), true
-//        );
-//        Log.i(TAG, "getPreferences: " + musicEnabled);
-
-        if (ApplicationSettings.isMusicEnabled(this)){
+        if (ApplicationSettings.isMusicEnabled(this)) {
             BackgroundMusicService.getInstance(this.getApplicationContext()).start();
         }
     }
@@ -256,20 +234,20 @@ public class LobbyListActivity extends AppCompatActivity {
                 EnterLobbyResponse enterLobbyResponse = (EnterLobbyResponse) msg.obj;
                 SessionInfo.setPrivateLobbyInfo(enterLobbyResponse.getPrivateLobbyInfo());
                 NetworkService.setHandler(null);
-                Intent nextActivity = LobbyActivity.getStartIntent(getApplicationContext(),
-                        enterLobbyResponse.getPrivateLobbyInfo(), null);
+                Intent nextActivity = LobbyActivity.getStartIntent(getApplicationContext());
                 startActivity(nextActivity);
+                shouldMusicStay = true;
                 finish();
             } else if (msg.obj instanceof CreateLobbyResponse) {
                 Log.d(TAG, "LobbyListActivityHandler: CreateLobbyResponse");
-                SessionInfo.setGameId(((CreateLobbyResponse) msg.obj).getLobbyId());
                 startService(NetworkService.getSendIntent(getApplicationContext(),
                         new LobbyListUnsubscribeRequest(SessionInfo.getAuthToken()), true));
                 CreateLobbyResponse createLobbyResponse = (CreateLobbyResponse) msg.obj;
                 SessionInfo.getPublicLobbyInfo().setLobbyId(createLobbyResponse.getLobbyId());
+                SessionInfo.setPrivateLobbyInfo(new PrivateLobbyInfo(new PlayerInfo(SessionInfo.getUserName(),
+                        SessionInfo.getUserRating())));
                 NetworkService.setHandler(null);
-                Intent intent = LobbyActivity.getStartIntent(getApplicationContext(), new PrivateLobbyInfo(),
-                        createLobbyResponse.getLobbyId());
+                Intent intent = LobbyActivity.getStartIntent(getApplicationContext());
                 startActivity(intent);
             }
         }
@@ -289,8 +267,9 @@ public class LobbyListActivity extends AppCompatActivity {
                                 logOutRequest, true));
 
                         Context context = LobbyListActivity.this.getApplicationContext();
-                        Intent nextActivity = MainActivity.getStartIntent(context);
+                        Intent nextActivity = LogInActivity.getStartIntent(context);
                         context.startActivity(nextActivity);
+                        finish();
                     }
                 })
                 .setNegativeButton("No", null).show();

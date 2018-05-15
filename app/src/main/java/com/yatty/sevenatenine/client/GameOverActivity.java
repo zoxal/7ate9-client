@@ -62,7 +62,7 @@ public class GameOverActivity extends AppCompatActivity implements View.OnClickL
                         .inflate(android.R.layout.simple_list_item_2, null);
             }
             ((TextView) listView.findViewById(android.R.id.text1))
-                    .setText(result.getPlayerName());
+                    .setText(result.getPlayerId());
             ((TextView) listView.findViewById(android.R.id.text2))
                     .setText("Cards left: " + result.getCardsLeft());
             return listView;
@@ -86,7 +86,7 @@ public class GameOverActivity extends AppCompatActivity implements View.OnClickL
             mScores = Arrays.copyOf(parcelableArray, parcelableArray.length, PlayerResult[].class);
         }
         sortByCardCount(mScores);
-        if (mWinnerName == null) mWinnerName = mScores[0].getPlayerName();
+        if (mWinnerName == null) mWinnerName = mScores[0].getPlayerId();
         if (mPlayerName.equals(mWinnerName)) mGameOverText.setText("Winner winner chicken dinner!");
         else mGameOverText.setText("Better luck next time!");
         mWinnerNameTextView.setText(mWinnerName);
@@ -94,7 +94,7 @@ public class GameOverActivity extends AppCompatActivity implements View.OnClickL
         Log.d(TAG, "Player name: " + mPlayerName);
         Log.d(TAG, "Scores:");
         for (int i = 0; i < mScores.length; i++) {
-            Log.d(TAG, mScores[i].getPlayerName() + ": " + mScores[i].getCardsLeft());
+            Log.d(TAG, mScores[i].getPlayerId() + ": " + mScores[i].getCardsLeft());
         }
         ScoreBoardAdapter adapter = new ScoreBoardAdapter(this);
         mScoreBoard.setAdapter(adapter);
@@ -116,9 +116,12 @@ public class GameOverActivity extends AppCompatActivity implements View.OnClickL
         super.onPause();
         BackgroundMusicService.getInstance(this.getApplicationContext()).pause();
     }
+
     @Override
     protected void onResume() {
         super.onResume();
+        View rootView = findViewById(android.R.id.content);
+        rootView.setBackground(ApplicationSettings.getBackgroundPicture(this));
         BackgroundMusicService.getInstance(this.getApplicationContext()).start();
     }
 }

@@ -51,6 +51,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_weight="0"
-        android:text="@string/action_to_lobby_list"/>
+        android:fontFamily="@font/permanent_marker"
+        android:text="@string/action_to_lobby_list" />
 
 </LinearLayout>

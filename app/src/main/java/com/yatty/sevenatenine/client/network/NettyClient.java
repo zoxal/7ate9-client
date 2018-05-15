@@ -29,19 +29,19 @@ import com.yatty.sevenatenine.api.out_commands.LobbyListUnsubscribeRequest;
 import com.yatty.sevenatenine.api.out_commands.LogInRequest;
 import com.yatty.sevenatenine.api.out_commands.LogOutRequest;
 import com.yatty.sevenatenine.api.out_commands.MoveRequest;
-import com.yatty.sevenatenine.client.SessionInfo;
+import com.yatty.sevenatenine.client.auth.SessionInfo;
 
 import java.net.InetSocketAddress;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
-import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInitializer;
@@ -63,13 +63,14 @@ class NettyClient {
     private static final int SLEEP_TIME_IF_HAS_NO_HANDLER_MS = 5;
 
     private static NettyClient sNettyClient;
-    private String mServerIp = "192.168.100.4";
+    private String mServerIp = "192.168.0.101";
     private int mPort = 39405;
     private HashMap<String, Class> mCommands;
     private EventLoopGroup eventLoopGroup = new NioEventLoopGroup();
     private Channel mChannel;
     private volatile Handler mHandler;
     private volatile AtomicBoolean keepAlive = new AtomicBoolean(false);
+    private Semaphore mConnectedSemaphore = new Semaphore(1);
 
     private NettyClient() {
         mCommands = new HashMap<>();
@@ -109,35 +110,31 @@ class NettyClient {
     }
 
     public void reconnect(final String serverIp) {
-        eventLoopGroup.shutdownGracefully().addListener(new GenericFutureListener() {
-            @Override
-            public void operationComplete(Future future) throws Exception {
-                Log.d(TAG, "Client has been shut down");
-                setServerIp(serverIp);
-                connect();
-            }
+        eventLoopGroup.shutdownGracefully().addListener(future -> {
+            Log.d(TAG, "Client has been shut down");
+            setServerIp(serverIp);
+            connect();
         });
     }
 
     public void connect() {
         try {
+            mConnectedSemaphore.acquire();
             Bootstrap bootstrap = new Bootstrap();
             bootstrap.group(eventLoopGroup)
                     .channel(NioSocketChannel.class)
                     .remoteAddress(new InetSocketAddress(mServerIp, mPort))
                     .handler(new PipeLineInitializer());
-            mChannel = bootstrap.connect().addListener(new ChannelFutureListener() {
-                @Override
-                public void operationComplete(ChannelFuture future) throws Exception {
-                    if (future.isSuccess()) {
-                        Log.d(TAG, "Connected to server");
-                    } else {
-                        System.out.println("Failed to connect to server");
-                        future.cause().printStackTrace();
-                        Log.d(TAG, "Failed to connect to server", future.cause());
-                        throw new RuntimeException("Failed to connect to server", future.cause());
-                    }
+            mChannel = bootstrap.connect().addListener((ChannelFutureListener) future -> {
+                if (future.isSuccess()) {
+                    mConnectedSemaphore.release();
+                    Log.d(TAG, "Connected to server");
+                } else {
+                    future.cause().printStackTrace();
+                    Log.d(TAG, "Failed to connect to server", future.cause());
+                    throw new RuntimeException("Failed to connect to server", future.cause());
                 }
+                mConnectedSemaphore.release();
             }).sync().channel();
             mChannel.closeFuture().addListener(new GenericFutureListener<Future<? super Void>>() {
                 @Override
@@ -153,26 +150,35 @@ class NettyClient {
                     }
                 }
             });
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            Log.e(TAG, "Failed to connect to server", e);
         }
     }
 
-    public void write(Object obj, boolean keepAlive) {
+    public void sendMessage(Object obj, boolean keepAlive) {
+        Log.d(TAG, "sendMessage started");
+        Log.d("NetworkService", "NettyClient called");
+        try {
+            Log.d(TAG, "Sending message, semaphore: " + mConnectedSemaphore.availablePermits());
+            mConnectedSemaphore.acquire();
+        } catch (InterruptedException e) {
+            Log.e(TAG, "Failed to acquire netty sending semaphores", e);
+        }
+        Log.d(TAG, "Got semaphore");
         this.keepAlive.set(keepAlive);
-        if (mChannel == null) return;
+        if (mChannel == null) {
+            Log.d(TAG, "Channel is null!!!");
+            return;
+        }
         if (!mChannel.isOpen()) {
             connect();
         }
-        mChannel.writeAndFlush(obj).addListener(new ChannelFutureListener() {
-            @Override
-            public void operationComplete(ChannelFuture future) throws Exception {
-                if (future.isSuccess()) {
-                    Log.d(TAG, "Message sent");
-                } else {
-                    System.out.println("Fail");
-                    future.cause().printStackTrace();
-                }
+        mChannel.writeAndFlush(obj).addListener((ChannelFutureListener) future -> {
+            mConnectedSemaphore.release();
+            if (future.isSuccess()) {
+                Log.d(TAG, "Message sent, semaphore: " + mConnectedSemaphore.availablePermits());
+            } else {
+                Log.e(TAG, "Failed to send message", future.cause());
             }
         });
     }
@@ -252,7 +258,7 @@ class NettyClient {
 
         @Override
         protected void encode(ChannelHandlerContext ctx, Object msg, List<Object> out) throws Exception {
-            //Log.d(TAG, "Encoding...");
+            Log.d(TAG, "Encoding...");
             Gson gson = new Gson();
             JsonElement jsonElement = gson.toJsonTree(msg);
             jsonElement.getAsJsonObject().addProperty(TYPE_FIELD, msg.getClass().getSimpleName());
