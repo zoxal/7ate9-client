@@ -10,7 +10,6 @@ app/release
 .externalNativeBuild
 .idea/
 app/proguard-rules.pro
-gradle/
 keystore.properties
 7ate9.jks
 keystore-config
