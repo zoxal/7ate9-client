@@ -116,6 +116,7 @@ class NettyClient {
             connect();
         });
     }
+
     public void connect() {
         try {
             mConnectedSemaphore.acquire();

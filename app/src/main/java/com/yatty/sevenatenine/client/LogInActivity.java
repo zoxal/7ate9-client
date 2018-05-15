@@ -47,11 +47,6 @@ public class LogInActivity extends AppCompatActivity {
         mConnectButton = findViewById(R.id.button_log_in);
         mNameEditText = findViewById(R.id.et_name);
         mHandler = new LogInHandler(this, mNameEditText, mConnectButton);
-        mConnectButton.setOnLongClickListener(v -> {
-            DialogFragment dialogFragment = new IpSettingsDialog();
-            dialogFragment.show(getSupportFragmentManager(), "Enter IP");
-            return false;
-        });
     }
 
     @Override

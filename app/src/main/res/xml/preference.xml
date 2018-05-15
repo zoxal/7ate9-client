@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory
-        android:title="Volume Settings">
+        android:title="Volume settings">
         <SwitchPreference
             android:defaultValue="true"
             android:key="@string/key_is_music_enabled"
@@ -16,7 +16,7 @@
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:title="Visual Settings">
+        android:title="Visual settings">
         <ListPreference
             android:defaultValue="wood"
             android:dialogTitle="Choose background picture"
@@ -25,6 +25,23 @@
             android:key="@string/key_background_picture"
             android:summary="Tap to choose background picture"
             android:title="Background image"
+            />
+    </PreferenceCategory>
+
+
+    <PreferenceCategory
+        android:title="Network settings">
+        <EditTextPreference
+            android:defaultValue="@string/default_server_ip"
+            android:key="@string/key_server_ip"
+            android:summary="Server IP address"
+            android:title="Server IP"
+            />
+        <EditTextPreference
+            android:defaultValue="@string/default_server_port"
+            android:key="@string/key_server_port"
+            android:summary="Server port number"
+            android:title="Server port"
             />
     </PreferenceCategory>
 

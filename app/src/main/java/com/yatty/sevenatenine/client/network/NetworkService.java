@@ -9,6 +9,8 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
 
+import com.yatty.sevenatenine.client.ApplicationSettings;
+
 import java.io.Serializable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -21,9 +23,6 @@ public class NetworkService extends Service {
     private static final int ACTION_CONNECT = 1;
     private static final int ACTION_SEND_MESSAGE = 2;
     private static final int ACTION_DISCONNECT = 99;
-
-    private static String sIp = "192.168.0.101";
-    private static int sPort = 39405;
 
     private volatile ExecutorService mExecutorService;
     private static volatile Handler responseHandler;
@@ -94,30 +93,14 @@ public class NetworkService extends Service {
         return intent;
     }
 
-    public static String getIp() {
-        return sIp;
-    }
-
-    public static void setIp(String ip) {
-        sIp = ip;
-    }
-
-    public static int getPort() {
-        return sPort;
-    }
-
-    public static void setPort(int port) {
-        sPort = port;
-    }
-
     public static void setHandler(Handler handler) {
         NettyClient.getInstance().setHandler(handler);
     }
 
     private void connect() {
         NettyClient nettyClient = NettyClient.getInstance();
-        nettyClient.setServerIp(sIp);
-        nettyClient.setPort(sPort);
+        nettyClient.setServerIp(ApplicationSettings.getServerIp(getApplicationContext()));
+        nettyClient.setPort(ApplicationSettings.getServerPort(getApplicationContext()));
         nettyClient.connect();
         Log.d(TAG, "Connected");
     }

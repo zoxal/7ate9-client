@@ -19,6 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
             android:ems="10"
+            android:fontFamily="@font/permanent_marker"
             android:hint="@string/hint_login_name"
             android:inputType="textPersonName"
             android:text="username"/>
@@ -44,9 +45,9 @@
             android:background="@drawable/shape_button"
             android:fontFamily="@font/permanent_marker"
             android:onClick="googleSignInClicked"
-            android:text="@string/action_google_auth"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
+            android:text="@string/action_google_auth"
             android:textAllCaps="false"/>
     </LinearLayout>
 </FrameLayout>
