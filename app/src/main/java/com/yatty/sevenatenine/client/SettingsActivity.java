@@ -38,7 +38,7 @@ public class SettingsActivity extends PreferenceActivity {
     protected void onResume() {
         super.onResume();
         View rootView = findViewById(android.R.id.content);
-        rootView.setBackground(ApplicationSettings.getBackgroundPicture(this));
+        rootView.setBackground(ApplicationSettings.getBackgroundPicture(getApplicationContext()));
         if (ApplicationSettings.isMusicEnabled(this)) {
             BackgroundMusicService.getInstance(this.getApplicationContext()).start();
         }

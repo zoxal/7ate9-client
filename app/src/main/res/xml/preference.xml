@@ -18,7 +18,7 @@
     <PreferenceCategory
         android:title="Visual settings">
         <ListPreference
-            android:defaultValue="wood"
+            android:defaultValue="cards1"
             android:dialogTitle="Choose background picture"
             android:entries="@array/background_pictures"
             android:entryValues="@array/values_background_pictures"

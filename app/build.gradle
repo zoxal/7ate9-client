@@ -49,11 +49,13 @@ android {
             minifyEnabled false
 //            proguardFiles getDefaultProguardFile('proguard-android.txt')
             signingConfig signingConfigs.release
+            debuggable true
         }
         debug {
             minifyEnabled false
 //            proguardFiles getDefaultProguardFile('proguard-android.txt')
             signingConfig signingConfigs.release
+            debuggable true
         }
     }
     configurations.all {
