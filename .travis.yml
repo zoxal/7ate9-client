@@ -14,4 +14,4 @@ deploy:
 before_install:
 - openssl aes-256-cbc -K $encrypted_7fc8947abd05_key -iv $encrypted_7fc8947abd05_iv
   -in keystore-config.enc -out keystore-config -d
-- tar xvf secrets.tar
+- tar xvf keystore-config
