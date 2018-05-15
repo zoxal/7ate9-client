@@ -1,10 +1,12 @@
 package com.yatty.sevenatenine.client;
 
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.view.View;
 
 public class
 
@@ -46,5 +48,8 @@ PreferenceFragment extends android.preference.PreferenceFragment
             Log.i(TAG, "Music disabled");
             BackgroundMusicService.getInstance(getActivity().getApplicationContext()).pause();
         }
+        Drawable background = ApplicationSettings.getBackgroundPicture(getActivity().getApplicationContext());
+        View rootView = getActivity().findViewById(android.R.id.content);
+        rootView.setBackground(background);
     }
 }
