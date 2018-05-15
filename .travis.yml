@@ -13,9 +13,6 @@ deploy:
     tags: true
 before_install:
 - openssl aes-256-cbc -K $encrypted_7fc8947abd05_key -iv $encrypted_7fc8947abd05_iv
-  -in app/7ate9.jks.enc -out app/7ate9.jks -d
+  -in 7ate9.jks.enc -out app/7ate9.jks -d
 - openssl aes-256-cbc -K $encrypted_7fc8947abd05_key -iv $encrypted_7fc8947abd05_iv
   -in keystore.properties.enc -out keystore.properties -d
-env:
-  global:
-    secure: fuCQk1eNE/O1OfwzxSP9GxVc7FNEiOeexkwVCp8KidM17W4rSBU2sLEXRhyluOaC1iNDzPrniA1hIstAqCGfOME3BKXo+JOFT6jciNQnRJ7+8MUJ2KAK1QcaQ6L1xDNYW6nYdqFfMrArWaegv9Zvs5xwVoJuEqRaPLfWdhiApGaa7EW/c6Rp1k2Yn1YY0Oy+32lK3LS6GRIbyefhmMnBGiAqG07ag3nf2nmBKGgJWv5bEgFDJAM15dSkJ5BVnulZ4hVq8H64dGMq54SxXqQgqpmHSknbO+MwD4eKXMe/KK4Xp8Q3Okb+R9ox3XfJwYP4APtLSiT1ajpPL/GHXn3tbRaX1h9slcLy+QtlnYqA+0iIuDNq+Mg2xdaoTYmnoIbWQVyScigIIUzlDpFsxyIrlOP6ZDL4jOGvxvAFEJN4nTKlnZ24qk7t3qyL7GwQZWGKSnEsEXdzEZYtbCwQWzqetthrI6GoWxUFLNnBaykDC3XmS/V5BaqhlzlEhcPgJeEnrT0L83+NVG5yhyH7SCiekSa5AJ9UukJ6TKp/A4+RPrqUBBXFzE835bBBFjFtDoPyudvsvH+5Gfdh9WS1anS/vOf/fK289VzYQyItZS16fEfduiWwteEn2y5iSPs7HgiKFmhIogq3+jUgvbNb95PsVshED0/NC/bD5KlAiQKW4Kk=
