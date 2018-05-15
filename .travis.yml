@@ -17,6 +17,9 @@ android:
   - google-gdk-license-.+
 deploy:
   provider: releases
+  api_key:
+    secure: w2duYkBws7P+ISQHMkjrsFcmWwE6so/bM6Nlmb5uBei5cOekJXgbcl47LzITAUvTS5+xM3BhlBvD9BAvAUpIALcrzZ92W7/OJb1kdruZYcAMu0R+YdrcaVuTg9moZyffgNhSB5WmJztqqSa7BmHAD4c8TZjQuX5Zq4GxH81QSntd3gCmMh0Nu0Oap3ZiSZy1m5eslyJJ+a6BPrpA+kfAEzAcZdzU+n/gUc1fSR4Qs0w2AIMENFtIjuD/8gEFzE/T0V2mgNjbi/AEWe5GkAQPBvDwLjaqA4MlMtETQOccD6Jx0dfipqPt0Tk7C4fPSuOEmS30XQPt71agBdJ7EUvA9xaM+o47HUuiXZFHzOhvL7CCltN/jRm1uOlurGrropyaAkHq9NEa2Q9Ct1RnOewCg+Ow03sFQZbCcFTE0RloUmkJFI4LwhgFHKbF+4ZNMMULIgjevKxaDOZ9N56elB9BadiSvCB3+hZ+Ni+VuMBZdO+CUwxObKQEV1f6T6wz7wb+LRAANJbBPAkXlntDbUiwBASepZWch1g6hrkrqMAnITeZNnMnB0/OY4TvyOJxgh8cOaAVMSLJsGfR/eOBg1tjVSO4xUyJvkouUvmi1ll8VES15RZh/TL8Q5zKKF7zyb5J7m5zpa6nV17NUvrpPB7ZkzvGNrwZlWJNIMJG6St6He8=
+
   file_glob: true
   file: "/home/travis/build/zoxal/7ate9-client/app/build/outputs/apk/release/7ate9-client*"
   skip_cleanup: true
@@ -24,6 +27,3 @@ deploy:
   on:
     repo: zoxal/7ate9-client
     tags: true
-env:
-  global:
-    secure: w2duYkBws7P+ISQHMkjrsFcmWwE6so/bM6Nlmb5uBei5cOekJXgbcl47LzITAUvTS5+xM3BhlBvD9BAvAUpIALcrzZ92W7/OJb1kdruZYcAMu0R+YdrcaVuTg9moZyffgNhSB5WmJztqqSa7BmHAD4c8TZjQuX5Zq4GxH81QSntd3gCmMh0Nu0Oap3ZiSZy1m5eslyJJ+a6BPrpA+kfAEzAcZdzU+n/gUc1fSR4Qs0w2AIMENFtIjuD/8gEFzE/T0V2mgNjbi/AEWe5GkAQPBvDwLjaqA4MlMtETQOccD6Jx0dfipqPt0Tk7C4fPSuOEmS30XQPt71agBdJ7EUvA9xaM+o47HUuiXZFHzOhvL7CCltN/jRm1uOlurGrropyaAkHq9NEa2Q9Ct1RnOewCg+Ow03sFQZbCcFTE0RloUmkJFI4LwhgFHKbF+4ZNMMULIgjevKxaDOZ9N56elB9BadiSvCB3+hZ+Ni+VuMBZdO+CUwxObKQEV1f6T6wz7wb+LRAANJbBPAkXlntDbUiwBASepZWch1g6hrkrqMAnITeZNnMnB0/OY4TvyOJxgh8cOaAVMSLJsGfR/eOBg1tjVSO4xUyJvkouUvmi1ll8VES15RZh/TL8Q5zKKF7zyb5J7m5zpa6nV17NUvrpPB7ZkzvGNrwZlWJNIMJG6St6He8=
