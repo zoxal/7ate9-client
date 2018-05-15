@@ -45,7 +45,7 @@ android {
         multiDexEnabled true
         versionCode 1
         versionName "1.0"
-        setProperty("archivesBaseName", applicationId + "-v" + versionCode + "(" + versionName + ")")
+        setProperty("archivesBaseName", "7ate9-client_v" + versionCode)
     }
     buildTypes {
         release {
@@ -53,6 +53,7 @@ android {
 //            proguardFiles getDefaultProguardFile('proguard-android.txt')
             signingConfig signingConfigs.release
             debuggable true
+            versionNameSuffix "-R"
         }
         debug {
             minifyEnabled false
